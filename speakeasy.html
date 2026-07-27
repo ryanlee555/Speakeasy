@@ -298,10 +298,10 @@ body.mode-text .transcript{display:block;position:absolute;inset:0;background:#0
       <div class="panel">
         <div class="phead"><span class="dot"></span> STATS</div>
         <div class="stats">
-          <div class="stat"><div class="n">142</div><div class="l">WORDS / MIN</div></div>
-          <div class="stat"><div class="n">3.1</div><div class="l">FILLERS / MIN</div></div>
-          <div class="stat"><div class="n">6</div><div class="l">DAY STREAK</div></div>
-          <div class="stat"><div class="n">84</div><div class="l">TOTAL MINS</div></div>
+          <div class="stat"><div class="n" id="statWpm">—</div><div class="l">WORDS / MIN</div></div>
+          <div class="stat"><div class="n" id="statFillers">—</div><div class="l">FILLERS / MIN</div></div>
+          <div class="stat"><div class="n" id="statStreak">0</div><div class="l">DAY STREAK</div></div>
+          <div class="stat"><div class="n" id="statMins">0</div><div class="l">TOTAL MINS</div></div>
         </div>
       </div>
 
@@ -386,8 +386,12 @@ let dirHandle = null;
 
 function openDB(){
   return new Promise((res,rej)=>{
-    const r=indexedDB.open('speakeasy-fs',1);
-    r.onupgradeneeded=e=>e.target.result.createObjectStore('handles');
+    const r=indexedDB.open('speakeasy-fs',2);
+    r.onupgradeneeded=e=>{
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('handles')) db.createObjectStore('handles');
+      if(!db.objectStoreNames.contains('recordings')) db.createObjectStore('recordings',{keyPath:'id'});
+    };
     r.onsuccess=e=>res(e.target.result);
     r.onerror=e=>rej(e.target.error);
   });
@@ -409,10 +413,56 @@ async function storeHandle(h){
     tx.oncomplete=res; tx.onerror=e=>rej(e.target.error);
   });
 }
+async function getAllRecordings(){
+  const db=await openDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('recordings','readonly');
+    const r=tx.objectStore('recordings').getAll();
+    r.onsuccess=e=>res(e.target.result);
+    r.onerror=e=>rej(e.target.error);
+  });
+}
+async function saveRecordingMeta(rec){
+  const db=await openDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('recordings','readwrite');
+    tx.objectStore('recordings').put(rec);
+    tx.oncomplete=res; tx.onerror=e=>rej(e.target.error);
+  });
+}
 
 const saveBar=$('#saveBar'), saveStatus=$('#saveStatus');
 const pickDirBtn=$('#pickDirBtn'), regrantBtn=$('#regrantBtn');
 function setSaveStatus(msg){ saveStatus.textContent=msg; }
+
+/* ── Stats ── */
+function toLocalDateStr(isoStr){
+  const d=new Date(isoStr);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function computeStreak(records){
+  if(!records.length) return 0;
+  const days=new Set(records.map(r=>toLocalDateStr(r.dateISO)));
+  const now=new Date();
+  let d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const fmt=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+  if(!days.has(fmt(d))) d.setDate(d.getDate()-1); // today has no recording yet — don't break streak
+  let streak=0;
+  while(days.has(fmt(d))){ streak++; d.setDate(d.getDate()-1); }
+  return streak;
+}
+function renderStats(records){
+  const totalSec=records.reduce((s,r)=>s+(r.durationSec||0),0);
+  $('#statWpm').textContent='—';
+  $('#statFillers').textContent='—';
+  $('#statStreak').textContent=computeStreak(records);
+  $('#statMins').textContent=Math.round(totalSec/60);
+}
+async function refreshStats(){
+  try{ renderStats(await getAllRecordings()); }
+  catch(e){ console.error('speakeasy stats:',e); }
+}
+/* ── end Stats ── */
 
 async function pickDirectory(){
   try{
@@ -479,6 +529,7 @@ regrantBtn.addEventListener('click', async()=>{
 });
 
 initFSAA();
+refreshStats();
 /* ── end FSAA ── */
 
 recBtn.addEventListener('click',()=>{
@@ -497,10 +548,13 @@ recBtn.addEventListener('click',()=>{
       document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
       setMode('full');
       status.textContent='review it — toggle FULL / CAM / AUDIO / TEXT';
+      const topicText=$('#topic').textContent.trim();
+      saveRecordingMeta({id:Date.now().toString(),dateISO:new Date().toISOString(),durationSec,mode:'topic',topicText})
+        .then(refreshStats).catch(e=>console.error('speakeasy meta:',e));
       if(fsaaSupported){
         if(dirHandle){
           setSaveStatus('saving…');
-          const name=await autoSave(blob,durationSec,$('#topic').textContent.trim());
+          const name=await autoSave(blob,durationSec,topicText);
           setSaveStatus(name ? 'saved: '+name+'.webm' : 'save failed — check folder');
         }else{
           setSaveStatus('not saved — click SET SAVE DIR first');
