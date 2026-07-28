@@ -1,6 +1,9 @@
 # Speakeasy — Progress Log
 
-Living doc. Updated after every change made in this project so any new chat can pick up without re-deriving context.
+Living doc. Updated after every change made in this project so any new chat can pick up without re-deriving context. See [CLAUDE.md](CLAUDE.md) for the overall project vision/end-state — this file tracks state, roadmap, and decisions only.
+
+## Repo state
+All work described below is committed and pushed to the `feature/recording-stats` branch — **not yet merged to `main`**. If `main` looks like the old pixel/CRT version, that's expected; the current version lives on `feature/recording-stats` until it's PR'd/merged. Check `git branch --show-current` at the start of a new session.
 
 ## Current state (2026-07-27)
 
