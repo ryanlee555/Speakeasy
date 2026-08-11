@@ -3,7 +3,10 @@
 Living doc. Updated after every change made in this project so any new chat can pick up without re-deriving context. See [CLAUDE.md](CLAUDE.md) for the overall project vision/end-state — this file tracks state, roadmap, and decisions only.
 
 ## Repo state
-All work described below is committed and pushed to the `feature/recording-stats` branch — **not yet merged to `main`**. If `main` looks like the old pixel/CRT version, that's expected; the current version lives on `feature/recording-stats` until it's PR'd/merged. Check `git branch --show-current` at the start of a new session.
+`feature/recording-stats` has been merged into `main` (2026-08-10) — `main` now has the current warm/cozy version with Supabase auth, not the old pixel/CRT one.
+
+## Deployment (2026-08-10)
+Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
 ## Current state (2026-07-28)
 
