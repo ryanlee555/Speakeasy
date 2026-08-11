@@ -11,7 +11,7 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
 ## Current state (2026-07-28)
 
 - Two static HTML files, no build step:
-  - `index.html` — cutesy-minimal landing page (warm/cozy, same visual system as the app), CTA links to `speakeasy.html`.
+  - `index.html` — cutesy-minimal landing page (warm/cozy, same visual system as the app). **(2026-08-10)** "Sign in" is now the primary CTA (links to `speakeasy.html?auth=1`), with "Start practicing without an account" as a subtler secondary link underneath — nudges people toward accounts since logged-out recordings aren't saved to the cloud. `speakeasy.html` reads the `auth=1` query param and auto-opens the login modal on load (once, only if not already logged in).
   - `speakeasy.html` — the actual practice tool. Camera/mic capture via `getUserMedia` + `MediaRecorder`, all client-side.
 - **Accounts: Supabase auth wired up (2026-07-28).** `speakeasy.html` loads `@supabase/supabase-js@2` via CDN and creates a client against the user's project (`https://niqwjooeuougvvusjznp.supabase.co`, anon key hardcoded client-side — safe per the anon-key exception below). Topbar has a "Sign in" pill → modal with Log in / Sign up tabs (email + password via Supabase Auth). Logged-in state shows the user's email in the pill; clicking it while logged in signs out. Login is **optional** — logged-out behavior is unchanged from before (local IndexedDB stats, local FSAA save).
   - Schema lives in [supabase/schema.sql](supabase/schema.sql) — a `recordings` table (`user_id`, `created_at`, `duration_sec`, `topic_text`, `mode`) with RLS policies scoping every row to its owner. **Applied — user ran it in the Supabase SQL Editor on 2026-07-28.**
