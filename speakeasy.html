@@ -642,10 +642,18 @@ function renderAuthState(){
   }
 }
 
+let autoAuthHandled=false;
 sb.auth.onAuthStateChange((_event, sess)=>{
   session=sess;
   renderAuthState();
   refreshStats();
+  if(!autoAuthHandled){
+    autoAuthHandled=true;
+    if(!session && new URLSearchParams(location.search).get('auth')==='1'){
+      setAuthMode('login');
+      openAuthModal();
+    }
+  }
 });
 sb.auth.getSession().then(({data})=>{
   session=data.session;

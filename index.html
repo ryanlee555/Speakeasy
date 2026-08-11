@@ -73,7 +73,15 @@ body{
 .cta:hover{filter:brightness(1.08)}
 .cta:active{transform:scale(.98)}
 
-.sub{margin-top:18px;font-size:12px;color:var(--ink-faint)}
+.sub{margin-top:14px;font-size:12px;color:var(--ink-faint)}
+
+.cta-secondary{
+  display:inline-block;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+  color:var(--ink-dim);background:transparent;border:1px solid var(--border-soft);
+  border-radius:999px;padding:11px 26px;text-decoration:none;margin-top:14px;
+  transition:color .15s,border-color .15s;
+}
+.cta-secondary:hover{color:var(--ink);border-color:var(--ink-faint)}
 
 .foot{margin-top:70px;font-size:12px;color:var(--ink-faint)}
 </style>
@@ -97,8 +105,10 @@ body{
     <div class="feature"><span class="dot"></span> Build a streak</div>
   </div>
 
-  <a class="cta" href="speakeasy.html">Start practicing →</a>
-  <div class="sub">nothing leaves your machine</div>
+  <a class="cta" href="speakeasy.html?auth=1">Sign in →</a>
+  <div class="sub">save your recordings & track your streak across devices</div>
+  <br>
+  <a class="cta-secondary" href="speakeasy.html">Start practicing without an account</a>
 
   <div class="foot">speakeasy · v0.1</div>
 </div>
