@@ -22,6 +22,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 
 body{
   min-height:100vh;
@@ -31,18 +32,36 @@ body{
     radial-gradient(1100px 560px at 50% -8%, rgba(221,146,87,.10), transparent 60%),
     radial-gradient(800px 480px at 88% 6%, rgba(143,168,146,.07), transparent 60%),
     var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;
 }
 
-.wrap{max-width:560px;width:100%;text-align:center;padding:8px 0}
-
-.brandtab{
-  font-family:'Fraunces',serif;font-size:15px;font-weight:560;letter-spacing:.02em;
-  color:var(--ink-dim);display:flex;align-items:center;justify-content:center;gap:8px;
-  margin-bottom:56px;
+/* ---- header ---- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 40px;
+  background:rgba(16,13,11,.75);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
 }
-.brandtab .icn{width:6px;height:6px;border-radius:50%;background:var(--ember)}
+.brand{font-family:'Fraunces',serif;font-size:17px;font-weight:560;letter-spacing:.01em;color:var(--ink)}
+.topnav{display:flex;align-items:center;gap:30px}
+.topnav a{font-size:13px;color:var(--ink-dim);text-decoration:none;transition:color .15s}
+.topnav a:hover{color:var(--ink)}
+.nav-cta{
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+  color:#1c1108;background:var(--ember);border:1px solid var(--ember);
+  border-radius:999px;padding:9px 20px;text-decoration:none;
+  transition:filter .15s,transform .04s;
+}
+.nav-cta:hover{filter:brightness(1.08)}
+.nav-cta:active{transform:scale(.98)}
+
+@media(max-width:640px){
+  .topbar{padding:16px 20px}
+  .topnav a:not(.nav-cta){display:none}
+}
+
+/* ---- hero ---- */
+.hero{max-width:640px;margin:0 auto;text-align:center;padding:100px 24px 96px}
 
 .logo{
   font-family:'Fraunces',serif;font-size:clamp(40px,9vw,68px);font-weight:440;
@@ -58,16 +77,10 @@ body{
   max-width:420px;margin:26px auto 0;
 }
 
-.features{
-  display:flex;justify-content:center;gap:28px;margin:38px 0 44px;flex-wrap:wrap;
-}
-.feature{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-dim)}
-.feature .dot{width:5px;height:5px;border-radius:50%;background:var(--sage);flex-shrink:0}
-
 .cta{
   display:inline-block;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
   color:#1c1108;background:var(--ember);border:1px solid var(--ember);
-  border-radius:999px;padding:15px 34px;text-decoration:none;
+  border-radius:999px;padding:15px 34px;text-decoration:none;margin-top:40px;
   transition:filter .15s,transform .04s;
 }
 .cta:hover{filter:brightness(1.08)}
@@ -78,18 +91,93 @@ body{
 .cta-secondary{
   display:inline-block;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
   color:var(--ink-dim);background:transparent;border:1px solid var(--border-soft);
-  border-radius:999px;padding:11px 26px;text-decoration:none;margin-top:14px;
+  border-radius:999px;padding:11px 26px;text-decoration:none;margin-top:16px;
   transition:color .15s,border-color .15s;
 }
 .cta-secondary:hover{color:var(--ink);border-color:var(--ink-faint)}
 
-.foot{margin-top:70px;font-size:12px;color:var(--ink-faint)}
+/* ---- generic section ---- */
+.section{padding:84px 24px;border-top:1px solid var(--border)}
+.section-inner{max-width:1080px;margin:0 auto}
+.section-label{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ember);margin-bottom:14px;
+}
+.section-title{
+  font-family:'Fraunces',serif;font-size:clamp(26px,4vw,34px);font-weight:480;
+  color:var(--ink);margin-bottom:14px;
+}
+.section-sub{font-size:14.5px;line-height:1.7;color:var(--ink-faint);max-width:560px}
+
+/* ---- how it works ---- */
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:44px}
+
+.video-placeholder{
+  aspect-ratio:16/9;border:1px dashed var(--border-soft);border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:var(--panel);color:var(--ink-faint);
+}
+.video-placeholder .play{
+  width:52px;height:52px;border-radius:50%;border:1px solid var(--border-soft);
+  display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-size:16px;
+}
+.video-placeholder span{font-size:12.5px}
+
+.how-steps{list-style:none;display:flex;flex-direction:column;gap:24px}
+.how-steps li{display:flex;gap:14px;align-items:flex-start}
+.how-steps .num{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:var(--ember-soft);color:var(--ember);
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.how-steps .txt{font-size:14.5px;line-height:1.6;color:var(--ink-dim)}
+.how-steps .txt strong{color:var(--ink);font-weight:600}
+
+/* ---- features ---- */
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+.feature-card{border:1px solid var(--border);border-radius:16px;padding:24px 20px;background:var(--panel)}
+.feature-card .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-bottom:14px}
+.feature-card h3{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.feature-card p{font-size:13px;line-height:1.6;color:var(--ink-faint)}
+
+@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.features-grid{grid-template-columns:1fr}}
+
+/* ---- about ---- */
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start;margin-top:44px}
+.about-text p{font-size:14.5px;line-height:1.8;color:var(--ink-dim);margin-bottom:18px}
+.about-text p:last-child{margin-bottom:0}
+
+.about-photos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.photo-placeholder{
+  aspect-ratio:3/4;border:1px dashed var(--border-soft);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-faint);font-size:12px;background:var(--panel);
+}
+
+@media(max-width:760px){
+  .how-grid,.about-grid{grid-template-columns:1fr}
+  .about-photos{max-width:320px}
+}
+
+/* ---- footer ---- */
+.foot{padding:40px 24px;text-align:center;font-size:12px;color:var(--ink-faint);border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="brandtab"><span class="icn"></span> Speakeasy</div>
 
+<header class="topbar">
+  <div class="brand">Speakeasy</div>
+  <nav class="topnav">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#about">About</a>
+    <a class="nav-cta" href="speakeasy.html?auth=1">Sign in</a>
+  </nav>
+</header>
+
+<section class="hero">
   <div class="logo">Speak a little easier.</div>
   <div class="tag">one prompt, one minute, one honest take.</div>
 
@@ -99,18 +187,118 @@ body{
     more comfortable with your own voice.
   </div>
 
-  <div class="features">
-    <div class="feature"><span class="dot"></span> Record yourself</div>
-    <div class="feature"><span class="dot"></span> Review instantly</div>
-    <div class="feature"><span class="dot"></span> Build a streak</div>
+  <div>
+    <a class="cta" href="speakeasy.html?auth=1">Sign in →</a>
+    <div class="sub">save your recordings & track your streak across devices</div>
+    <br>
+    <a class="cta-secondary" href="speakeasy.html">Start practicing without an account</a>
   </div>
+</section>
 
-  <a class="cta" href="speakeasy.html?auth=1">Sign in →</a>
-  <div class="sub">save your recordings & track your streak across devices</div>
-  <br>
-  <a class="cta-secondary" href="speakeasy.html">Start practicing without an account</a>
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Practice in a few minutes, not a few hours.</div>
+    <div class="section-sub">No setup, no scripts to memorize — just you, a prompt, and a timer.</div>
 
-  <div class="foot">speakeasy · v0.1</div>
-</div>
+    <div class="how-grid">
+      <div class="video-placeholder">
+        <div class="play">▶</div>
+        <span>demo video — coming soon</span>
+      </div>
+
+      <ol class="how-steps">
+        <li>
+          <span class="num">1</span>
+          <span class="txt"><strong>Pick a topic.</strong> Choose a category and difficulty, or let Speakeasy surprise you with a random prompt.</span>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic — right in the browser, no app to install.</span>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript — whatever helps you notice the most.</span>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <span class="txt"><strong>Build the habit.</strong> Sign in to track your streak and minutes practiced over time.</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <div class="section-title">Everything you need, nothing you don't.</div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="dot"></div>
+        <h3>36 built-in prompts</h3>
+        <p>6 categories and 3 difficulty levels, from casual small talk to hard debate topics.</p>
+      </div>
+      <div class="feature-card">
+        <div class="dot"></div>
+        <h3>Camera & mic, in-browser</h3>
+        <p>Nothing to install — record straight from your browser whenever you've got a minute.</p>
+      </div>
+      <div class="feature-card">
+        <div class="dot"></div>
+        <h3>Review your way</h3>
+        <p>Watch the full clip, audio-only, visual-only, or read it back as a transcript.</p>
+      </div>
+      <div class="feature-card">
+        <div class="dot"></div>
+        <h3>Local or cloud save</h3>
+        <p>Save straight to a folder on your machine, or sign in to keep your history anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <div class="section-title">Why I built this.</div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          All my life, I was never a great speaker. I found myself trembling
+          uncontrollably whenever I had to speak in public, and no matter what
+          I tried, nothing seemed to help. That's when I came across
+          Vinh Giang, who said that the best way to get better at public
+          speaking is to watch and listen to yourself.
+        </p>
+        <p>
+          There are three main things you need to do: record yourself, then
+          replay that recording — first just the audio, then just the visual,
+          then with a transcript, then fully again. Practicing this over and
+          over has genuinely helped me improve, and I've seen real progress
+          in myself.
+        </p>
+        <p>
+          Another way I found to get better was putting myself in pressure
+          situations — giving myself a random topic and speaking about it for
+          a set amount of time. Doing this trains your brain to stay calm
+          under pressure. I'm hoping this website can help you get better at
+          public speaking too, or that you'll simply find it useful for
+          practice.
+        </p>
+      </div>
+
+      <div class="about-photos">
+        <div class="photo-placeholder">photo</div>
+        <div class="photo-placeholder">photo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="foot">speakeasy · v0.1</div>
+
 </body>
 </html>
