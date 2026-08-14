@@ -700,7 +700,12 @@ authForm.addEventListener('submit', async e=>{
       closeAuthModal();
     }
   }catch(err){
-    authMsg.textContent = err.message || 'Something went wrong.';
+    const msg = err && err.message ? err.message : '';
+    // a dead/paused Supabase project surfaces only as a generic fetch failure
+    const offline = /failed to fetch|networkerror|load failed/i.test(msg);
+    authMsg.textContent = offline
+      ? "Can't reach the server right now. You can keep practicing without an account, your recordings still save locally."
+      : (msg || 'Something went wrong.');
   }finally{
     authSubmit.disabled=false;
   }
