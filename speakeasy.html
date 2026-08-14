@@ -96,6 +96,7 @@ body{
   border:1px solid var(--border);border-radius:16px;overflow:hidden;
 }
 .screen video{width:100%;height:100%;object-fit:cover;display:block;background:#0b0908}
+.screen video.mirror{transform:scaleX(-1)}
 .scrline{position:absolute;inset:0;pointer-events:none;display:none;opacity:.5;
   background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(221,146,87,.05) 3px 4px)}
 body.crt .scrline{display:block}
@@ -207,6 +208,9 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 .lib li{padding:11px 2px;border-bottom:1px solid var(--border);color:var(--ink-dim);display:flex;gap:8px}
 .lib li:last-child{border-bottom:0}
 .lib .c{color:var(--ink-faint)}
+.lib li.playable{cursor:pointer}
+.lib li.playable:hover{color:var(--ink)}
+.lib li.playable:hover .c{color:var(--ember)}
 .sample{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:var(--ink-faint);margin-top:12px}
 
 .foot{text-align:center;margin-top:40px;font-size:12px;color:var(--ink-faint)}
@@ -236,6 +240,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
     <div class="brandtab"><span class="icn"></span> Speakeasy</div>
     <div class="toggles">
       <div class="toggle" id="authBtn">Sign in</div>
+      <div class="toggle" id="mirrorBtn">Mirror <span class="v">off</span></div>
       <div class="toggle" id="crtBtn">CRT <span class="v">off</span></div>
       <div class="toggle" id="sfxBtn">SFX <span class="v">off</span></div>
     </div>
@@ -305,7 +310,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 
         <div class="recrow">
           <button class="pbtn pbtn--rec" id="recBtn" disabled>● Rec</button>
-          <button class="pbtn pbtn--ghost pbtn--sm" id="dlBtn" disabled>↓ Save .webm</button>
+          <button class="pbtn pbtn--ghost pbtn--sm" id="saveRecBtn" style="display:none" disabled>💾 Save</button>
           <span class="status" id="status">enable camera to begin</span>
         </div>
         <div id="saveBar" style="display:none;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px">
@@ -376,12 +381,8 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 
       <div class="panel">
         <div class="phead"><span class="dot"></span> Library</div>
-        <ul class="lib">
-          <li><span class="c">·</span> 06/22 · impromptu · 1:30 · 138wpm</li>
-          <li><span class="c">·</span> 06/21 · persuasive · 2:00 · 151wpm</li>
-          <li><span class="c">·</span> 06/20 · story · 1:00 · 129wpm</li>
-        </ul>
-        <div class="sample">sample data, real sessions land here once storage is wired</div>
+        <ul class="lib" id="libList"></ul>
+        <div class="sample" id="libEmpty">no recordings yet, hit record to start your history</div>
       </div>
     </div>
   </div>
@@ -393,8 +394,9 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 <script>
 const $ = s => document.querySelector(s);
 const screen = $('#screen'), overlay = $('#overlay'), status = $('#status');
-const recBtn = $('#recBtn'), dlBtn = $('#dlBtn'), timerEl = $('#timer');
+const recBtn = $('#recBtn'), saveRecBtn = $('#saveRecBtn'), timerEl = $('#timer');
 let stream=null, recorder=null, chunks=[], blobUrl=null, recording=false, t0=0, tick=null, targetSec=60;
+let pendingBlob=null, pendingBase=null, pendingMeta=null;
 
 /* SFX */
 let sfx=false, actx=null;
@@ -405,6 +407,8 @@ document.addEventListener('click',e=>{ if(e.target.closest('.pbtn,.dur,.toggle')
 
 $('#crtBtn').addEventListener('click',function(){ document.body.classList.toggle('crt');
   const on=document.body.classList.contains('crt'); this.classList.toggle('on',on); this.querySelector('.v').textContent=on?'ON':'OFF'; });
+$('#mirrorBtn').addEventListener('click',function(){ screen.classList.toggle('mirror');
+  const on=screen.classList.contains('mirror'); this.classList.toggle('on',on); this.querySelector('.v').textContent=on?'ON':'OFF'; });
 $('#sfxBtn').addEventListener('click',function(){ sfx=!sfx; this.classList.toggle('on',sfx);
   this.querySelector('.v').textContent=sfx?'ON':'OFF'; beep(660,0.06); });
 
@@ -642,13 +646,64 @@ function renderStats(records){
   $('#statMins').textContent=Math.round(totalSec/60);
 }
 async function fetchCloudRecordings(){
-  const {data,error}=await sb.from('recordings').select('created_at,duration_sec').eq('user_id',session.user.id);
+  const {data,error}=await sb.from('recordings').select('created_at,duration_sec,topic_text,mode')
+    .eq('user_id',session.user.id).order('created_at',{ascending:false});
   if(error){ console.error('speakeasy cloud stats:',error); return []; }
-  return data.map(r=>({dateISO:r.created_at, durationSec:r.duration_sec}));
+  return data.map(r=>({dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text, mode:r.mode}));
 }
+async function loadRecords(){
+  const records = session ? await fetchCloudRecordings() : await getAllRecordings();
+  return records.slice().sort((a,b)=>new Date(b.dateISO)-new Date(a.dateISO));
+}
+/* ── Library ── */
+const libList=$('#libList'), libEmpty=$('#libEmpty');
+let libRecords=[];
+function fmtDur(s){ const m=Math.floor(s/60); return m+':'+String(Math.round(s%60)).padStart(2,'0'); }
+function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
+function renderLibrary(records){
+  libRecords=records;
+  if(!records.length){ libList.innerHTML=''; libEmpty.style.display=''; return; }
+  libEmpty.style.display='none';
+  libList.innerHTML=records.map((rec,i)=>{
+    const dateStr=new Date(rec.dateISO).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    const modeLabel=rec.mode==='freeplay' ? 'Freeplay' : 'Topic';
+    const topicPart=rec.mode==='freeplay' ? '' : (rec.topicText ? ' · "'+truncate(rec.topicText,36)+'"' : '');
+    const playable=!!rec.fsaaFile;
+    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'"><span class="c">·</span> '+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+'</li>';
+  }).join('');
+}
+async function playLibraryRecord(rec){
+  if(!rec.fsaaFile){ setSaveStatus('no local video saved for that one'); return; }
+  if(!dirHandle){ setSaveStatus('reconnect your save folder (SET SAVE DIR) to watch local recordings'); return; }
+  try{
+    const fh=await dirHandle.getFileHandle(rec.fsaaFile);
+    const file=await fh.getFile();
+    const url=URL.createObjectURL(file);
+    if(blobUrl) URL.revokeObjectURL(blobUrl);
+    blobUrl=url;
+    screen.srcObject=null; screen.src=url;
+    document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b/g,'').trim();
+    document.body.classList.add('is-review');
+    document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
+    setMode('full');
+    status.textContent='reviewing saved recording · '+rec.fsaaFile;
+  }catch(e){
+    setSaveStatus("couldn't open that file, it may have moved");
+  }
+}
+libList.addEventListener('click', e=>{
+  const li=e.target.closest('li.playable[data-idx]');
+  if(!li) return;
+  const rec=libRecords[+li.dataset.idx];
+  if(rec) playLibraryRecord(rec);
+});
+/* ── end Library ── */
 async function refreshStats(){
-  try{ renderStats(session ? await fetchCloudRecordings() : await getAllRecordings()); }
-  catch(e){ console.error('speakeasy stats:',e); }
+  try{
+    const records=await loadRecords();
+    renderStats(records);
+    renderLibrary(records.slice(0,20));
+  }catch(e){ console.error('speakeasy stats:',e); }
 }
 /* ── end Stats ── */
 
@@ -755,9 +810,7 @@ async function pickDirectory(){
   }
 }
 
-async function autoSave(blob, durationSec, topicText, mode){
-  if(!dirHandle) return null;
-  const now=new Date();
+function fsaaBase(now, mode){
   const stamp=[
     now.getFullYear(),
     String(now.getMonth()+1).padStart(2,'0'),
@@ -766,11 +819,14 @@ async function autoSave(blob, durationSec, topicText, mode){
     String(now.getHours()).padStart(2,'0'),
     String(now.getMinutes()).padStart(2,'0')
   ].join('-');
-  const base='speakeasy_'+(mode==='freeplay'?'freeplay_':'')+stamp;
+  return 'speakeasy_'+(mode==='freeplay'?'freeplay_':'')+stamp;
+}
+async function autoSave(blob, base, durationSec, topicText, mode){
+  if(!dirHandle) return null;
   try{
     const wFh=await dirHandle.getFileHandle(base+'.webm',{create:true});
     const wW=await wFh.createWritable(); await wW.write(blob); await wW.close();
-    const meta={timestamp:now.toISOString(),durationSeconds:durationSec,mode,topic:topicText||null};
+    const meta={timestamp:new Date().toISOString(),durationSeconds:durationSec,mode,topic:topicText||null};
     const jFh=await dirHandle.getFileHandle(base+'.json',{create:true});
     const jW=await jFh.createWritable(); await jW.write(JSON.stringify(meta,null,2)); await jW.close();
     return base;
@@ -781,7 +837,6 @@ async function autoSave(blob, durationSec, topicText, mode){
 
 async function initFSAA(){
   if(!fsaaSupported) return;
-  dlBtn.style.display='none';
   saveBar.style.display='flex';
   setSaveStatus('checking…');
   const h=await getStoredHandle().catch(()=>null);
@@ -815,37 +870,52 @@ recBtn.addEventListener('click',()=>{
   if(!recording){
     chunks=[]; document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b/g,'').trim();
     screen.srcObject=stream; screen.muted=true; screen.controls=false; screen.play();
+    pendingBlob=null; pendingBase=null; pendingMeta=null;
+    saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
     recorder=new MediaRecorder(stream);
     recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
-    recorder.onstop=async ()=>{
+    recorder.onstop=()=>{
       const durationSec=Math.round((Date.now()-t0)/1000);
       const blob=new Blob(chunks,{type:'video/webm'});
       if(blobUrl) URL.revokeObjectURL(blobUrl); blobUrl=URL.createObjectURL(blob);
       screen.srcObject=null; screen.src=blobUrl;
       document.body.classList.add('is-review');
-      if(!fsaaSupported) dlBtn.disabled=false;
       document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
       setMode('full');
-      status.textContent='review it, toggle FULL / CAM / AUDIO / TEXT';
       const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
-      saveRecordingMeta({id:Date.now().toString(),dateISO:new Date().toISOString(),durationSec,mode:recMode,topicText})
-        .then(refreshStats).catch(e=>console.error('speakeasy meta:',e));
-      if(fsaaSupported){
-        if(dirHandle){
-          setSaveStatus('saving…');
-          const name=await autoSave(blob,durationSec,topicText,recMode);
-          setSaveStatus(name ? 'saved: '+name+'.webm' : 'save failed, check folder');
-        }else{
-          setSaveStatus('not saved, click SET SAVE DIR first');
-        }
-      }
+      const now=new Date();
+      pendingBlob=blob;
+      pendingBase=fsaaBase(now,recMode);
+      pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText};
+      recBtn.textContent='↺ Retake';
+      saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
+      status.textContent='review it, then Save or Retake';
     };
     recorder.start(); recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
     document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
   } else {
     recorder.stop(); recording=false; clearInterval(tick);
-    document.body.classList.remove('is-rec'); recBtn.textContent='● REC';
+    document.body.classList.remove('is-rec');
   }
+});
+
+saveRecBtn.addEventListener('click', async ()=>{
+  if(!pendingBlob) return;
+  saveRecBtn.disabled=true;
+  const fsaaFile = dirHandle ? pendingBase+'.webm' : null;
+  try{ await saveRecordingMeta({...pendingMeta, fsaaFile}); }
+  catch(e){ console.error('speakeasy meta:',e); }
+  refreshStats();
+  if(dirHandle){
+    setSaveStatus('saving…');
+    const name=await autoSave(pendingBlob, pendingBase, pendingMeta.durationSec, pendingMeta.topicText, pendingMeta.mode);
+    setSaveStatus(name ? 'saved: '+name+'.webm' : 'save failed, check folder');
+  }else{
+    const a=document.createElement('a'); a.href=blobUrl; a.download=pendingBase+'.webm'; a.click();
+    setSaveStatus('downloaded '+pendingBase+'.webm');
+  }
+  saveRecBtn.textContent='Saved ✓';
+  status.textContent='saved. toggle FULL / CAM / AUDIO / TEXT, or hit Retake for another take';
 });
 
 function setMode(m){
@@ -856,13 +926,6 @@ function setMode(m){
   if(m==='text'){ screen.pause(); } else { screen.play().catch(()=>{}); }
 }
 document.querySelectorAll('.modes .pbtn').forEach(b=>b.addEventListener('click',()=>{ if(!b.disabled) setMode(b.dataset.mode); }));
-
-dlBtn.addEventListener('click',()=>{
-  if(!blobUrl) return;
-  const a=document.createElement('a'); a.href=blobUrl;
-  a.download='speakeasy_'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.webm';
-  a.click();
-});
 </script>
 </body>
 </html>
