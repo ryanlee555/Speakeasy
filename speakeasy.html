@@ -358,7 +358,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
           <li><span class="c">·</span> 06/21 · persuasive · 2:00 · 151wpm</li>
           <li><span class="c">·</span> 06/20 · story · 1:00 · 129wpm</li>
         </ul>
-        <div class="sample">sample data — real sessions land here once storage is wired</div>
+        <div class="sample">sample data, real sessions land here once storage is wired</div>
       </div>
     </div>
   </div>
@@ -395,7 +395,7 @@ const topics=[
  {text:"What do we owe to people we'll never meet?",cat:'deep',diff:'hard'},
 
  {text:"Argue that mornings are better than nights.",cat:'debate',diff:'easy'},
- {text:"Cats or dogs — settle it.",cat:'debate',diff:'easy'},
+ {text:"Cats or dogs. Settle it.",cat:'debate',diff:'easy'},
  {text:"Convince me to visit a city you've never been to.",cat:'debate',diff:'medium'},
  {text:"Sell me on your hometown in 60 seconds.",cat:'debate',diff:'medium'},
  {text:"Defend an unpopular opinion you actually hold.",cat:'debate',diff:'hard'},
@@ -433,7 +433,7 @@ let selectedCat='all', selectedDiff='all', lastTopic=$('#topic').textContent.tri
 
 function pickTopic(){
   const pool=topics.filter(t=>(selectedCat==='all'||t.cat===selectedCat)&&(selectedDiff==='all'||t.diff===selectedDiff));
-  if(!pool.length){ $('#topic').textContent='No topics match that combo yet — try a different filter.'; return; }
+  if(!pool.length){ $('#topic').textContent='No topics match that combo yet. Try a different filter.'; return; }
   let pick;
   do{ pick=pool[Math.floor(Math.random()*pool.length)]; }while(pool.length>1&&pick.text===lastTopic);
   lastTopic=pick.text; $('#topic').textContent=pick.text;
@@ -475,7 +475,7 @@ $('#enableBtn').addEventListener('click',async()=>{
   try{
     stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
     screen.srcObject=stream; screen.muted=true; await screen.play();
-    overlay.classList.add('hide'); recBtn.disabled=false; status.textContent='ready — hit REC';
+    overlay.classList.add('hide'); recBtn.disabled=false; status.textContent='ready, hit REC';
   }catch(err){
     overlay.classList.remove('hide');
     status.textContent='camera blocked here. download + open locally to use it.';
@@ -670,7 +670,7 @@ async function pickDirectory(){
     setSaveStatus('auto-save › '+h.name);
     regrantBtn.style.display='none';
   }catch(e){
-    if(e.name!=='AbortError') setSaveStatus('error — try again');
+    if(e.name!=='AbortError') setSaveStatus('error, try again');
   }
 }
 
@@ -704,12 +704,12 @@ async function initFSAA(){
   saveBar.style.display='flex';
   setSaveStatus('checking…');
   const h=await getStoredHandle().catch(()=>null);
-  if(!h){ setSaveStatus('no save folder — click SET SAVE DIR'); return; }
+  if(!h){ setSaveStatus('no save folder, click SET SAVE DIR'); return; }
   const perm=await h.queryPermission({mode:'readwrite'});
   if(perm==='granted'){
     dirHandle=h; setSaveStatus('auto-save › '+h.name);
   }else{
-    setSaveStatus('permission lost — click RE-GRANT');
+    setSaveStatus('permission lost, click RE-GRANT');
     regrantBtn.style.display='';
   }
 }
@@ -745,7 +745,7 @@ recBtn.addEventListener('click',()=>{
       if(!fsaaSupported) dlBtn.disabled=false;
       document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
       setMode('full');
-      status.textContent='review it — toggle FULL / CAM / AUDIO / TEXT';
+      status.textContent='review it, toggle FULL / CAM / AUDIO / TEXT';
       const topicText=$('#topic').textContent.trim();
       saveRecordingMeta({id:Date.now().toString(),dateISO:new Date().toISOString(),durationSec,mode:'topic',topicText})
         .then(refreshStats).catch(e=>console.error('speakeasy meta:',e));
@@ -753,9 +753,9 @@ recBtn.addEventListener('click',()=>{
         if(dirHandle){
           setSaveStatus('saving…');
           const name=await autoSave(blob,durationSec,topicText);
-          setSaveStatus(name ? 'saved: '+name+'.webm' : 'save failed — check folder');
+          setSaveStatus(name ? 'saved: '+name+'.webm' : 'save failed, check folder');
         }else{
-          setSaveStatus('not saved — click SET SAVE DIR first');
+          setSaveStatus('not saved, click SET SAVE DIR first');
         }
       }
     };

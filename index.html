@@ -46,9 +46,9 @@ body{
 .topnav{display:flex;align-items:center;gap:30px}
 .topnav a{font-size:13px;color:var(--ink-dim);text-decoration:none;transition:color .15s}
 .topnav a:hover{color:var(--ink)}
-.nav-cta{
+.topnav a.nav-cta{
   font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
-  color:#1c1108;background:var(--ember);border:1px solid var(--ember);
+  color:#000;background:var(--ember);border:1px solid var(--ember);
   border-radius:999px;padding:9px 20px;text-decoration:none;
   transition:filter .15s,transform .04s;
 }
@@ -67,11 +67,6 @@ body{
   font-family:'Fraunces',serif;font-size:clamp(40px,9vw,68px);font-weight:440;
   color:var(--ink);line-height:1.05;letter-spacing:-.01em;
 }
-.tag{
-  font-family:'Fraunces',serif;font-style:italic;font-weight:400;
-  font-size:18px;color:var(--ink-dim);margin-top:16px;
-}
-
 .blurb{
   font-size:15px;line-height:1.7;color:var(--ink-faint);
   max-width:420px;margin:26px auto 0;
@@ -179,12 +174,9 @@ body{
 
 <section class="hero">
   <div class="logo">Speak a little easier.</div>
-  <div class="tag">one prompt, one minute, one honest take.</div>
 
   <div class="blurb">
-    A cozy little studio for practicing out loud — pick a topic, hit record,
-    and watch it back. No audience, no pressure, just you getting a little
-    more comfortable with your own voice.
+    A cozy little studio for practicing your public speaking out loud.
   </div>
 
   <div>
@@ -198,13 +190,13 @@ body{
 <section class="section" id="how">
   <div class="section-inner">
     <div class="section-label">How it works</div>
-    <div class="section-title">Practice in a few minutes, not a few hours.</div>
-    <div class="section-sub">No setup, no scripts to memorize — just you, a prompt, and a timer.</div>
+    <div class="section-title">You can practice speaking in just a few minutes.</div>
+    <div class="section-sub">There's no setup and nothing to memorize. Just you, a prompt, and a timer.</div>
 
     <div class="how-grid">
       <div class="video-placeholder">
         <div class="play">▶</div>
-        <span>demo video — coming soon</span>
+        <span>demo video coming soon</span>
       </div>
 
       <ol class="how-steps">
@@ -214,11 +206,11 @@ body{
         </li>
         <li>
           <span class="num">2</span>
-          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic — right in the browser, no app to install.</span>
+          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic right in the browser. There's no app to install.</span>
         </li>
         <li>
           <span class="num">3</span>
-          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript — whatever helps you notice the most.</span>
+          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript. Pick whichever helps you notice the most.</span>
         </li>
         <li>
           <span class="num">4</span>
@@ -232,7 +224,7 @@ body{
 <section class="section" id="features">
   <div class="section-inner">
     <div class="section-label">Features</div>
-    <div class="section-title">Everything you need, nothing you don't.</div>
+    <div class="section-title">Speakeasy gives you everything you need to practice.</div>
 
     <div class="features-grid">
       <div class="feature-card">
@@ -243,7 +235,7 @@ body{
       <div class="feature-card">
         <div class="dot"></div>
         <h3>Camera & mic, in-browser</h3>
-        <p>Nothing to install — record straight from your browser whenever you've got a minute.</p>
+        <p>Nothing to install. Record straight from your browser whenever you've got a minute.</p>
       </div>
       <div class="feature-card">
         <div class="dot"></div>
@@ -275,14 +267,14 @@ body{
         </p>
         <p>
           There are three main things you need to do: record yourself, then
-          replay that recording — first just the audio, then just the visual,
+          replay that recording, first just the audio, then just the visual,
           then with a transcript, then fully again. Practicing this over and
           over has genuinely helped me improve, and I've seen real progress
           in myself.
         </p>
         <p>
           Another way I found to get better was putting myself in pressure
-          situations — giving myself a random topic and speaking about it for
+          situations, giving myself a random topic and speaking about it for
           a set amount of time. Doing this trains your brain to stay calm
           under pressure. I'm hoping this website can help you get better at
           public speaking too, or that you'll simply find it useful for

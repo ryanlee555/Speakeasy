@@ -8,10 +8,13 @@ Living doc. Updated after every change made in this project so any new chat can 
 ## Deployment (2026-08-10)
 Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
+## Content style rule (2026-08-13)
+No em dashes anywhere in user-facing copy on either page, and avoid comma-spliced "fragment, fragment" titles/headlines (e.g. the old "Everything you need, nothing you don't." pattern) — write full sentences instead. Applies to both `index.html` and `speakeasy.html`. (The `—` used as an empty-stat placeholder in `speakeasy.html`, e.g. `#statWpm`, is a typographic glyph, not prose, and is exempt.)
+
 ## Current state (2026-07-28)
 
 - Two static HTML files, no build step:
-  - `index.html` — landing page (warm/cozy, same visual system as the app). **(2026-08-13) Redesigned into a real multi-section marketing page:**
+  - `index.html` — landing page (warm/cozy, same visual system as the app). **(2026-08-13) Copy pass:** hero blurb simplified to "A cozy little studio for practicing your public speaking out loud." (the old feature-dot row and the "one prompt, one minute, one honest take." tagline are gone). Section titles rewritten as full sentences instead of comma-fragments (e.g. "You can practice speaking in just a few minutes."). Fixed a CSS specificity bug where `.topnav a` was silently overriding `.nav-cta`'s color, making the header "Sign in" pill render in muted gray instead of black — now `.topnav a.nav-cta` wins and the text is solid black. **(2026-08-13) Redesigned into a real multi-section marketing page:**
     - Sticky header, "Speakeasy" wordmark pinned top-left (the old orange dot next to it is gone), nav links (How it works / Features / About) + a "Sign in" pill on the right.
     - Hero: headline/tagline/blurb unchanged, but the "Record yourself · Review instantly · Build a streak" dot-row under the blurb was removed. "Sign in" (→ `speakeasy.html?auth=1`) is still the primary CTA, "Start practicing without an account" the secondary link underneath.
     - New `#how` section: two-column — left is a dashed-border video placeholder (`.video-placeholder`, labeled "demo video — coming soon", swap for a real `<video>`/embed later), right is a 4-step numbered list of the actual product flow (pick a topic → hit record → watch it back → build the habit).
