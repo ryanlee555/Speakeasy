@@ -185,6 +185,19 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 /* words mode: a single word gets room to breathe */
 .topic.is-word{display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:clamp(30px,6vw,44px);line-height:1.2;letter-spacing:-.01em;color:var(--ember)}
+/* daily challenge */
+.daily{border:1px solid rgba(221,146,87,.28);background:rgba(221,146,87,.06);
+  border-radius:14px;padding:14px;margin-bottom:14px}
+.daily-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.daily-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ember)}
+.daily-date{font-size:11px;color:var(--ink-faint);white-space:nowrap}
+.daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.5;color:var(--ink-dim);margin-bottom:12px}
+.daily.is-active .daily-prompt{display:none}
+.daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
+.daily-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ember);margin:8px 0 -4px}
+.lib .daily-mark{color:var(--ember)}
 .dursel{display:flex;gap:6px;margin:18px 0 12px;flex-wrap:wrap}
 .dur{
   font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;color:var(--ink-faint);
@@ -340,6 +353,14 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
         </div>
 
         <div id="topicPane">
+          <div class="daily" id="dailyCard" hidden>
+            <div class="daily-top">
+              <span class="daily-label">◆ Daily Challenge</span>
+              <span class="daily-date" id="dailyDate"></span>
+            </div>
+            <div class="daily-prompt" id="dailyPrompt"></div>
+            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Do today's challenge</button>
+          </div>
           <div class="filterrow" id="catFilters"></div>
           <div class="filterrow" id="diffFilters">
             <button class="dur is-active" data-diff="all">All levels</button>
@@ -347,6 +368,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
             <button class="dur" data-diff="medium">Medium</button>
             <button class="dur" data-diff="hard">Hard</button>
           </div>
+          <div class="daily-tag" id="dailyTag" hidden>◆ Today's Daily Challenge</div>
           <div class="topic" id="topic">Convince me to visit a city you've never been to.</div>
         </div>
 
@@ -7931,6 +7953,7 @@ function renderDiffFilters(){
 function pickTopic(){
   if(recMode==='freeplay') return;
   if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; return; }
+  if(recMode==='topic') setDailyActive(false); // rerolling or filtering opts out of the daily
   const {cat,diff}=selected[recMode];
   const item=window.pickPrompt(recMode,cat,diff,{recent:recentIds});
   if(!item){
@@ -7953,6 +7976,45 @@ diffFilters.addEventListener('click',e=>{
   const b=e.target.closest('.dur[data-diff]'); if(!b) return;
   selected[recMode].diff=b.dataset.diff; renderDiffFilters(); pickTopic();
 });
+
+/* ── Daily Challenge: one date-seeded topic prompt, the same for everyone on a
+   given UTC day, chosen with no backend. A given date maps to a fixed prompt
+   forever, which is what lets two people compare their takes. ── */
+const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag');
+let dailyItem=null, dailyActive=false;
+
+function computeDaily(){
+  if(!libOK) return;
+  const pool=LIB.items.filter(i=>i.mode==='topic');
+  if(!pool.length) return;
+  const now=new Date();
+  const epochDay=Math.floor(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())/864e5);
+  // stride by a multiplier coprime to the pool size (585 = 3^2*5*13), so the
+  // daily prompt walks through every prompt exactly once before any repeats.
+  // 362 also avoids aliasing with the 45-prompt category blocks, so consecutive
+  // days stay in different categories.
+  const idx=((epochDay*362+61)%pool.length+pool.length)%pool.length;
+  dailyItem=pool[idx];
+  $('#dailyDate').textContent=now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+  $('#dailyPrompt').textContent=dailyItem.text;
+  dailyCard.hidden=false;
+}
+function setDailyActive(on){
+  dailyActive=on&&!!dailyItem;
+  dailyCard.classList.toggle('is-active',dailyActive);
+  dailyBtn.classList.toggle('is-active',dailyActive);
+  dailyBtn.textContent=dailyActive?"✓ Doing today's challenge":"Do today's challenge";
+  dailyTag.hidden=!dailyActive;
+}
+dailyBtn.addEventListener('click',()=>{
+  if(!dailyItem) return;
+  if(dailyActive){ setDailyActive(false); return; }
+  currentText.topic=dailyItem.text;
+  topicEl.textContent=dailyItem.text;
+  if(recentIds.indexOf(dailyItem.id)===-1) recentIds.push(dailyItem.id);
+  setDailyActive(true);
+});
+computeDaily();
 
 /* rec mode: topic vs words vs freeplay */
 const DUR_PRESETS={
@@ -8153,10 +8215,11 @@ function renderLibrary(records){
   libEmpty.style.display='none';
   libList.innerHTML=records.map((rec,i)=>{
     const dateStr=new Date(rec.dateISO).toLocaleDateString(undefined,{month:'short',day:'numeric'});
-    const modeLabel=MODE_LABELS[rec.mode] || 'Topic';
+    const modeLabel=(rec.isDaily ? 'Daily' : MODE_LABELS[rec.mode]) || 'Topic';
     const topicPart=rec.mode==='freeplay' ? '' : (rec.topicText ? ' · "'+truncate(rec.topicText,36)+'"' : '');
+    const mark=rec.isDaily ? '<span class="daily-mark">◆</span> ' : '<span class="c">·</span> ';
     const playable=!!rec.fsaaFile;
-    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'"><span class="c">·</span> '+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+'</li>';
+    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'">'+mark+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+'</li>';
   }).join('');
 }
 async function playLibraryRecord(rec){
@@ -8370,10 +8433,11 @@ recBtn.addEventListener('click',()=>{
       document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
       setMode('full');
       const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
+      const isDaily = dailyActive && recMode==='topic';
       const now=new Date();
       pendingBlob=blob;
       pendingBase=fsaaBase(now,recMode);
-      pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText};
+      pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItem.id:null};
       recBtn.textContent='↺ Retake';
       saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
       status.textContent='review it, then Save or Retake';
