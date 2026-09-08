@@ -126,9 +126,10 @@ body.is-review .recdot{background:var(--sage);animation:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 .audioviz{
   position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
-  justify-content:center;gap:20px;background:#0b0908;color:var(--ink-dim);
+  justify-content:center;gap:20px;background:#0b0908;color:var(--ink-dim);pointer-events:none;
 }
 body.mode-audio .audioviz,body.mode-text .audioviz{display:flex}
+body.audio-only:not(.mode-text) .audioviz{display:flex}
 .bars{display:flex;gap:7px;align-items:flex-end;height:56px}
 .bars i{width:6px;border-radius:3px;background:var(--ember);display:block;opacity:.85}
 @media (prefers-reduced-motion:no-preference){body.mode-audio .bars i{animation:eq 1.1s ease-in-out infinite alternate}}
@@ -166,6 +167,51 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 .pbtn--sm{font-size:11px;padding:9px 14px}
 .pbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 
+/* enable-capture overlay: camera vs audio-only */
+.overlay-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* review: click-to-play hint + scrubber */
+.playhint{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:58px;height:58px;border-radius:50%;padding-left:4px;
+  background:rgba(16,13,11,.55);backdrop-filter:blur(4px);
+  border:1px solid var(--border-soft);color:var(--ink);font-size:17px;
+  display:none;align-items:center;justify-content:center;pointer-events:none;z-index:3;
+}
+body.is-review.paused:not(.mode-text) .playhint{display:flex}
+body.is-review .screen{cursor:pointer}
+.scrub{margin:12px 0 0;display:none;flex-direction:column;gap:6px}
+body.is-review .scrub{display:flex}
+.scrub input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;
+  background:var(--panel-2);border:1px solid var(--border);outline:0;cursor:pointer;accent-color:var(--ember);
+}
+.scrub input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--ember);border:0;cursor:pointer;
+}
+.scrub input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ember);border:0;cursor:pointer}
+.scrub input[type=range]:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
+.scrub-time{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+
+/* difficulty pill (current prompt + daily card) */
+.diff-pill{
+  font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid transparent;
+}
+.diff-pill.easy{color:var(--sage);border-color:rgba(143,168,146,.4)}
+.diff-pill.medium{color:var(--ember);border-color:rgba(221,146,87,.4)}
+.diff-pill.hard{color:var(--rec);border-color:rgba(205,115,98,.5)}
+#topicDiff{display:block;width:max-content;max-width:100%;margin-top:12px}
+#topic.is-word ~ #topicDiff{margin-left:auto;margin-right:auto}
+.daily-diff{display:inline-block;margin-top:10px}
+.daily.is-active .daily-prompt,.daily.is-active .daily-diff{display:none}
+
+/* mirror toggle relocated into the Rec Studio header */
+.phead--split{justify-content:space-between}
+.phead--split .phead-title{display:flex;align-items:center;gap:8px}
+.toggle--mini{padding:5px 11px;text-transform:none;font-size:10.5px}
+
 /* topic card */
 .rpg{
   background:var(--panel);border:1px solid var(--border);border-radius:20px;
@@ -193,7 +239,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
   text-transform:uppercase;color:var(--ember)}
 .daily-date{font-size:11px;color:var(--ink-faint);white-space:nowrap}
 .daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.5;color:var(--ink-dim);margin-bottom:12px}
-.daily.is-active .daily-prompt{display:none}
+.daily-prompt.is-word{font-family:'Fraunces',serif;font-size:24px;color:var(--ember)}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
 .daily-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ember);margin:8px 0 -4px}
@@ -260,7 +306,6 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
     <div class="brandtab"><span class="icn"></span> Speakeasy</div>
     <div class="toggles">
       <div class="toggle" id="authBtn">Sign in</div>
-      <div class="toggle" id="mirrorBtn">Mirror <span class="v">off</span></div>
       <div class="toggle" id="crtBtn">CRT <span class="v">off</span></div>
       <div class="toggle" id="sfxBtn">SFX <span class="v">off</span></div>
     </div>
@@ -297,11 +342,15 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
     <!-- STUDIO -->
     <div>
       <div class="panel">
-        <div class="phead"><span class="dot"></span> Rec Studio</div>
+        <div class="phead phead--split">
+          <span class="phead-title"><span class="dot"></span> Rec Studio</span>
+          <button class="toggle toggle--mini" id="mirrorBtn" type="button">Mirror <span class="v">off</span></button>
+        </div>
         <div class="screen">
           <video id="screen" playsinline></video>
           <div class="scrline"></div>
           <div class="badge"><span class="recdot"></span><span id="timer">0:00</span></div>
+          <div class="playhint">▶</div>
           <div class="audioviz">
             <div class="bars"><i style="height:16px"></i><i style="height:38px"></i><i style="height:24px"></i><i style="height:52px"></i><i style="height:30px"></i><i style="height:44px"></i><i style="height:18px"></i></div>
             <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)">Audio only</div>
@@ -315,10 +364,18 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
             <span style="font-family:'Inter',sans-serif;color:var(--ink-faint);font-size:13px">filler words auto-highlighted once you wire up Whisper. 3 fillers in 14s.</span>
           </div>
           <div class="overlay" id="overlay">
-            <div class="big">Camera offline</div>
-            <div class="sub">tap enable to start your mic + camera. nothing leaves your machine.</div>
-            <button class="pbtn pbtn--rec" id="enableBtn">Enable camera</button>
+            <div class="big">Ready when you are</div>
+            <div class="sub">record with camera and mic, or audio only. nothing leaves your machine.</div>
+            <div class="overlay-btns">
+              <button class="pbtn pbtn--rec" id="enableBtn">Enable camera</button>
+              <button class="pbtn pbtn--ghost pbtn--sm" id="enableAudioBtn">Just record audio</button>
+            </div>
           </div>
+        </div>
+
+        <div class="scrub" id="scrubBar">
+          <input type="range" id="scrub" min="0" max="1000" value="0" step="1" aria-label="Playback position">
+          <div class="scrub-time"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
         </div>
 
         <div class="modes">
@@ -331,7 +388,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
         <div class="recrow">
           <button class="pbtn pbtn--rec" id="recBtn" disabled>● Rec</button>
           <button class="pbtn pbtn--ghost pbtn--sm" id="saveRecBtn" style="display:none" disabled>💾 Save</button>
-          <span class="status" id="status">enable camera to begin</span>
+          <span class="status" id="status">enable camera or audio to begin</span>
         </div>
         <div id="saveBar" style="display:none;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px">
           <button class="pbtn pbtn--ghost pbtn--sm" id="pickDirBtn">Set save dir</button>
@@ -355,11 +412,12 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
         <div id="topicPane">
           <div class="daily" id="dailyCard" hidden>
             <div class="daily-top">
-              <span class="daily-label">◆ Daily Challenge</span>
+              <span class="daily-label" id="dailyLabel">◆ Daily Challenge</span>
               <span class="daily-date" id="dailyDate"></span>
             </div>
             <div class="daily-prompt" id="dailyPrompt"></div>
-            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Do today's challenge</button>
+            <span class="diff-pill daily-diff" id="dailyDiff"></span>
+            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center;margin-top:12px">Do today's challenge</button>
           </div>
           <div class="filterrow" id="catFilters"></div>
           <div class="filterrow" id="diffFilters">
@@ -370,6 +428,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
           </div>
           <div class="daily-tag" id="dailyTag" hidden>◆ Today's Daily Challenge</div>
           <div class="topic" id="topic">Convince me to visit a city you've never been to.</div>
+          <div class="diff-pill" id="topicDiff" hidden></div>
         </div>
 
         <div class="freeplay-copy" id="freeplayPane" style="display:none">
@@ -7910,7 +7969,7 @@ const $ = s => document.querySelector(s);
 const screen = $('#screen'), overlay = $('#overlay'), status = $('#status');
 const recBtn = $('#recBtn'), saveRecBtn = $('#saveRecBtn'), timerEl = $('#timer');
 let stream=null, recorder=null, chunks=[], blobUrl=null, recording=false, t0=0, tick=null, targetSec=60;
-let pendingBlob=null, pendingBase=null, pendingMeta=null;
+let pendingBlob=null, pendingBase=null, pendingMeta=null, audioOnly=false;
 
 /* SFX */
 let sfx=false, actx=null;
@@ -7935,6 +7994,7 @@ const catFilters=$('#catFilters'), diffFilters=$('#diffFilters'), topicEl=$('#to
 const selected={topic:{cat:'all',diff:'all'},words:{cat:'all',diff:'all'}};
 /* the prompt on screen, per mode, so toggling modes doesn't reroll it */
 const currentText={topic:'',words:''};
+const currentItem={topic:null,words:null};
 /* ids shown this session so "new topic" doesn't hand back the same one */
 const recentIds=[], RECENT_MAX=60;
 
@@ -7950,20 +8010,32 @@ function renderDiffFilters(){
   diffFilters.querySelectorAll('.dur[data-diff]').forEach(b=>b.classList.toggle('is-active',b.dataset.diff===cur));
 }
 
+/* small easy/medium/hard pill under the current prompt */
+const topicDiffEl=$('#topicDiff');
+function renderTopicMeta(item){
+  if(!item||recMode==='freeplay'){ topicDiffEl.hidden=true; return; }
+  topicDiffEl.hidden=false;
+  topicDiffEl.textContent=item.difficulty;
+  topicDiffEl.className='diff-pill '+item.difficulty;
+}
+
 function pickTopic(){
   if(recMode==='freeplay') return;
-  if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; return; }
-  if(recMode==='topic') setDailyActive(false); // rerolling or filtering opts out of the daily
+  if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; renderTopicMeta(null); return; }
+  setDailyActive(false); // rerolling or filtering opts out of the daily
   const {cat,diff}=selected[recMode];
   const item=window.pickPrompt(recMode,cat,diff,{recent:recentIds});
   if(!item){
     topicEl.textContent=(recMode==='words'?'No words':'No topics')+' match that combo yet. Try a different filter.';
+    currentItem[recMode]=null; renderTopicMeta(null);
     return;
   }
   recentIds.push(item.id);
   if(recentIds.length>RECENT_MAX) recentIds.shift();
   currentText[recMode]=item.text;
+  currentItem[recMode]=item;
   topicEl.textContent=item.text;
+  renderTopicMeta(item);
 }
 $('#newTopic').addEventListener('click',pickTopic);
 
@@ -7977,41 +8049,64 @@ diffFilters.addEventListener('click',e=>{
   selected[recMode].diff=b.dataset.diff; renderDiffFilters(); pickTopic();
 });
 
-/* ── Daily Challenge: one date-seeded topic prompt, the same for everyone on a
-   given UTC day, chosen with no backend. A given date maps to a fixed prompt
-   forever, which is what lets two people compare their takes. ── */
+/* ── Daily Challenge: one date-seeded prompt per mode, the same for everyone on
+   a given UTC day, chosen with no backend. Topic mode gets a daily topic, Words
+   mode gets a daily word. A given date maps to fixed prompts forever, which is
+   what lets two people compare their takes. ── */
 const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag');
-let dailyItem=null, dailyActive=false;
+const dailyItems={topic:null,words:null};
+const dailyActive={topic:false,words:false};
 
 function computeDaily(){
   if(!libOK) return;
-  const pool=LIB.items.filter(i=>i.mode==='topic');
-  if(!pool.length) return;
   const now=new Date();
   const epochDay=Math.floor(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())/864e5);
-  // stride by a multiplier coprime to the pool size (585 = 3^2*5*13), so the
-  // daily prompt walks through every prompt exactly once before any repeats.
-  // 362 also avoids aliasing with the 45-prompt category blocks, so consecutive
-  // days stay in different categories.
-  const idx=((epochDay*362+61)%pool.length+pool.length)%pool.length;
-  dailyItem=pool[idx];
+  // multiplier coprime to each pool size, so the pick is a full permutation
+  // (every prompt used once before any repeat); the offsets differ so the topic
+  // and the word of the day aren't correlated.
+  const CFG={topic:{lib:'topic',mult:362,off:61}, words:{lib:'word',mult:283,off:193}};
+  for(const m of ['topic','words']){
+    const c=CFG[m], pool=LIB.items.filter(i=>i.mode===c.lib);
+    if(!pool.length) continue;
+    dailyItems[m]=pool[((epochDay*c.mult+c.off)%pool.length+pool.length)%pool.length];
+  }
   $('#dailyDate').textContent=now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
-  $('#dailyPrompt').textContent=dailyItem.text;
+}
+function renderDailyCard(){
+  const m=recMode;
+  if(m!=='topic'&&m!=='words') return;
+  const item=dailyItems[m];
+  if(!item){ dailyCard.hidden=true; return; }
   dailyCard.hidden=false;
+  const isWord=m==='words';
+  $('#dailyLabel').textContent=isWord?'◆ Daily Word':'◆ Daily Challenge';
+  const p=$('#dailyPrompt'); p.textContent=item.text; p.classList.toggle('is-word',isWord);
+  const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
+  const on=dailyActive[m];
+  dailyCard.classList.toggle('is-active',on);
+  dailyBtn.classList.toggle('is-active',on);
+  dailyBtn.textContent=on ? (isWord?"✓ Doing today's word":"✓ Doing today's challenge")
+                          : (isWord?"Do today's word":"Do today's challenge");
+  dailyTag.hidden=!on;
+  dailyTag.textContent=isWord?"◆ Today's Daily Word":"◆ Today's Daily Challenge";
 }
 function setDailyActive(on){
-  dailyActive=on&&!!dailyItem;
-  dailyCard.classList.toggle('is-active',dailyActive);
-  dailyBtn.classList.toggle('is-active',dailyActive);
-  dailyBtn.textContent=dailyActive?"✓ Doing today's challenge":"Do today's challenge";
-  dailyTag.hidden=!dailyActive;
+  const m=recMode;
+  if(m!=='topic'&&m!=='words') return;
+  dailyActive[m]=on&&!!dailyItems[m];
+  renderDailyCard();
 }
 dailyBtn.addEventListener('click',()=>{
-  if(!dailyItem) return;
-  if(dailyActive){ setDailyActive(false); return; }
-  currentText.topic=dailyItem.text;
-  topicEl.textContent=dailyItem.text;
-  if(recentIds.indexOf(dailyItem.id)===-1) recentIds.push(dailyItem.id);
+  const m=recMode;
+  if(m!=='topic'&&m!=='words') return;
+  const item=dailyItems[m];
+  if(!item) return;
+  if(dailyActive[m]){ setDailyActive(false); return; }
+  currentText[m]=item.text;
+  currentItem[m]=item;
+  topicEl.textContent=item.text;
+  renderTopicMeta(item);
+  if(recentIds.indexOf(item.id)===-1) recentIds.push(item.id);
   setDailyActive(true);
 });
 computeDaily();
@@ -8056,9 +8151,12 @@ function applyRecMode(mode){
   rpgTitle.textContent = mode==='topic' ? "Today's topic" : (mode==='words' ? 'Your word' : 'Freeplay');
   topicEl.classList.toggle('is-word', mode==='words');
   if(!isFreeplay){
-    renderCatFilters(); renderDiffFilters();
+    renderCatFilters(); renderDiffFilters(); renderDailyCard();
     /* restore what this mode was last showing rather than rerolling on every toggle */
-    if(currentText[mode]) topicEl.textContent=currentText[mode]; else pickTopic();
+    if(currentItem[mode]){ topicEl.textContent=currentItem[mode].text; renderTopicMeta(currentItem[mode]); }
+    else pickTopic();
+  } else {
+    renderTopicMeta(null);
   }
   renderDurations();
 }
@@ -8086,23 +8184,73 @@ customDur.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(
 customDur.addEventListener('blur',commitCustomDur);
 applyRecMode('topic');
 
-/* camera */
-$('#enableBtn').addEventListener('click',async()=>{
-  status.textContent='requesting camera + mic…';
+/* capture: camera + mic, or mic only */
+async function startStream(withVideo){
+  overlay.querySelector('.big').textContent='Ready when you are';
+  overlay.querySelector('.sub').textContent='record with camera and mic, or audio only. nothing leaves your machine.';
+  status.textContent='requesting '+(withVideo?'camera + mic':'mic')+'…';
   try{
-    stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-    screen.srcObject=stream; screen.muted=true; await screen.play();
-    overlay.classList.add('hide'); recBtn.disabled=false; status.textContent='ready, hit REC';
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia(withVideo?{video:true,audio:true}:{audio:true});
+    audioOnly=!withVideo;
+    document.body.classList.toggle('audio-only',audioOnly);
+    screen.removeAttribute('src');
+    if(withVideo){ screen.srcObject=stream; screen.muted=true; await screen.play(); }
+    else { screen.srcObject=null; }
+    overlay.classList.add('hide');
+    recBtn.disabled=false; recBtn.textContent='● Rec';
+    status.textContent=audioOnly?'audio only, hit REC':'ready, hit REC';
   }catch(err){
     overlay.classList.remove('hide');
-    status.textContent='camera blocked here. download + open locally to use it.';
+    status.textContent='capture blocked here. open the file locally and allow access.';
     overlay.querySelector('.big').textContent='ACCESS DENIED';
-    overlay.querySelector('.sub').textContent='preview sandboxes often block the camera. open this file in your browser and click allow.';
+    overlay.querySelector('.sub').textContent='preview sandboxes often block capture. open this file in your browser and click allow.';
   }
-});
+}
+$('#enableBtn').addEventListener('click',()=>startStream(true));
+$('#enableAudioBtn').addEventListener('click',()=>startStream(false));
 
 function setTimer(){ const s=Math.floor((Date.now()-t0)/1000); const m=Math.floor(s/60);
   timerEl.textContent=m+':'+String(s%60).padStart(2,'0'); timerEl.style.color = s>=targetSec ? '#ff7676':'#fff'; }
+
+/* ── review scrubber: click clip to play/pause, drag to seek ── */
+const scrub=$('#scrub'), curTime=$('#curTime'), durTime=$('#durTime');
+let scrubbing=false;
+function fmtClock(s){ if(!isFinite(s)||s<0) s=0; const m=Math.floor(s/60); return m+':'+String(Math.floor(s%60)).padStart(2,'0'); }
+function syncDuration(){
+  if(screen.duration===Infinity||isNaN(screen.duration)){
+    // Chromium reports Infinity for fresh MediaRecorder blobs until a seek forces it
+    const fix=()=>{ screen.removeEventListener('timeupdate',fix); try{ screen.currentTime=0; }catch(e){} durTime.textContent=fmtClock(screen.duration); };
+    screen.addEventListener('timeupdate',fix);
+    try{ screen.currentTime=1e101; }catch(e){}
+  } else {
+    durTime.textContent=fmtClock(screen.duration);
+  }
+}
+screen.addEventListener('loadedmetadata',syncDuration);
+screen.addEventListener('timeupdate',()=>{
+  if(scrubbing) return;
+  const d=screen.duration||0;
+  if(isFinite(d)&&d>0) scrub.value=Math.round(screen.currentTime/d*1000);
+  curTime.textContent=fmtClock(screen.currentTime);
+});
+scrub.addEventListener('input',()=>{
+  scrubbing=true;
+  const d=screen.duration||0;
+  curTime.textContent=fmtClock(isFinite(d)?d*(scrub.value/1000):0);
+});
+scrub.addEventListener('change',()=>{
+  const d=screen.duration||0;
+  if(isFinite(d)&&d>0) screen.currentTime=d*(scrub.value/1000);
+  scrubbing=false;
+});
+function reflectPaused(){ document.body.classList.toggle('paused', screen.paused && document.body.classList.contains('is-review')); }
+screen.addEventListener('play',reflectPaused);
+screen.addEventListener('pause',reflectPaused);
+screen.addEventListener('click',()=>{
+  if(!document.body.classList.contains('is-review')||document.body.classList.contains('mode-text')) return;
+  if(screen.paused) screen.play().catch(()=>{}); else screen.pause();
+});
 
 /* ── File System Access API auto-save ── */
 const fsaaSupported = 'showDirectoryPicker' in window;
@@ -8217,9 +8365,10 @@ function renderLibrary(records){
     const dateStr=new Date(rec.dateISO).toLocaleDateString(undefined,{month:'short',day:'numeric'});
     const modeLabel=(rec.isDaily ? 'Daily' : MODE_LABELS[rec.mode]) || 'Topic';
     const topicPart=rec.mode==='freeplay' ? '' : (rec.topicText ? ' · "'+truncate(rec.topicText,36)+'"' : '');
+    const avPart=rec.audioOnly ? ' · audio' : '';
     const mark=rec.isDaily ? '<span class="daily-mark">◆</span> ' : '<span class="c">·</span> ';
     const playable=!!rec.fsaaFile;
-    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'">'+mark+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+'</li>';
+    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'">'+mark+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+avPart+'</li>';
   }).join('');
 }
 async function playLibraryRecord(rec){
@@ -8232,11 +8381,12 @@ async function playLibraryRecord(rec){
     if(blobUrl) URL.revokeObjectURL(blobUrl);
     blobUrl=url;
     screen.srcObject=null; screen.src=url;
-    document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b/g,'').trim();
-    document.body.classList.add('is-review');
+    document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
+    document.body.classList.add('is-review','paused');
     document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
-    setMode('full');
-    status.textContent='reviewing saved recording · '+rec.fsaaFile;
+    setMode('full'); screen.pause(); try{ screen.currentTime=0; }catch(e){}
+    scrub.value=0; curTime.textContent='0:00';
+    status.textContent='click the clip to play it · '+rec.fsaaFile;
   }catch(e){
     setSaveStatus("couldn't open that file, it may have moved");
   }
@@ -8416,38 +8566,64 @@ initFSAA();
 refreshStats();
 /* ── end FSAA ── */
 
-recBtn.addEventListener('click',()=>{
-  if(!recording){
-    chunks=[]; document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b/g,'').trim();
-    screen.srcObject=stream; screen.muted=true; screen.controls=false; screen.play();
-    pendingBlob=null; pendingBase=null; pendingMeta=null;
-    saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
-    recorder=new MediaRecorder(stream);
-    recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
-    recorder.onstop=()=>{
-      const durationSec=Math.round((Date.now()-t0)/1000);
-      const blob=new Blob(chunks,{type:'video/webm'});
-      if(blobUrl) URL.revokeObjectURL(blobUrl); blobUrl=URL.createObjectURL(blob);
-      screen.srcObject=null; screen.src=blobUrl;
-      document.body.classList.add('is-review');
+function startRecording(){
+  chunks=[];
+  document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
+  if(!audioOnly){ screen.srcObject=stream; screen.muted=true; screen.controls=false; screen.removeAttribute('src'); screen.play().catch(()=>{}); }
+  pendingBlob=null; pendingBase=null; pendingMeta=null;
+  saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
+  document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
+  recorder=new MediaRecorder(stream);
+  recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
+  recorder.onstop=()=>{
+    const durationSec=Math.round((Date.now()-t0)/1000);
+    const blob=new Blob(chunks,{type:'video/webm'});
+    if(blobUrl) URL.revokeObjectURL(blobUrl); blobUrl=URL.createObjectURL(blob);
+    screen.srcObject=null; screen.src=blobUrl;
+    document.body.classList.add('is-review','paused');
+    if(audioOnly){
+      document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=(b.dataset.mode==='full'||b.dataset.mode==='cam'); });
+      setMode('audio');
+    } else {
       document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
       setMode('full');
-      const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
-      const isDaily = dailyActive && recMode==='topic';
-      const now=new Date();
-      pendingBlob=blob;
-      pendingBase=fsaaBase(now,recMode);
-      pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItem.id:null};
-      recBtn.textContent='↺ Retake';
-      saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
-      status.textContent='review it, then Save or Retake';
-    };
-    recorder.start(); recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
-    document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
-  } else {
+    }
+    screen.pause(); try{ screen.currentTime=0; }catch(e){}
+    scrub.value=0; curTime.textContent='0:00';
+    const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
+    const isDaily = recMode!=='freeplay' && dailyActive[recMode];
+    const now=new Date();
+    pendingBlob=blob;
+    pendingBase=fsaaBase(now,recMode);
+    pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly};
+    recBtn.textContent='↺ Retake';
+    saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
+    status.textContent='click the clip to play it. Save keeps it, Retake starts over';
+  };
+  recorder.start(); recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
+  document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
+}
+function resetToIdle(){
+  pendingBlob=null; pendingBase=null; pendingMeta=null;
+  if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
+  document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
+  saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
+  document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
+  scrub.value=0; curTime.textContent='0:00'; durTime.textContent='0:00';
+  recBtn.textContent='● Rec';
+  screen.pause(); screen.removeAttribute('src');
+  if(audioOnly){ screen.srcObject=null; status.textContent='audio only, hit REC'; }
+  else if(stream){ screen.srcObject=stream; screen.muted=true; screen.play().catch(()=>{}); status.textContent='ready, hit REC'; }
+  else { status.textContent='enable camera or audio to begin'; }
+}
+recBtn.addEventListener('click',()=>{
+  if(recording){
     recorder.stop(); recording=false; clearInterval(tick);
     document.body.classList.remove('is-rec');
+    return;
   }
+  if(document.body.classList.contains('is-review')){ resetToIdle(); return; } // Retake goes back to start, does not record
+  startRecording();
 });
 
 saveRecBtn.addEventListener('click', async ()=>{
