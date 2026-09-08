@@ -195,6 +195,7 @@ body.is-review .scrub{display:flex}
 
 /* capture mode switch (camera <-> audio only), shown once capture is on */
 .capbar{margin:12px 0 0;display:flex}
+.capbar[hidden]{display:none}
 
 /* difficulty pill — daily card only */
 .diff-pill{
@@ -205,7 +206,13 @@ body.is-review .scrub{display:flex}
 .diff-pill.medium{color:var(--ember);border-color:rgba(221,146,87,.4)}
 .diff-pill.hard{color:var(--rec);border-color:rgba(205,115,98,.5)}
 .daily-diff{display:inline-block;margin-top:10px}
-.daily.is-active .daily-prompt{display:none}
+/* active: the daily gets louder, not hidden */
+.daily.is-active{
+  border-color:var(--ember);background:rgba(221,146,87,.13);
+  box-shadow:0 0 0 1px rgba(221,146,87,.35), 0 10px 28px -14px rgba(221,146,87,.45);
+}
+.daily.is-active .daily-prompt{color:var(--ink)}
+.daily.is-active .daily-prompt.is-word{color:var(--ember)}
 
 /* mirror toggle relocated into the Rec Studio header */
 .phead--split{justify-content:space-between}
@@ -8073,10 +8080,11 @@ function renderDailyCard(){
   if(!item){ dailyCard.hidden=true; return; }
   dailyCard.hidden=false;
   const isWord=m==='words';
-  $('#dailyLabel').textContent=isWord?'◆ Daily Word':'◆ Daily Challenge';
+  const on=dailyActive[m];
+  const base=isWord?'Daily Word':'Daily Challenge';
+  $('#dailyLabel').textContent=(on?'✓ ':'◆ ')+base+(on?' · in progress':'');
   const p=$('#dailyPrompt'); p.textContent=item.text; p.classList.toggle('is-word',isWord);
   const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
-  const on=dailyActive[m];
   dailyCard.classList.toggle('is-active',on);
   dailyBtn.classList.toggle('is-active',on);
   dailyBtn.textContent=on ? (isWord?"✓ Doing today's word":"✓ Doing today's challenge")
@@ -8183,7 +8191,7 @@ const capBar=$('#capBar'), switchCapBtn=$('#switchCapBtn');
 function updateCapBar(){
   const show = !!stream && !recording && !document.body.classList.contains('is-review');
   capBar.hidden=!show;
-  if(show) switchCapBtn.textContent = audioOnly ? '📷 Turn on camera' : '🎙 Switch to audio only';
+  if(show) switchCapBtn.textContent = audioOnly ? 'Turn on camera' : 'Switch to audio only';
 }
 async function startStream(withVideo){
   overlay.querySelector('.big').textContent='Ready when you are';
