@@ -106,14 +106,14 @@ body{
 body.crt .scrline{display:block}
 .overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:16px;text-align:center;padding:24px;
+  justify-content:center;gap:16px;text-align:center;padding:24px;z-index:5;
   background:#0b0908;color:var(--ink-dim);
 }
 .overlay.hide{display:none}
 .overlay .big{font-family:'Fraunces',serif;font-size:22px;font-weight:440;color:var(--ink)}
 .overlay .sub{font-size:14px;line-height:1.6;color:var(--ink-faint);max-width:320px}
 .badge{
-  position:absolute;top:12px;left:12px;display:none;align-items:center;gap:8px;
+  position:absolute;top:12px;left:12px;display:none;align-items:center;gap:8px;z-index:4;pointer-events:none;
   background:rgba(16,13,11,.78);backdrop-filter:blur(6px);
   padding:6px 12px;border:1px solid var(--border-soft);border-radius:999px;
   font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);line-height:1;
@@ -132,8 +132,6 @@ body.mode-audio .audioviz,body.mode-text .audioviz{display:flex}
 body.audio-only:not(.mode-text) .audioviz{display:flex}
 .bars{display:flex;gap:7px;align-items:flex-end;height:56px}
 .bars i{width:6px;border-radius:3px;background:var(--ember);display:block;opacity:.85}
-@media (prefers-reduced-motion:no-preference){body.mode-audio .bars i{animation:eq 1.1s ease-in-out infinite alternate}}
-@keyframes eq{from{height:8px}to{height:52px}}
 .transcript{display:none;padding:22px;font-family:'Fraunces',serif;font-size:17px;line-height:1.75;color:var(--ink)}
 body.mode-text .audioviz{display:none}
 body.mode-text .transcript{display:block;position:absolute;inset:0;background:#0b0908;overflow:auto}
@@ -183,18 +181,22 @@ body.is-review .screen{cursor:pointer}
 .scrub{margin:12px 0 0;display:none;flex-direction:column;gap:6px}
 body.is-review .scrub{display:flex}
 .scrub input[type=range]{
-  -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;
-  background:var(--panel-2);border:1px solid var(--border);outline:0;cursor:pointer;accent-color:var(--ember);
+  -webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;
+  border:1px solid var(--border);outline:0;cursor:pointer;
+  background:linear-gradient(to right,var(--ember) 0 calc(var(--pct,0)*1%),var(--panel-2) calc(var(--pct,0)*1%) 100%);
 }
 .scrub input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
-  background:var(--ember);border:0;cursor:pointer;
+  -webkit-appearance:none;appearance:none;width:13px;height:13px;border-radius:50%;
+  background:var(--ember);border:2px solid var(--panel);box-shadow:0 0 0 1px var(--ember);cursor:pointer;
 }
-.scrub input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ember);border:0;cursor:pointer}
+.scrub input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--ember);border:2px solid var(--panel);cursor:pointer}
 .scrub input[type=range]:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
 .scrub-time{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
 
-/* difficulty pill (current prompt + daily card) */
+/* capture mode switch (camera <-> audio only), shown once capture is on */
+.capbar{margin:12px 0 0;display:flex}
+
+/* difficulty pill — daily card only */
 .diff-pill{
   font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid transparent;
@@ -202,10 +204,8 @@ body.is-review .scrub{display:flex}
 .diff-pill.easy{color:var(--sage);border-color:rgba(143,168,146,.4)}
 .diff-pill.medium{color:var(--ember);border-color:rgba(221,146,87,.4)}
 .diff-pill.hard{color:var(--rec);border-color:rgba(205,115,98,.5)}
-#topicDiff{display:block;width:max-content;max-width:100%;margin-top:12px}
-#topic.is-word ~ #topicDiff{margin-left:auto;margin-right:auto}
 .daily-diff{display:inline-block;margin-top:10px}
-.daily.is-active .daily-prompt,.daily.is-active .daily-diff{display:none}
+.daily.is-active .daily-prompt{display:none}
 
 /* mirror toggle relocated into the Rec Studio header */
 .phead--split{justify-content:space-between}
@@ -373,8 +373,12 @@ body.is-review .scrub{display:flex}
           </div>
         </div>
 
+        <div class="capbar" id="capBar" hidden>
+          <button class="pbtn pbtn--ghost pbtn--sm" id="switchCapBtn" type="button">Turn on camera</button>
+        </div>
+
         <div class="scrub" id="scrubBar">
-          <input type="range" id="scrub" min="0" max="1000" value="0" step="1" aria-label="Playback position">
+          <input type="range" id="scrub" min="0" max="1000" value="0" step="any" aria-label="Playback position">
           <div class="scrub-time"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
         </div>
 
@@ -428,7 +432,6 @@ body.is-review .scrub{display:flex}
           </div>
           <div class="daily-tag" id="dailyTag" hidden>◆ Today's Daily Challenge</div>
           <div class="topic" id="topic">Convince me to visit a city you've never been to.</div>
-          <div class="diff-pill" id="topicDiff" hidden></div>
         </div>
 
         <div class="freeplay-copy" id="freeplayPane" style="display:none">
@@ -443,6 +446,7 @@ body.is-review .scrub{display:flex}
           <button class="dur" data-sec="90">1:30</button>
           <button class="dur" data-sec="120">2:00</button>
           <button class="dur" data-sec="180">3:00</button>
+          <button class="dur dur-nolimit" data-sec="0">No limit</button>
           <label class="dur dur-custom" id="customDurWrap">
             <input type="text" id="customDur" placeholder="custom (m:ss)" inputmode="numeric">
           </label>
@@ -8010,24 +8014,15 @@ function renderDiffFilters(){
   diffFilters.querySelectorAll('.dur[data-diff]').forEach(b=>b.classList.toggle('is-active',b.dataset.diff===cur));
 }
 
-/* small easy/medium/hard pill under the current prompt */
-const topicDiffEl=$('#topicDiff');
-function renderTopicMeta(item){
-  if(!item||recMode==='freeplay'){ topicDiffEl.hidden=true; return; }
-  topicDiffEl.hidden=false;
-  topicDiffEl.textContent=item.difficulty;
-  topicDiffEl.className='diff-pill '+item.difficulty;
-}
-
 function pickTopic(){
   if(recMode==='freeplay') return;
-  if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; renderTopicMeta(null); return; }
+  if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; return; }
   setDailyActive(false); // rerolling or filtering opts out of the daily
   const {cat,diff}=selected[recMode];
   const item=window.pickPrompt(recMode,cat,diff,{recent:recentIds});
   if(!item){
     topicEl.textContent=(recMode==='words'?'No words':'No topics')+' match that combo yet. Try a different filter.';
-    currentItem[recMode]=null; renderTopicMeta(null);
+    currentItem[recMode]=null;
     return;
   }
   recentIds.push(item.id);
@@ -8035,7 +8030,6 @@ function pickTopic(){
   currentText[recMode]=item.text;
   currentItem[recMode]=item;
   topicEl.textContent=item.text;
-  renderTopicMeta(item);
 }
 $('#newTopic').addEventListener('click',pickTopic);
 
@@ -8105,7 +8099,6 @@ dailyBtn.addEventListener('click',()=>{
   currentText[m]=item.text;
   currentItem[m]=item;
   topicEl.textContent=item.text;
-  renderTopicMeta(item);
   if(recentIds.indexOf(item.id)===-1) recentIds.push(item.id);
   setDailyActive(true);
 });
@@ -8126,7 +8119,7 @@ function fmtDur(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 
 function renderDurations(){
   const presets=DUR_PRESETS[recMode], cur=chosenSec[recMode];
-  const btns=durSel.querySelectorAll('.dur[data-sec]');
+  const btns=durSel.querySelectorAll('.dur[data-sec]:not(.dur-nolimit)');
   let matched=false;
   btns.forEach((b,i)=>{
     b.dataset.sec=presets[i];
@@ -8135,6 +8128,9 @@ function renderDurations(){
     b.classList.toggle('is-active',on);
     if(on) matched=true;
   });
+  const noLimit=cur===0;
+  durSel.querySelector('.dur-nolimit').classList.toggle('is-active',noLimit);
+  if(noLimit) matched=true;
   customDurWrap.classList.toggle('is-active',!matched);
   customDur.value = matched ? '' : fmtDur(cur);
   targetSec=cur;
@@ -8153,10 +8149,8 @@ function applyRecMode(mode){
   if(!isFreeplay){
     renderCatFilters(); renderDiffFilters(); renderDailyCard();
     /* restore what this mode was last showing rather than rerolling on every toggle */
-    if(currentItem[mode]){ topicEl.textContent=currentItem[mode].text; renderTopicMeta(currentItem[mode]); }
+    if(currentItem[mode]) topicEl.textContent=currentItem[mode].text;
     else pickTopic();
-  } else {
-    renderTopicMeta(null);
   }
   renderDurations();
 }
@@ -8184,7 +8178,13 @@ customDur.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(
 customDur.addEventListener('blur',commitCustomDur);
 applyRecMode('topic');
 
-/* capture: camera + mic, or mic only */
+/* capture: camera + mic, or mic only. switchable mid-session via #switchCapBtn */
+const capBar=$('#capBar'), switchCapBtn=$('#switchCapBtn');
+function updateCapBar(){
+  const show = !!stream && !recording && !document.body.classList.contains('is-review');
+  capBar.hidden=!show;
+  if(show) switchCapBtn.textContent = audioOnly ? '📷 Turn on camera' : '🎙 Switch to audio only';
+}
 async function startStream(withVideo){
   overlay.querySelector('.big').textContent='Ready when you are';
   overlay.querySelector('.sub').textContent='record with camera and mic, or audio only. nothing leaves your machine.';
@@ -8200,6 +8200,7 @@ async function startStream(withVideo){
     overlay.classList.add('hide');
     recBtn.disabled=false; recBtn.textContent='● Rec';
     status.textContent=audioOnly?'audio only, hit REC':'ready, hit REC';
+    updateCapBar();
   }catch(err){
     overlay.classList.remove('hide');
     status.textContent='capture blocked here. open the file locally and allow access.';
@@ -8209,14 +8210,41 @@ async function startStream(withVideo){
 }
 $('#enableBtn').addEventListener('click',()=>startStream(true));
 $('#enableAudioBtn').addEventListener('click',()=>startStream(false));
+switchCapBtn.addEventListener('click',()=>startStream(audioOnly)); // audioOnly=true -> want video; false -> want audio
 
-function setTimer(){ const s=Math.floor((Date.now()-t0)/1000); const m=Math.floor(s/60);
-  timerEl.textContent=m+':'+String(s%60).padStart(2,'0'); timerEl.style.color = s>=targetSec ? '#ff7676':'#fff'; }
+/* timer: counts DOWN from the chosen limit and auto-stops at 0.
+   targetSec===0 means "No limit" -> count up, manual stop. */
+function setTimer(){
+  const elapsed=Math.floor((Date.now()-t0)/1000);
+  if(targetSec>0){
+    const remain=targetSec-elapsed, shown=Math.max(0,remain);
+    timerEl.textContent=Math.floor(shown/60)+':'+String(shown%60).padStart(2,'0');
+    timerEl.style.color = shown<=5 ? '#ff7676' : '#fff';
+    if(remain<=0 && recording) stopRecording();
+  } else {
+    timerEl.textContent=Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
+    timerEl.style.color='#fff';
+  }
+}
 
 /* ── review scrubber: click clip to play/pause, drag to seek ── */
 const scrub=$('#scrub'), curTime=$('#curTime'), durTime=$('#durTime');
-let scrubbing=false;
+let scrubbing=false, scrubRaf=null;
 function fmtClock(s){ if(!isFinite(s)||s<0) s=0; const m=Math.floor(s/60); return m+':'+String(Math.floor(s%60)).padStart(2,'0'); }
+function paintScrub(pct){
+  pct=Math.max(0,Math.min(100,pct||0));
+  if(!scrubbing) scrub.value=pct*10;            // 0..1000
+  scrub.style.setProperty('--pct',pct);         // drives the ember fill
+}
+function scrubFrame(){
+  if(!scrubbing && isFinite(screen.duration) && screen.duration>0){
+    paintScrub(screen.currentTime/screen.duration*100);
+    curTime.textContent=fmtClock(screen.currentTime);
+  }
+  scrubRaf=requestAnimationFrame(scrubFrame);   // smooth: updates every frame, not just on timeupdate
+}
+function startScrubRaf(){ if(!scrubRaf) scrubRaf=requestAnimationFrame(scrubFrame); }
+function stopScrubRaf(){ if(scrubRaf){ cancelAnimationFrame(scrubRaf); scrubRaf=null; } }
 function syncDuration(){
   if(screen.duration===Infinity||isNaN(screen.duration)){
     // Chromium reports Infinity for fresh MediaRecorder blobs until a seek forces it
@@ -8229,15 +8257,16 @@ function syncDuration(){
 }
 screen.addEventListener('loadedmetadata',syncDuration);
 screen.addEventListener('timeupdate',()=>{
-  if(scrubbing) return;
+  if(scrubbing||scrubRaf) return;               // rAF owns the playing case
   const d=screen.duration||0;
-  if(isFinite(d)&&d>0) scrub.value=Math.round(screen.currentTime/d*1000);
+  if(isFinite(d)&&d>0) paintScrub(screen.currentTime/d*100);
   curTime.textContent=fmtClock(screen.currentTime);
 });
 scrub.addEventListener('input',()=>{
   scrubbing=true;
-  const d=screen.duration||0;
-  curTime.textContent=fmtClock(isFinite(d)?d*(scrub.value/1000):0);
+  const d=screen.duration||0, pct=scrub.value/10;
+  scrub.style.setProperty('--pct',pct);
+  curTime.textContent=fmtClock(isFinite(d)?d*(pct/100):0);
 });
 scrub.addEventListener('change',()=>{
   const d=screen.duration||0;
@@ -8245,8 +8274,9 @@ scrub.addEventListener('change',()=>{
   scrubbing=false;
 });
 function reflectPaused(){ document.body.classList.toggle('paused', screen.paused && document.body.classList.contains('is-review')); }
-screen.addEventListener('play',reflectPaused);
-screen.addEventListener('pause',reflectPaused);
+screen.addEventListener('play',()=>{ reflectPaused(); startScrubRaf(); });
+screen.addEventListener('pause',()=>{ reflectPaused(); stopScrubRaf(); });
+screen.addEventListener('ended',stopScrubRaf);
 screen.addEventListener('click',()=>{
   if(!document.body.classList.contains('is-review')||document.body.classList.contains('mode-text')) return;
   if(screen.paused) screen.play().catch(()=>{}); else screen.pause();
@@ -8385,7 +8415,7 @@ async function playLibraryRecord(rec){
     document.body.classList.add('is-review','paused');
     document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
     setMode('full'); screen.pause(); try{ screen.currentTime=0; }catch(e){}
-    scrub.value=0; curTime.textContent='0:00';
+    stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
     status.textContent='click the clip to play it · '+rec.fsaaFile;
   }catch(e){
     setSaveStatus("couldn't open that file, it may have moved");
@@ -8566,12 +8596,18 @@ initFSAA();
 refreshStats();
 /* ── end FSAA ── */
 
+function stopRecording(){
+  if(!recording) return;
+  recorder.stop(); recording=false; clearInterval(tick);
+  document.body.classList.remove('is-rec');
+}
 function startRecording(){
   chunks=[];
   document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
   if(!audioOnly){ screen.srcObject=stream; screen.muted=true; screen.controls=false; screen.removeAttribute('src'); screen.play().catch(()=>{}); }
   pendingBlob=null; pendingBase=null; pendingMeta=null;
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
+  capBar.hidden=true;
   document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
   recorder=new MediaRecorder(stream);
   recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
@@ -8589,7 +8625,8 @@ function startRecording(){
       setMode('full');
     }
     screen.pause(); try{ screen.currentTime=0; }catch(e){}
-    scrub.value=0; curTime.textContent='0:00';
+    stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
+    timerEl.textContent=fmtDur(durationSec); timerEl.style.color='#fff'; // badge shows clip length during review
     const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
     const isDaily = recMode!=='freeplay' && dailyActive[recMode];
     const now=new Date();
@@ -8600,7 +8637,9 @@ function startRecording(){
     saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
     status.textContent='click the clip to play it. Save keeps it, Retake starts over';
   };
-  recorder.start(); recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
+  try{ recorder.start(); }
+  catch(e){ console.error('speakeasy recorder:',e); status.textContent='could not start recording, try re-enabling capture'; updateCapBar(); return; }
+  recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
   document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
 }
 function resetToIdle(){
@@ -8609,19 +8648,16 @@ function resetToIdle(){
   document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
   document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
-  scrub.value=0; curTime.textContent='0:00'; durTime.textContent='0:00';
+  stopScrubRaf(); paintScrub(0); curTime.textContent='0:00'; durTime.textContent='0:00';
   recBtn.textContent='● Rec';
   screen.pause(); screen.removeAttribute('src');
   if(audioOnly){ screen.srcObject=null; status.textContent='audio only, hit REC'; }
   else if(stream){ screen.srcObject=stream; screen.muted=true; screen.play().catch(()=>{}); status.textContent='ready, hit REC'; }
   else { status.textContent='enable camera or audio to begin'; }
+  updateCapBar();
 }
 recBtn.addEventListener('click',()=>{
-  if(recording){
-    recorder.stop(); recording=false; clearInterval(tick);
-    document.body.classList.remove('is-rec');
-    return;
-  }
+  if(recording){ stopRecording(); return; }
   if(document.body.classList.contains('is-review')){ resetToIdle(); return; } // Retake goes back to start, does not record
   startRecording();
 });
