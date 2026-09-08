@@ -173,7 +173,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 }
 .rpg .phead{color:var(--ink-faint)}
 .rpg .phead .dot{background:var(--sage)}
-.modeseg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;
+.modeseg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px;
   background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
 .modeseg .pbtn{padding:9px 6px}
 .modeseg .pbtn:hover{color:var(--ink)}
@@ -182,6 +182,9 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
   color:var(--ink);margin-bottom:8px}
 .filterrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .topic{font-family:'Fraunces',serif;font-size:22px;font-weight:440;line-height:1.4;min-height:84px;color:var(--ink);margin-top:6px}
+/* words mode: a single word gets room to breathe */
+.topic.is-word{display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:clamp(30px,6vw,44px);line-height:1.2;letter-spacing:-.01em;color:var(--ember)}
 .dursel{display:flex;gap:6px;margin:18px 0 12px;flex-wrap:wrap}
 .dur{
   font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;color:var(--ink-faint);
@@ -332,19 +335,12 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 
         <div class="modeseg" id="recModeSeg">
           <button class="pbtn is-active" type="button" data-recmode="topic">Topic</button>
+          <button class="pbtn" type="button" data-recmode="words">Words</button>
           <button class="pbtn" type="button" data-recmode="freeplay">Freeplay</button>
         </div>
 
         <div id="topicPane">
-          <div class="filterrow" id="catFilters">
-            <button class="dur is-active" data-cat="all">All</button>
-            <button class="dur" data-cat="random">Random</button>
-            <button class="dur" data-cat="sports">Sports</button>
-            <button class="dur" data-cat="news">News</button>
-            <button class="dur" data-cat="deep">Deep Qs</button>
-            <button class="dur" data-cat="debate">Debate</button>
-            <button class="dur" data-cat="story">Story</button>
-          </div>
+          <div class="filterrow" id="catFilters"></div>
           <div class="filterrow" id="diffFilters">
             <button class="dur is-active" data-diff="all">All levels</button>
             <button class="dur" data-diff="easy">Easy</button>
@@ -395,6 +391,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="speakeasy-library.js"></script>
 <script>
 const $ = s => document.querySelector(s);
 const screen = $('#screen'), overlay = $('#overlay'), status = $('#status');
@@ -416,79 +413,66 @@ $('#mirrorBtn').addEventListener('click',function(){ screen.classList.toggle('mi
 $('#sfxBtn').addEventListener('click',function(){ sfx=!sfx; this.classList.toggle('on',sfx);
   this.querySelector('.v').textContent=sfx?'ON':'OFF'; beep(660,0.06); });
 
-/* topics */
-const topics=[
- {text:"What's a small thing that makes a huge difference?",cat:'deep',diff:'easy'},
- {text:"What would you do with one extra hour every day?",cat:'deep',diff:'easy'},
- {text:"What's a skill you think everyone should learn?",cat:'deep',diff:'medium'},
- {text:"If you could ban one thing forever, what would it be?",cat:'deep',diff:'medium'},
- {text:"Is it possible to be truly objective about your own life?",cat:'deep',diff:'hard'},
- {text:"What do we owe to people we'll never meet?",cat:'deep',diff:'hard'},
+/* topics + words: sourced from speakeasy-library.js */
+const LIB=window.SPEAKEASY_LIBRARY;
+const libOK=!!(LIB&&window.pickPrompt&&window.categoriesFor);
+const catFilters=$('#catFilters'), diffFilters=$('#diffFilters'), topicEl=$('#topic');
 
- {text:"Argue that mornings are better than nights.",cat:'debate',diff:'easy'},
- {text:"Cats or dogs. Settle it.",cat:'debate',diff:'easy'},
- {text:"Convince me to visit a city you've never been to.",cat:'debate',diff:'medium'},
- {text:"Sell me on your hometown in 60 seconds.",cat:'debate',diff:'medium'},
- {text:"Defend an unpopular opinion you actually hold.",cat:'debate',diff:'hard'},
- {text:"Argue that failure is more valuable than success.",cat:'debate',diff:'hard'},
+/* filters are remembered per mode, same as duration is */
+const selected={topic:{cat:'all',diff:'all'},words:{cat:'all',diff:'all'}};
+/* the prompt on screen, per mode, so toggling modes doesn't reroll it */
+const currentText={topic:'',words:''};
+/* ids shown this session so "new topic" doesn't hand back the same one */
+const recentIds=[], RECENT_MAX=60;
 
- {text:"Describe the best meal you've ever had, in detail.",cat:'story',diff:'easy'},
- {text:"Tell me about a place that feels like home.",cat:'story',diff:'easy'},
- {text:"Tell a story about a time you were completely wrong.",cat:'story',diff:'medium'},
- {text:"Describe a moment a stranger changed your day.",cat:'story',diff:'medium'},
- {text:"Tell a story where you were the villain.",cat:'story',diff:'hard'},
- {text:"Describe a turning point you didn't recognize until later.",cat:'story',diff:'hard'},
-
- {text:"What's the most overrated thing in the world?",cat:'random',diff:'easy'},
- {text:"Teach me something you learned this week.",cat:'random',diff:'easy'},
- {text:"Pitch a product that doesn't exist yet.",cat:'random',diff:'medium'},
- {text:"Explain your favorite hobby to someone who's never heard of it.",cat:'random',diff:'medium'},
- {text:"If you had to give up the internet or your car forever, which and why?",cat:'random',diff:'hard'},
- {text:"Design a holiday from scratch and defend why it deserves to exist.",cat:'random',diff:'hard'},
-
- {text:"What's your favorite sport to watch, and why?",cat:'sports',diff:'easy'},
- {text:"Describe the most exciting game you've ever seen.",cat:'sports',diff:'easy'},
- {text:"Should college athletes be paid a salary? Make your case.",cat:'sports',diff:'medium'},
- {text:"Pick the greatest athlete of all time and defend it.",cat:'sports',diff:'medium'},
- {text:"Is it fair for one country to dominate a sport for decades? Discuss.",cat:'sports',diff:'hard'},
- {text:"Argue whether sports create more unity or more division in society.",cat:'sports',diff:'hard'},
-
- {text:"What's a recent headline that caught your attention, and why?",cat:'news',diff:'easy'},
- {text:"Describe how you get your news these days.",cat:'news',diff:'easy'},
- {text:"Should social media platforms be responsible for fact-checking news?",cat:'news',diff:'medium'},
- {text:"Pick a current event and explain both sides fairly.",cat:'news',diff:'medium'},
- {text:"Is the 24-hour news cycle making us more informed or more anxious?",cat:'news',diff:'hard'},
- {text:"Should AI-generated content be labeled by law? Make your case.",cat:'news',diff:'hard'}
-];
-let selectedCat='all', selectedDiff='all', lastTopic=$('#topic').textContent.trim();
+function renderCatFilters(){
+  if(!libOK||recMode==='freeplay') return;
+  const cats=window.categoriesFor(recMode), cur=selected[recMode].cat;
+  catFilters.innerHTML='<button class="dur'+(cur==='all'?' is-active':'')+'" data-cat="all">All</button>'+
+    cats.map(c=>'<button class="dur'+(cur===c.id?' is-active':'')+'" data-cat="'+c.id+'">'+c.label+'</button>').join('');
+}
+function renderDiffFilters(){
+  if(recMode==='freeplay') return;
+  const cur=selected[recMode].diff;
+  diffFilters.querySelectorAll('.dur[data-diff]').forEach(b=>b.classList.toggle('is-active',b.dataset.diff===cur));
+}
 
 function pickTopic(){
-  const pool=topics.filter(t=>(selectedCat==='all'||t.cat===selectedCat)&&(selectedDiff==='all'||t.diff===selectedDiff));
-  if(!pool.length){ $('#topic').textContent='No topics match that combo yet. Try a different filter.'; return; }
-  let pick;
-  do{ pick=pool[Math.floor(Math.random()*pool.length)]; }while(pool.length>1&&pick.text===lastTopic);
-  lastTopic=pick.text; $('#topic').textContent=pick.text;
+  if(recMode==='freeplay') return;
+  if(!libOK){ topicEl.textContent="Prompt library didn't load. Check that speakeasy-library.js sits next to this page."; return; }
+  const {cat,diff}=selected[recMode];
+  const item=window.pickPrompt(recMode,cat,diff,{recent:recentIds});
+  if(!item){
+    topicEl.textContent=(recMode==='words'?'No words':'No topics')+' match that combo yet. Try a different filter.';
+    return;
+  }
+  recentIds.push(item.id);
+  if(recentIds.length>RECENT_MAX) recentIds.shift();
+  currentText[recMode]=item.text;
+  topicEl.textContent=item.text;
 }
 $('#newTopic').addEventListener('click',pickTopic);
 
-document.querySelectorAll('.dur[data-cat]').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.dur[data-cat]').forEach(x=>x.classList.remove('is-active'));
-  b.classList.add('is-active'); selectedCat=b.dataset.cat; pickTopic();
-}));
-document.querySelectorAll('.dur[data-diff]').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.dur[data-diff]').forEach(x=>x.classList.remove('is-active'));
-  b.classList.add('is-active'); selectedDiff=b.dataset.diff; pickTopic();
-}));
+/* chips get rebuilt whenever the mode changes, so both rows are delegated */
+catFilters.addEventListener('click',e=>{
+  const b=e.target.closest('.dur[data-cat]'); if(!b) return;
+  selected[recMode].cat=b.dataset.cat; renderCatFilters(); pickTopic();
+});
+diffFilters.addEventListener('click',e=>{
+  const b=e.target.closest('.dur[data-diff]'); if(!b) return;
+  selected[recMode].diff=b.dataset.diff; renderDiffFilters(); pickTopic();
+});
 
-/* rec mode: topic vs freeplay */
+/* rec mode: topic vs words vs freeplay */
 const DUR_PRESETS={
   topic:[60,90,120,180],
+  words:[30,60,90,120],
   freeplay:[180,300,600,900]
 };
 const durSel=$('#dursel'), rpgTitle=$('#rpgTitle');
 const topicPane=$('#topicPane'), freeplayPane=$('#freeplayPane'), newTopicBtn=$('#newTopic');
 let recMode='topic';
-const chosenSec={topic:60,freeplay:300};
+const chosenSec={topic:60,words:60,freeplay:300};
 
 function fmtDur(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 
@@ -511,11 +495,18 @@ function renderDurations(){
 function applyRecMode(mode){
   recMode=mode;
   document.querySelectorAll('#recModeSeg .pbtn').forEach(b=>b.classList.toggle('is-active',b.dataset.recmode===mode));
-  const isTopic = mode==='topic';
-  topicPane.style.display = isTopic ? '' : 'none';
-  freeplayPane.style.display = isTopic ? 'none' : '';
-  newTopicBtn.style.display = isTopic ? '' : 'none';
-  rpgTitle.textContent = isTopic ? "Today's topic" : 'Freeplay';
+  const isFreeplay = mode==='freeplay';
+  topicPane.style.display = isFreeplay ? 'none' : '';
+  freeplayPane.style.display = isFreeplay ? '' : 'none';
+  newTopicBtn.style.display = isFreeplay ? 'none' : '';
+  newTopicBtn.textContent = mode==='words' ? '↻ New word' : '↻ New topic';
+  rpgTitle.textContent = mode==='topic' ? "Today's topic" : (mode==='words' ? 'Your word' : 'Freeplay');
+  topicEl.classList.toggle('is-word', mode==='words');
+  if(!isFreeplay){
+    renderCatFilters(); renderDiffFilters();
+    /* restore what this mode was last showing rather than rerolling on every toggle */
+    if(currentText[mode]) topicEl.textContent=currentText[mode]; else pickTopic();
+  }
   renderDurations();
 }
 document.querySelectorAll('#recModeSeg .pbtn').forEach(b=>
@@ -661,6 +652,7 @@ async function loadRecords(){
 }
 /* ── Library ── */
 const libList=$('#libList'), libEmpty=$('#libEmpty');
+const MODE_LABELS={topic:'Topic',words:'Words',freeplay:'Freeplay'};
 let libRecords=[];
 function fmtDur(s){ const m=Math.floor(s/60); return m+':'+String(Math.round(s%60)).padStart(2,'0'); }
 function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
@@ -670,7 +662,7 @@ function renderLibrary(records){
   libEmpty.style.display='none';
   libList.innerHTML=records.map((rec,i)=>{
     const dateStr=new Date(rec.dateISO).toLocaleDateString(undefined,{month:'short',day:'numeric'});
-    const modeLabel=rec.mode==='freeplay' ? 'Freeplay' : 'Topic';
+    const modeLabel=MODE_LABELS[rec.mode] || 'Topic';
     const topicPart=rec.mode==='freeplay' ? '' : (rec.topicText ? ' · "'+truncate(rec.topicText,36)+'"' : '');
     const playable=!!rec.fsaaFile;
     return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'"><span class="c">·</span> '+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+'</li>';
@@ -823,7 +815,7 @@ function fsaaBase(now, mode){
     String(now.getHours()).padStart(2,'0'),
     String(now.getMinutes()).padStart(2,'0')
   ].join('-');
-  return 'speakeasy_'+(mode==='freeplay'?'freeplay_':'')+stamp;
+  return 'speakeasy_'+(mode==='topic'?'':mode+'_')+stamp;
 }
 async function autoSave(blob, base, durationSec, topicText, mode){
   if(!dirHandle) return null;

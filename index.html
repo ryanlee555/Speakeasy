@@ -130,7 +130,7 @@ body{
 .how-steps .txt strong{color:var(--ink);font-weight:600}
 
 /* ---- features ---- */
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+.features-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:44px}
 .feature-card{border:1px solid var(--border);border-radius:16px;padding:24px 20px;background:var(--panel)}
 .feature-card .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-bottom:14px}
 .feature-card h3{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
@@ -141,7 +141,8 @@ body{
   padding:2px 7px;margin-left:6px;vertical-align:middle;
 }
 
-@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1080px){.features-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
+@media(max-width:760px){.features-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.features-grid{grid-template-columns:1fr}}
 
 /* ---- about ---- */
@@ -207,7 +208,7 @@ body{
       <ol class="how-steps">
         <li>
           <span class="num">1</span>
-          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty, or switch to Freeplay and record with no prompt at all.</span>
+          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty, get a single random word to riff on, or switch to Freeplay and record with no prompt at all.</span>
         </li>
         <li>
           <span class="num">2</span>
@@ -235,7 +236,12 @@ body{
       <div class="feature-card">
         <div class="dot"></div>
         <h3>Topic mode</h3>
-        <p>Get a random prompt and speak on it for a set amount of time. Practicing under that bit of pressure is what trains you to stay calm.</p>
+        <p>Hundreds of prompts across thirteen categories, each one rated easy, medium or hard. Speaking under that bit of pressure is what trains you to stay calm.</p>
+      </div>
+      <div class="feature-card">
+        <div class="dot"></div>
+        <h3>Words mode</h3>
+        <p>One random word and nothing else. There is no question to lean on, so you have to build the whole thing yourself.</p>
       </div>
       <div class="feature-card">
         <div class="dot"></div>

@@ -1,0 +1,7458 @@
+{
+ "version": 1,
+ "generated": "2026-09-08",
+ "modes": [
+  {
+   "id": "topic",
+   "label": "Topic"
+  },
+  {
+   "id": "freeplay",
+   "label": "Freeplay"
+  },
+  {
+   "id": "words",
+   "label": "Words"
+  }
+ ],
+ "difficulties": [
+  {
+   "id": "easy",
+   "label": "Easy"
+  },
+  {
+   "id": "medium",
+   "label": "Medium"
+  },
+  {
+   "id": "hard",
+   "label": "Hard"
+  }
+ ],
+ "categories": {
+  "topic": [
+   {
+    "id": "random",
+    "label": "Random"
+   },
+   {
+    "id": "sports",
+    "label": "Sports"
+   },
+   {
+    "id": "news",
+    "label": "News"
+   },
+   {
+    "id": "deep",
+    "label": "Deep Qs"
+   },
+   {
+    "id": "debate",
+    "label": "Debate"
+   },
+   {
+    "id": "story",
+    "label": "Story"
+   },
+   {
+    "id": "hypothetical",
+    "label": "What If"
+   },
+   {
+    "id": "tech",
+    "label": "Tech"
+   },
+   {
+    "id": "work",
+    "label": "Work"
+   },
+   {
+    "id": "culture",
+    "label": "Culture"
+   },
+   {
+    "id": "explain",
+    "label": "Explain"
+   },
+   {
+    "id": "pitch",
+    "label": "Pitch"
+   },
+   {
+    "id": "humor",
+    "label": "Humor"
+   }
+  ],
+  "word": [
+   {
+    "id": "objects",
+    "label": "Objects"
+   },
+   {
+    "id": "abstract",
+    "label": "Abstract"
+   },
+   {
+    "id": "emotions",
+    "label": "Emotions"
+   },
+   {
+    "id": "places",
+    "label": "Places"
+   },
+   {
+    "id": "actions",
+    "label": "Actions"
+   },
+   {
+    "id": "nature",
+    "label": "Nature"
+   },
+   {
+    "id": "people",
+    "label": "People"
+   },
+   {
+    "id": "weird",
+    "label": "Weird"
+   }
+  ]
+ },
+ "counts": {
+  "total": 1043,
+  "topic": 585,
+  "word": 458,
+  "by_category": {
+   "topic:random": 45,
+   "topic:sports": 45,
+   "topic:news": 45,
+   "topic:deep": 45,
+   "topic:debate": 45,
+   "topic:story": 45,
+   "topic:hypothetical": 45,
+   "topic:tech": 45,
+   "topic:work": 45,
+   "topic:culture": 45,
+   "topic:explain": 45,
+   "topic:pitch": 45,
+   "topic:humor": 45,
+   "word:objects": 58,
+   "word:abstract": 58,
+   "word:emotions": 58,
+   "word:places": 57,
+   "word:actions": 58,
+   "word:nature": 55,
+   "word:people": 57,
+   "word:weird": 57
+  },
+  "by_difficulty": {
+   "easy": 341,
+   "medium": 367,
+   "hard": 335
+  }
+ },
+ "items": [
+  {
+   "id": "t0001",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What did you eat for breakfast, and describe it like a food critic."
+  },
+  {
+   "id": "t0002",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Describe your morning routine, start to finish."
+  },
+  {
+   "id": "t0003",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's the last thing that made you laugh out loud?"
+  },
+  {
+   "id": "t0004",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Talk about the room you're sitting in right now."
+  },
+  {
+   "id": "t0005",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's your go-to order at a coffee shop and why that one?"
+  },
+  {
+   "id": "t0006",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Describe the weather today without using the word 'nice'."
+  },
+  {
+   "id": "t0007",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's something small you did this week that you're glad you did?"
+  },
+  {
+   "id": "t0008",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Talk about your phone's home screen."
+  },
+  {
+   "id": "t0009",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's a song you've had stuck in your head recently?"
+  },
+  {
+   "id": "t0010",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Describe your ideal Saturday, hour by hour."
+  },
+  {
+   "id": "t0011",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's the last thing you bought, and was it worth it?"
+  },
+  {
+   "id": "t0012",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Talk about someone you saw today, even a stranger."
+  },
+  {
+   "id": "t0013",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "What's your favorite thing about the season we're in?"
+  },
+  {
+   "id": "t0014",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "easy",
+   "text": "Describe your commute or your walk to class."
+  },
+  {
+   "id": "t0015",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Explain a hobby you have to someone who thinks it's pointless."
+  },
+  {
+   "id": "t0016",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's a small habit that has quietly changed your life?"
+  },
+  {
+   "id": "t0017",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Talk about a place you go when you need to think."
+  },
+  {
+   "id": "t0018",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Describe a smell that instantly takes you somewhere else."
+  },
+  {
+   "id": "t0019",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's something everyone seems to love that you just don't get?"
+  },
+  {
+   "id": "t0020",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Talk about the best meal you've ever eaten and what made it that."
+  },
+  {
+   "id": "t0021",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's a skill you have that almost never comes up?"
+  },
+  {
+   "id": "t0022",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Describe your relationship with your alarm clock."
+  },
+  {
+   "id": "t0023",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What would a documentary crew following you for a week actually capture?"
+  },
+  {
+   "id": "t0024",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Talk about a possession you own that has no monetary value."
+  },
+  {
+   "id": "t0025",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's the most useful thing you learned outside a classroom?"
+  },
+  {
+   "id": "t0026",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Describe your ideal workspace and why it's built that way."
+  },
+  {
+   "id": "t0027",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's a rule you follow that nobody asked you to follow?"
+  },
+  {
+   "id": "t0028",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Talk about a stranger who affected your day."
+  },
+  {
+   "id": "t0029",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "What's the most overrated part of adult life?"
+  },
+  {
+   "id": "t0030",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "medium",
+   "text": "Describe a time you were completely, blissfully bored."
+  },
+  {
+   "id": "t0031",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Describe yourself the way your closest friend would describe you behind your back, generously."
+  },
+  {
+   "id": "t0032",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Talk for two minutes about something you have never told anyone."
+  },
+  {
+   "id": "t0033",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What's the thing you're avoiding right now, and why?"
+  },
+  {
+   "id": "t0034",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Describe the version of you that exists only when you're alone."
+  },
+  {
+   "id": "t0035",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What would you say to the version of you from five years ago, knowing they can't respond?"
+  },
+  {
+   "id": "t0036",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Talk about a belief you hold that you can't fully defend."
+  },
+  {
+   "id": "t0037",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Describe a moment you realized you were becoming your parents."
+  },
+  {
+   "id": "t0038",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What's the gap between how you want to be seen and how you actually are?"
+  },
+  {
+   "id": "t0039",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Talk about something you've outgrown but haven't let go of."
+  },
+  {
+   "id": "t0040",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What's a compliment you got that you didn't believe?"
+  },
+  {
+   "id": "t0041",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Describe the sound of your own thoughts on a bad day."
+  },
+  {
+   "id": "t0042",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What are you pretending not to know about your own life?"
+  },
+  {
+   "id": "t0043",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Talk about a door you closed that you sometimes wish you hadn't."
+  },
+  {
+   "id": "t0044",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "Describe your life as a three-act structure and say what act you're in."
+  },
+  {
+   "id": "t0045",
+   "mode": "topic",
+   "category": "random",
+   "difficulty": "hard",
+   "text": "What's the most honest sentence you could say about yourself right now?"
+  },
+  {
+   "id": "t0046",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What's your favorite sport to watch and why that one?"
+  },
+  {
+   "id": "t0047",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Describe the last game or match you watched."
+  },
+  {
+   "id": "t0048",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Talk about an athlete you admire."
+  },
+  {
+   "id": "t0049",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What sport did you play as a kid, and how did that go?"
+  },
+  {
+   "id": "t0050",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Explain the basic rules of a sport you love in under a minute."
+  },
+  {
+   "id": "t0051",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What's the best stadium or venue you've been to?"
+  },
+  {
+   "id": "t0052",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Talk about a team you support and how you ended up supporting them."
+  },
+  {
+   "id": "t0053",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What's your favorite sports moment of all time?"
+  },
+  {
+   "id": "t0054",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Describe the feeling of watching a game go into overtime."
+  },
+  {
+   "id": "t0055",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What sport would you try if you had a year to get good at it?"
+  },
+  {
+   "id": "t0056",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Talk about a coach or teammate who stuck with you."
+  },
+  {
+   "id": "t0057",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "What's the most fun sport to actually play, not watch?"
+  },
+  {
+   "id": "t0058",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Describe game day traditions, yours or ones you've seen."
+  },
+  {
+   "id": "t0059",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "easy",
+   "text": "Talk about a sport you don't understand at all."
+  },
+  {
+   "id": "t0060",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Make the case for your favorite athlete being the greatest of all time."
+  },
+  {
+   "id": "t0061",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about a rivalry and why it matters to the people in it."
+  },
+  {
+   "id": "t0062",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "What does a sport teach you that a classroom can't?"
+  },
+  {
+   "id": "t0063",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Explain why people cry over teams they have no control over."
+  },
+  {
+   "id": "t0064",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about the moment a team's season turns."
+  },
+  {
+   "id": "t0065",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "What's the most underrated position or role in any sport?"
+  },
+  {
+   "id": "t0066",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Describe an athlete's decline and what makes it hard to watch."
+  },
+  {
+   "id": "t0067",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about a rule change that improved or ruined a sport."
+  },
+  {
+   "id": "t0068",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "What separates a good player from a great one, specifically?"
+  },
+  {
+   "id": "t0069",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Explain the appeal of a sport nobody in your circle watches."
+  },
+  {
+   "id": "t0070",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about the business side of sports and how it changed the game."
+  },
+  {
+   "id": "t0071",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Describe the psychology of a comeback."
+  },
+  {
+   "id": "t0072",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "What's the most impressive individual performance you've ever seen?"
+  },
+  {
+   "id": "t0073",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about a losing season and what fans get out of it."
+  },
+  {
+   "id": "t0074",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "How do you handle being the worst player on a team?"
+  },
+  {
+   "id": "t0075",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "medium",
+   "text": "Talk about the role of superstition in sports."
+  },
+  {
+   "id": "t0076",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Argue that college athletes are exploited, then argue they aren't."
+  },
+  {
+   "id": "t0077",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Should the Olympics exist in their current form? Defend your answer."
+  },
+  {
+   "id": "t0078",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Make the case that youth sports do more harm than good."
+  },
+  {
+   "id": "t0079",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Talk about the ethics of watching sports that cause brain damage."
+  },
+  {
+   "id": "t0080",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Argue that dynasties are bad for a league."
+  },
+  {
+   "id": "t0081",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "How should sports handle athletes who are great competitors and bad people?"
+  },
+  {
+   "id": "t0082",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Talk about what happens to an athlete's identity when the career ends."
+  },
+  {
+   "id": "t0083",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Argue that analytics have made sports worse to watch."
+  },
+  {
+   "id": "t0084",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Should there be a salary cap? Build the argument from first principles."
+  },
+  {
+   "id": "t0085",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Talk about nationalism and international sport."
+  },
+  {
+   "id": "t0086",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Make the case that the 'GOAT' debate is meaningless."
+  },
+  {
+   "id": "t0087",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "How would you redesign a sport from scratch to be maximally fair?"
+  },
+  {
+   "id": "t0088",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Talk about gambling's takeover of sports broadcasting."
+  },
+  {
+   "id": "t0089",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "Argue that fandom is an irrational use of a human life, and then defend it anyway."
+  },
+  {
+   "id": "t0090",
+   "mode": "topic",
+   "category": "sports",
+   "difficulty": "hard",
+   "text": "What do we owe athletes who gave us their bodies?"
+  },
+  {
+   "id": "t0091",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "What's a headline you saw this week? Summarize it out loud."
+  },
+  {
+   "id": "t0092",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Where do you get your news, and why there?"
+  },
+  {
+   "id": "t0093",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Talk about a local story happening where you live."
+  },
+  {
+   "id": "t0094",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Describe a news story that made you feel good recently."
+  },
+  {
+   "id": "t0095",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "What's a story everyone was talking about that you ignored?"
+  },
+  {
+   "id": "t0096",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Explain a recent event to someone who's been offline for a month."
+  },
+  {
+   "id": "t0097",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Talk about how you found out about a big news event."
+  },
+  {
+   "id": "t0098",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "What section of the news do you actually read first?"
+  },
+  {
+   "id": "t0099",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Describe a piece of news that changed your plans."
+  },
+  {
+   "id": "t0100",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Talk about a story you keep seeing but don't understand."
+  },
+  {
+   "id": "t0101",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "What's the last thing you read that you shared with someone?"
+  },
+  {
+   "id": "t0102",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Describe the difference between the news you seek out and the news that finds you."
+  },
+  {
+   "id": "t0103",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "Talk about a public figure who's been in the news lately."
+  },
+  {
+   "id": "t0104",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "easy",
+   "text": "What news do you deliberately avoid?"
+  },
+  {
+   "id": "t0105",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Explain a story in the news right now, including both sides fairly."
+  },
+  {
+   "id": "t0106",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Talk about a story that got less attention than it deserved."
+  },
+  {
+   "id": "t0107",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "How has the way you consume news changed in the last five years?"
+  },
+  {
+   "id": "t0108",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Describe how a story you followed closely turned out to be more complicated."
+  },
+  {
+   "id": "t0109",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Talk about the difference between reporting and commentary."
+  },
+  {
+   "id": "t0110",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "What's a topic where you think coverage is consistently bad?"
+  },
+  {
+   "id": "t0111",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Explain a piece of economic news in plain language."
+  },
+  {
+   "id": "t0112",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Talk about a headline that turned out to be misleading."
+  },
+  {
+   "id": "t0113",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "How should a person decide what to believe?"
+  },
+  {
+   "id": "t0114",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Describe the incentives that shape what gets covered."
+  },
+  {
+   "id": "t0115",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Talk about the news cycle and how quickly things disappear."
+  },
+  {
+   "id": "t0116",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "What's something happening now that people will study in fifty years?"
+  },
+  {
+   "id": "t0117",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Explain a scientific finding you saw reported recently."
+  },
+  {
+   "id": "t0118",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Talk about a story where you changed your mind as more came out."
+  },
+  {
+   "id": "t0119",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "Describe how a story looks different from inside the community it's about."
+  },
+  {
+   "id": "t0120",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "medium",
+   "text": "What responsibility does an audience have?"
+  },
+  {
+   "id": "t0121",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Steelman a position on a current issue that you personally disagree with."
+  },
+  {
+   "id": "t0122",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Argue that the 24-hour news cycle has made citizens worse at citizenship."
+  },
+  {
+   "id": "t0123",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Talk about a story you have strong feelings about, without revealing your side."
+  },
+  {
+   "id": "t0124",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "How would you cover a story where every source has an agenda?"
+  },
+  {
+   "id": "t0125",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Argue that objectivity in journalism is impossible and say what should replace it."
+  },
+  {
+   "id": "t0126",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Talk about the tradeoff between free speech and platform moderation."
+  },
+  {
+   "id": "t0127",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Make the case for and against paywalls on journalism."
+  },
+  {
+   "id": "t0128",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Explain a conflict abroad, including what its own participants believe."
+  },
+  {
+   "id": "t0129",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Argue that most people should consume dramatically less news."
+  },
+  {
+   "id": "t0130",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Talk about how you would know if you were inside a bubble."
+  },
+  {
+   "id": "t0131",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "What's the most important story nobody is covering?"
+  },
+  {
+   "id": "t0132",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Argue that anonymous sources do more good than harm, then reverse it."
+  },
+  {
+   "id": "t0133",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "How do you talk about a polarizing story with someone who disagrees?"
+  },
+  {
+   "id": "t0134",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Describe an issue where your side has the weaker argument."
+  },
+  {
+   "id": "t0135",
+   "mode": "topic",
+   "category": "news",
+   "difficulty": "hard",
+   "text": "Talk about the moment you stopped trusting a source you used to trust."
+  },
+  {
+   "id": "t0136",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What makes a good day good, for you specifically?"
+  },
+  {
+   "id": "t0137",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Who is someone you're grateful for and why?"
+  },
+  {
+   "id": "t0138",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What are you looking forward to?"
+  },
+  {
+   "id": "t0139",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Describe a moment you felt genuinely proud of yourself."
+  },
+  {
+   "id": "t0140",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What does home mean to you?"
+  },
+  {
+   "id": "t0141",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Talk about a piece of advice you actually took."
+  },
+  {
+   "id": "t0142",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What's something you want to be better at?"
+  },
+  {
+   "id": "t0143",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Describe a friendship that shaped you."
+  },
+  {
+   "id": "t0144",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What do you do when you're overwhelmed?"
+  },
+  {
+   "id": "t0145",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Talk about a time you were kind to someone for no reason."
+  },
+  {
+   "id": "t0146",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What's a memory you return to often?"
+  },
+  {
+   "id": "t0147",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Describe what you want your thirties, or your next decade, to feel like."
+  },
+  {
+   "id": "t0148",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "Who did you want to be when you were ten?"
+  },
+  {
+   "id": "t0149",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "easy",
+   "text": "What makes you feel most like yourself?"
+  },
+  {
+   "id": "t0150",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What's a fear that's been quietly steering your decisions?"
+  },
+  {
+   "id": "t0151",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Talk about the difference between what you want and what you think you should want."
+  },
+  {
+   "id": "t0152",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What do you get out of being busy?"
+  },
+  {
+   "id": "t0153",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Describe a time your confidence and your competence didn't match."
+  },
+  {
+   "id": "t0154",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What does success look like to you when nobody's watching?"
+  },
+  {
+   "id": "t0155",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Talk about a relationship that ended and what it taught you."
+  },
+  {
+   "id": "t0156",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "How do you know when you've forgiven someone?"
+  },
+  {
+   "id": "t0157",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What's something you believe that most people around you don't?"
+  },
+  {
+   "id": "t0158",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Describe the last time you changed your mind about something important."
+  },
+  {
+   "id": "t0159",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Talk about the role luck has played in your life."
+  },
+  {
+   "id": "t0160",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What do you do with regret?"
+  },
+  {
+   "id": "t0161",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "How much of your personality did you choose?"
+  },
+  {
+   "id": "t0162",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Talk about a version of your future you've quietly given up on."
+  },
+  {
+   "id": "t0163",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What are you optimizing your life for right now, honestly?"
+  },
+  {
+   "id": "t0164",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "Describe what you're like when you're at your worst."
+  },
+  {
+   "id": "t0165",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "medium",
+   "text": "What does it mean to waste a life?"
+  },
+  {
+   "id": "t0166",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "What would you do differently if you knew nobody would ever find out?"
+  },
+  {
+   "id": "t0167",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Talk about the thing you'd want said at your funeral, then whether you're earning it."
+  },
+  {
+   "id": "t0168",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Describe a time you hurt someone and how you explained it to yourself."
+  },
+  {
+   "id": "t0169",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "What's a truth about yourself you accept intellectually but not emotionally?"
+  },
+  {
+   "id": "t0170",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Talk about what you're afraid people would think if they really knew you."
+  },
+  {
+   "id": "t0171",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "How do you make peace with the lives you're not going to live?"
+  },
+  {
+   "id": "t0172",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "What do you owe the people who made your life possible?"
+  },
+  {
+   "id": "t0173",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Talk about the gap between your values and your calendar."
+  },
+  {
+   "id": "t0174",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Describe your relationship with death."
+  },
+  {
+   "id": "t0175",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "What is the strongest argument against how you're living?"
+  },
+  {
+   "id": "t0176",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Talk about a moment you chose comfort over growth and what it cost."
+  },
+  {
+   "id": "t0177",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "What would it take for you to be satisfied? Is that answer honest?"
+  },
+  {
+   "id": "t0178",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Describe something you've built your identity on that might not be true."
+  },
+  {
+   "id": "t0179",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "Talk about loneliness, without making it sound noble."
+  },
+  {
+   "id": "t0180",
+   "mode": "topic",
+   "category": "deep",
+   "difficulty": "hard",
+   "text": "If your life is a story someone else is reading, where do they lose interest?"
+  },
+  {
+   "id": "t0181",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Is a hot dog a sandwich? Defend your position."
+  },
+  {
+   "id": "t0182",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Cereal before milk or milk before cereal? Argue it seriously."
+  },
+  {
+   "id": "t0183",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Should pineapple go on pizza?"
+  },
+  {
+   "id": "t0184",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Is it better to be early or on time?"
+  },
+  {
+   "id": "t0185",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Text or call? Make the case."
+  },
+  {
+   "id": "t0186",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Are movie theaters worth saving?"
+  },
+  {
+   "id": "t0187",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Should tipping exist?"
+  },
+  {
+   "id": "t0188",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Is breakfast actually the most important meal?"
+  },
+  {
+   "id": "t0189",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Window seat or aisle seat? Defend it."
+  },
+  {
+   "id": "t0190",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Are group projects ever good?"
+  },
+  {
+   "id": "t0191",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Should you keep your read receipts on?"
+  },
+  {
+   "id": "t0192",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Is coffee better than tea? Commit."
+  },
+  {
+   "id": "t0193",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Should stores play music?"
+  },
+  {
+   "id": "t0194",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "easy",
+   "text": "Is it rude to be on your phone at dinner?"
+  },
+  {
+   "id": "t0195",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should the four-day work week be standard?"
+  },
+  {
+   "id": "t0196",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Is remote work better for companies or for people?"
+  },
+  {
+   "id": "t0197",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should college be free?"
+  },
+  {
+   "id": "t0198",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Are standardized tests worth keeping?"
+  },
+  {
+   "id": "t0199",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should social media have a minimum age?"
+  },
+  {
+   "id": "t0200",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Is it better to specialize early or stay broad?"
+  },
+  {
+   "id": "t0201",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should companies be allowed to monitor employees' screens?"
+  },
+  {
+   "id": "t0202",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Are internships fundamentally unfair?"
+  },
+  {
+   "id": "t0203",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should cars be banned from city centers?"
+  },
+  {
+   "id": "t0204",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Is homework useful past a certain age?"
+  },
+  {
+   "id": "t0205",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should voting be mandatory?"
+  },
+  {
+   "id": "t0206",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Are unions good for workers today?"
+  },
+  {
+   "id": "t0207",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should billionaires exist?"
+  },
+  {
+   "id": "t0208",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Is nuclear power the answer to climate change?"
+  },
+  {
+   "id": "t0209",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Should professional licensing be easier to get?"
+  },
+  {
+   "id": "t0210",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "medium",
+   "text": "Is gentrification ever good for a neighborhood?"
+  },
+  {
+   "id": "t0211",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Argue the opposite of what you believe about a topic that matters to you."
+  },
+  {
+   "id": "t0212",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should AI-generated work be allowed to hold copyright?"
+  },
+  {
+   "id": "t0213",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Argue that meritocracy is a myth, then defend it."
+  },
+  {
+   "id": "t0214",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should we let people sell their organs?"
+  },
+  {
+   "id": "t0215",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Is privacy a right or a preference? Build the case."
+  },
+  {
+   "id": "t0216",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Argue that democracy is not the best system of government."
+  },
+  {
+   "id": "t0217",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should there be limits on inheritance?"
+  },
+  {
+   "id": "t0218",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Make the case that free will doesn't exist and it doesn't matter."
+  },
+  {
+   "id": "t0219",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should we colonize other planets, given the cost?"
+  },
+  {
+   "id": "t0220",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Argue that suffering is necessary for a meaningful life, then attack it."
+  },
+  {
+   "id": "t0221",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should parents be licensed?"
+  },
+  {
+   "id": "t0222",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Is it moral to have children right now? Take a side and hold it."
+  },
+  {
+   "id": "t0223",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Argue that most jobs shouldn't exist."
+  },
+  {
+   "id": "t0224",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Should we be allowed to edit human embryos?"
+  },
+  {
+   "id": "t0225",
+   "mode": "topic",
+   "category": "debate",
+   "difficulty": "hard",
+   "text": "Defend a position you find personally repugnant, cleanly and fairly."
+  },
+  {
+   "id": "t0226",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a time you got lost."
+  },
+  {
+   "id": "t0227",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about your first day somewhere new."
+  },
+  {
+   "id": "t0228",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a meal that went wrong."
+  },
+  {
+   "id": "t0229",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about something you found."
+  },
+  {
+   "id": "t0230",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a pet, yours or someone else's."
+  },
+  {
+   "id": "t0231",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a road trip."
+  },
+  {
+   "id": "t0232",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story that starts with 'I shouldn't have said yes.'"
+  },
+  {
+   "id": "t0233",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a birthday."
+  },
+  {
+   "id": "t0234",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a teacher."
+  },
+  {
+   "id": "t0235",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about the worst haircut you've had."
+  },
+  {
+   "id": "t0236",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a time you were late."
+  },
+  {
+   "id": "t0237",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a childhood hiding place."
+  },
+  {
+   "id": "t0238",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about something you broke."
+  },
+  {
+   "id": "t0239",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "easy",
+   "text": "Tell a story about a summer."
+  },
+  {
+   "id": "t0240",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a time you were completely out of your depth."
+  },
+  {
+   "id": "t0241",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story where you were wrong about someone."
+  },
+  {
+   "id": "t0242",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a decision you made in under ten seconds."
+  },
+  {
+   "id": "t0243",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story that changes meaning depending on who's telling it."
+  },
+  {
+   "id": "t0244",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about the last time you were genuinely scared."
+  },
+  {
+   "id": "t0245",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a time you got caught."
+  },
+  {
+   "id": "t0246",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about someone who was kind to you when they didn't have to be."
+  },
+  {
+   "id": "t0247",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a goodbye."
+  },
+  {
+   "id": "t0248",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a time the plan fell apart and it turned out better."
+  },
+  {
+   "id": "t0249",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a moment you felt like an adult for the first time."
+  },
+  {
+   "id": "t0250",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story with a twist you set up in the first sentence."
+  },
+  {
+   "id": "t0251",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a rivalry."
+  },
+  {
+   "id": "t0252",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about the day you stopped doing something."
+  },
+  {
+   "id": "t0253",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a job."
+  },
+  {
+   "id": "t0254",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story from someone else's point of view."
+  },
+  {
+   "id": "t0255",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "medium",
+   "text": "Tell a story about a time you lied and it worked."
+  },
+  {
+   "id": "t0256",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story where you were the villain."
+  },
+  {
+   "id": "t0257",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a failure you still haven't fully processed."
+  },
+  {
+   "id": "t0258",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a time you let someone down."
+  },
+  {
+   "id": "t0259",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell the story of your worst day, and find one thing in it that was funny."
+  },
+  {
+   "id": "t0260",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a moment that split your life into before and after."
+  },
+  {
+   "id": "t0261",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story you've told a hundred times, and tell the true version."
+  },
+  {
+   "id": "t0262",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about someone you lost."
+  },
+  {
+   "id": "t0263",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story where you don't come out looking good and don't apologize for it."
+  },
+  {
+   "id": "t0264",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a betrayal, from the side of the betrayer."
+  },
+  {
+   "id": "t0265",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story that explains why you are the way you are."
+  },
+  {
+   "id": "t0266",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a moment you saw a parent as a person."
+  },
+  {
+   "id": "t0267",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story you're afraid would change how people see you."
+  },
+  {
+   "id": "t0268",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about a time you stayed silent and shouldn't have."
+  },
+  {
+   "id": "t0269",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story that ends in a question you still can't answer."
+  },
+  {
+   "id": "t0270",
+   "mode": "topic",
+   "category": "story",
+   "difficulty": "hard",
+   "text": "Tell a story about the last conversation you'd want to have with someone."
+  },
+  {
+   "id": "t0271",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You win the lottery tomorrow. Walk through your first week."
+  },
+  {
+   "id": "t0272",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You can have dinner with anyone alive. Who, and what do you ask?"
+  },
+  {
+   "id": "t0273",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You get one free flight anywhere, leaving tonight. Where?"
+  },
+  {
+   "id": "t0274",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You have to eat one cuisine forever. Choose and defend it."
+  },
+  {
+   "id": "t0275",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You wake up as your pet for a day. Describe it."
+  },
+  {
+   "id": "t0276",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You can instantly master one skill. Which one?"
+  },
+  {
+   "id": "t0277",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You get an extra hour every day. What happens to it?"
+  },
+  {
+   "id": "t0278",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You have to give up one app forever. Which one goes?"
+  },
+  {
+   "id": "t0279",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You can live in any decade. Pick one."
+  },
+  {
+   "id": "t0280",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You get a personal theme song that plays when you walk in. What is it?"
+  },
+  {
+   "id": "t0281",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You can only speak in questions for a day. How does it go?"
+  },
+  {
+   "id": "t0282",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You have to teach a class tomorrow on any subject. What's the syllabus?"
+  },
+  {
+   "id": "t0283",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You can rename any one thing in the world. What do you rename?"
+  },
+  {
+   "id": "t0284",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "easy",
+   "text": "You're on a desert island with three items. Choose."
+  },
+  {
+   "id": "t0285",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You have to leave your city in a week and can't come back. What do you do?"
+  },
+  {
+   "id": "t0286",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can erase one invention from history. Which and what happens?"
+  },
+  {
+   "id": "t0287",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You get to set one law that everyone must follow. What is it?"
+  },
+  {
+   "id": "t0288",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can know the exact date of your death. Do you want it?"
+  },
+  {
+   "id": "t0289",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You wake up in your body ten years ago with your memories. First move?"
+  },
+  {
+   "id": "t0290",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You have unlimited money but can never work again. Good deal?"
+  },
+  {
+   "id": "t0291",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can read minds but can't turn it off. Describe day one."
+  },
+  {
+   "id": "t0292",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You have to give away everything you own except what fits in a bag."
+  },
+  {
+   "id": "t0293",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You get to redesign the school system. Start."
+  },
+  {
+   "id": "t0294",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can talk to one person from history for an hour. Who and why?"
+  },
+  {
+   "id": "t0295",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "Everyone can see your search history for one day. What changes?"
+  },
+  {
+   "id": "t0296",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can be famous for one thing. What do you pick, and what does it cost?"
+  },
+  {
+   "id": "t0297",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You're put in charge of a city for one year. What's your agenda?"
+  },
+  {
+   "id": "t0298",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You can undo one decision, not yours. Whose?"
+  },
+  {
+   "id": "t0299",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You have to live in one room for a year with unlimited books. Survive it."
+  },
+  {
+   "id": "t0300",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "medium",
+   "text": "You wake up with no memory but all your skills. What do you do first?"
+  },
+  {
+   "id": "t0301",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can save five strangers or one person you love. Argue your choice out loud."
+  },
+  {
+   "id": "t0302",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can make everyone in the world one percent kinder or ten percent smarter. Choose."
+  },
+  {
+   "id": "t0303",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You find out your entire life has been observed as an experiment. What now?"
+  },
+  {
+   "id": "t0304",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can eliminate one human emotion permanently. Which, and what breaks?"
+  },
+  {
+   "id": "t0305",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You're the last person who remembers a language. What do you do with it?"
+  },
+  {
+   "id": "t0306",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can tell one truth that will hurt everyone but help humanity. Do you?"
+  },
+  {
+   "id": "t0307",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You get to write one sentence that everyone born after you will memorize."
+  },
+  {
+   "id": "t0308",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can live forever, but only you. Take it or leave it?"
+  },
+  {
+   "id": "t0309",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You discover that free will was invented by someone. Explain the implications."
+  },
+  {
+   "id": "t0310",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can prevent one historical event. Argue the second-order consequences."
+  },
+  {
+   "id": "t0311",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "Your consciousness is copied. Which one is you?"
+  },
+  {
+   "id": "t0312",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can end all suffering by ending all life. Argue against it convincingly."
+  },
+  {
+   "id": "t0313",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You know a friend is about to make a life-ruining mistake and telling them would end the friendship."
+  },
+  {
+   "id": "t0314",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You can give up ten years of your life for a guarantee. What guarantee is worth it?"
+  },
+  {
+   "id": "t0315",
+   "mode": "topic",
+   "category": "hypothetical",
+   "difficulty": "hard",
+   "text": "You're asked to design the rules of a society you'll enter at a random position."
+  },
+  {
+   "id": "t0316",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's an app you use every single day and why?"
+  },
+  {
+   "id": "t0317",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Describe the first computer or phone you remember using."
+  },
+  {
+   "id": "t0318",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's a piece of technology you refuse to use?"
+  },
+  {
+   "id": "t0319",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Talk about the last thing you googled."
+  },
+  {
+   "id": "t0320",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's the best gadget you own?"
+  },
+  {
+   "id": "t0321",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Explain how you organize your files or photos."
+  },
+  {
+   "id": "t0322",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Describe your screen time and how you feel about it."
+  },
+  {
+   "id": "t0323",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's a website you miss?"
+  },
+  {
+   "id": "t0324",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Talk about a tech problem you fixed yourself."
+  },
+  {
+   "id": "t0325",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's the most useful thing your phone does?"
+  },
+  {
+   "id": "t0326",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Describe your ideal desk setup."
+  },
+  {
+   "id": "t0327",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "Talk about the first video game you loved."
+  },
+  {
+   "id": "t0328",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What technology do your parents still not understand?"
+  },
+  {
+   "id": "t0329",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "easy",
+   "text": "What's a feature you wish existed?"
+  },
+  {
+   "id": "t0330",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Explain how the internet works to a ten-year-old."
+  },
+  {
+   "id": "t0331",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Talk about how AI has changed your daily work already."
+  },
+  {
+   "id": "t0332",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "What's the biggest tradeoff of the smartphone era?"
+  },
+  {
+   "id": "t0333",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Describe a product that got worse over time and why."
+  },
+  {
+   "id": "t0334",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Explain what a good user experience actually feels like."
+  },
+  {
+   "id": "t0335",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Talk about privacy and what you've quietly given up."
+  },
+  {
+   "id": "t0336",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "How do you decide whether a new tool is worth learning?"
+  },
+  {
+   "id": "t0337",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Describe a technology you think is overhyped right now."
+  },
+  {
+   "id": "t0338",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Explain a technical concept you understand well, in plain language."
+  },
+  {
+   "id": "t0339",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Talk about the last time software genuinely made your life better."
+  },
+  {
+   "id": "t0340",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "What should schools teach about technology and don't?"
+  },
+  {
+   "id": "t0341",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Describe how you'd explain algorithms to a skeptical adult."
+  },
+  {
+   "id": "t0342",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Talk about a company whose product decisions you admire."
+  },
+  {
+   "id": "t0343",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "What breaks when everyone uses the same three platforms?"
+  },
+  {
+   "id": "t0344",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Explain why good products still fail."
+  },
+  {
+   "id": "t0345",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "medium",
+   "text": "Talk about the difference between a feature and a product."
+  },
+  {
+   "id": "t0346",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Argue that AI will be net positive for work, then argue it won't."
+  },
+  {
+   "id": "t0347",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Should there be a right to not be tracked? Build the case."
+  },
+  {
+   "id": "t0348",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Talk about who is responsible when an automated system harms someone."
+  },
+  {
+   "id": "t0349",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Argue that social media should be regulated like tobacco."
+  },
+  {
+   "id": "t0350",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "What does it mean for a technology to be neutral? Take a position."
+  },
+  {
+   "id": "t0351",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Argue that open source is the only ethical way to build AI."
+  },
+  {
+   "id": "t0352",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Talk about the labor displaced by tools you personally use."
+  },
+  {
+   "id": "t0353",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Should attention be treated as a resource that can be stolen?"
+  },
+  {
+   "id": "t0354",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Argue that we should slow down AI development, then argue the opposite."
+  },
+  {
+   "id": "t0355",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Talk about the politics embedded in a piece of infrastructure you use."
+  },
+  {
+   "id": "t0356",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "What obligations do engineers have that they don't currently accept?"
+  },
+  {
+   "id": "t0357",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Argue that personalization has made people worse thinkers."
+  },
+  {
+   "id": "t0358",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Should companies be liable for what their models say?"
+  },
+  {
+   "id": "t0359",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Talk about a technology that solved a problem and created a worse one."
+  },
+  {
+   "id": "t0360",
+   "mode": "topic",
+   "category": "tech",
+   "difficulty": "hard",
+   "text": "Design a rule you'd want every AI product to follow, and defend it."
+  },
+  {
+   "id": "t0361",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Describe your job or major to someone outside it."
+  },
+  {
+   "id": "t0362",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Talk about your first job ever."
+  },
+  {
+   "id": "t0363",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "What's the best part of a workday for you?"
+  },
+  {
+   "id": "t0364",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Describe a coworker or classmate you learn from."
+  },
+  {
+   "id": "t0365",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "What does your ideal work environment look like?"
+  },
+  {
+   "id": "t0366",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Talk about how you take notes."
+  },
+  {
+   "id": "t0367",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "What's a task you actually enjoy doing?"
+  },
+  {
+   "id": "t0368",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Describe how you start a work session."
+  },
+  {
+   "id": "t0369",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "What's the last thing you finished that you were happy with?"
+  },
+  {
+   "id": "t0370",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Talk about a time someone gave you good feedback."
+  },
+  {
+   "id": "t0371",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "How do you handle a full inbox?"
+  },
+  {
+   "id": "t0372",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Describe a meeting that was actually worth it."
+  },
+  {
+   "id": "t0373",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "What's a tool you'd fight to keep?"
+  },
+  {
+   "id": "t0374",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "easy",
+   "text": "Talk about what you want your next role to be."
+  },
+  {
+   "id": "t0375",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Walk me through a project you're proud of, start to finish."
+  },
+  {
+   "id": "t0376",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Tell me about a time you disagreed with a decision and how you handled it."
+  },
+  {
+   "id": "t0377",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Describe how you prioritize when everything is urgent."
+  },
+  {
+   "id": "t0378",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Talk about a time you had to influence someone with no authority over them."
+  },
+  {
+   "id": "t0379",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "What's your biggest weakness, answered honestly and usefully?"
+  },
+  {
+   "id": "t0380",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Describe a project that failed and what you'd do differently."
+  },
+  {
+   "id": "t0381",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "How do you decide what not to work on?"
+  },
+  {
+   "id": "t0382",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Talk about giving hard feedback to someone you like."
+  },
+  {
+   "id": "t0383",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Describe how you'd onboard yourself to a totally new domain."
+  },
+  {
+   "id": "t0384",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "What makes a team good, beyond talent?"
+  },
+  {
+   "id": "t0385",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Talk about a process you improved."
+  },
+  {
+   "id": "t0386",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "How do you handle ambiguity in a task nobody has defined?"
+  },
+  {
+   "id": "t0387",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Describe a decision you made with incomplete information."
+  },
+  {
+   "id": "t0388",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Talk about the difference between being busy and being effective."
+  },
+  {
+   "id": "t0389",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "Explain what you'd do in your first thirty days in a new role."
+  },
+  {
+   "id": "t0390",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "medium",
+   "text": "How do you know when a piece of work is done?"
+  },
+  {
+   "id": "t0391",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Answer 'why should we hire you' without a single cliché."
+  },
+  {
+   "id": "t0392",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Talk about a time you were the problem on a team."
+  },
+  {
+   "id": "t0393",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Describe your career in one sentence, then defend it."
+  },
+  {
+   "id": "t0394",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Talk about ambition honestly, including what it costs you."
+  },
+  {
+   "id": "t0395",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "How do you handle working for someone you don't respect?"
+  },
+  {
+   "id": "t0396",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Make the case for a decision you'd get pushback on from leadership."
+  },
+  {
+   "id": "t0397",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Talk about a time you compromised your standards and why."
+  },
+  {
+   "id": "t0398",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Describe how you'd fire someone and what you'd say."
+  },
+  {
+   "id": "t0399",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "What's the strongest argument that your work doesn't matter?"
+  },
+  {
+   "id": "t0400",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Talk about impostor syndrome without using the phrase."
+  },
+  {
+   "id": "t0401",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Explain a strategic tradeoff and commit to a recommendation."
+  },
+  {
+   "id": "t0402",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "How would you tell an executive their favorite project should be killed?"
+  },
+  {
+   "id": "t0403",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Talk about what you'd do if you got everything you're currently chasing."
+  },
+  {
+   "id": "t0404",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Describe the moment you'd know you should quit."
+  },
+  {
+   "id": "t0405",
+   "mode": "topic",
+   "category": "work",
+   "difficulty": "hard",
+   "text": "Argue for the resources you need, to someone who's already said no."
+  },
+  {
+   "id": "t0406",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's the last movie you watched, and would you recommend it?"
+  },
+  {
+   "id": "t0407",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Talk about an album you know by heart."
+  },
+  {
+   "id": "t0408",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Describe a book that stuck with you."
+  },
+  {
+   "id": "t0409",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's your comfort show and why that one?"
+  },
+  {
+   "id": "t0410",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Talk about a concert or live event you went to."
+  },
+  {
+   "id": "t0411",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's a food from your family you'd defend to the death?"
+  },
+  {
+   "id": "t0412",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Describe a museum or gallery you liked."
+  },
+  {
+   "id": "t0413",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's a movie everyone loves that you found boring?"
+  },
+  {
+   "id": "t0414",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Talk about a character you relate to."
+  },
+  {
+   "id": "t0415",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's your favorite holiday tradition?"
+  },
+  {
+   "id": "t0416",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Describe a fashion trend you participated in."
+  },
+  {
+   "id": "t0417",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's the last thing you watched twice?"
+  },
+  {
+   "id": "t0418",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "Talk about a video game or app that ate months of your life."
+  },
+  {
+   "id": "t0419",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "easy",
+   "text": "What's a piece of art you'd hang in your home?"
+  },
+  {
+   "id": "t0420",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Explain what makes a great ending, using an example."
+  },
+  {
+   "id": "t0421",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Talk about a piece of art that changed how you see something."
+  },
+  {
+   "id": "t0422",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Describe a genre you used to dismiss and now respect."
+  },
+  {
+   "id": "t0423",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "What does a city's food say about its history?"
+  },
+  {
+   "id": "t0424",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Talk about the difference between popular and good."
+  },
+  {
+   "id": "t0425",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Describe how a song is built, for someone who doesn't play music."
+  },
+  {
+   "id": "t0426",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "What's a remake or adaptation that worked, and why?"
+  },
+  {
+   "id": "t0427",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Talk about nostalgia and whether it's trustworthy."
+  },
+  {
+   "id": "t0428",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Describe a cultural tradition you observe but didn't choose."
+  },
+  {
+   "id": "t0429",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "What's the role of critics now that everyone reviews everything?"
+  },
+  {
+   "id": "t0430",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Talk about an artist whose personal life complicates their work."
+  },
+  {
+   "id": "t0431",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Describe a scene, shot by shot, from memory."
+  },
+  {
+   "id": "t0432",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "What makes a place feel like it has a culture and not just amenities?"
+  },
+  {
+   "id": "t0433",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Talk about how the internet changed the way things get famous."
+  },
+  {
+   "id": "t0434",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "Describe a book you'd assign to everyone and defend the choice."
+  },
+  {
+   "id": "t0435",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "medium",
+   "text": "What are we going to be embarrassed about in twenty years?"
+  },
+  {
+   "id": "t0436",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Argue that most art made today won't survive, and say what will."
+  },
+  {
+   "id": "t0437",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Should we separate the art from the artist? Take a real position."
+  },
+  {
+   "id": "t0438",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Talk about cultural appropriation with genuine nuance on both sides."
+  },
+  {
+   "id": "t0439",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Argue that streaming ruined music, then argue it saved it."
+  },
+  {
+   "id": "t0440",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "What is art for? Answer without hedging."
+  },
+  {
+   "id": "t0441",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Talk about who gets to tell whose stories."
+  },
+  {
+   "id": "t0442",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Argue that nostalgia is a form of avoidance."
+  },
+  {
+   "id": "t0443",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Describe a canon and then argue for who's missing from it."
+  },
+  {
+   "id": "t0444",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Is taste real, or just class signaling? Defend it."
+  },
+  {
+   "id": "t0445",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Talk about a beloved work whose politics you find indefensible."
+  },
+  {
+   "id": "t0446",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Argue that algorithms have flattened culture, with specifics."
+  },
+  {
+   "id": "t0447",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "What is lost when everything is available all the time?"
+  },
+  {
+   "id": "t0448",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Talk about a tradition worth preserving that's dying, and what preserving it costs."
+  },
+  {
+   "id": "t0449",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Argue that the pursuit of originality is overrated."
+  },
+  {
+   "id": "t0450",
+   "mode": "topic",
+   "category": "culture",
+   "difficulty": "hard",
+   "text": "Defend the value of something widely considered worthless."
+  },
+  {
+   "id": "t0451",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to make your favorite meal, step by step."
+  },
+  {
+   "id": "t0452",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to tie a shoe out loud, with no hands."
+  },
+  {
+   "id": "t0453",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain the rules of a game you know well."
+  },
+  {
+   "id": "t0454",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to get from your home to somewhere you go often."
+  },
+  {
+   "id": "t0455",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to do a chore properly."
+  },
+  {
+   "id": "t0456",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how a bicycle works."
+  },
+  {
+   "id": "t0457",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to pack a suitcase efficiently."
+  },
+  {
+   "id": "t0458",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain what your favorite app does to someone who's never seen it."
+  },
+  {
+   "id": "t0459",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to make a good cup of coffee."
+  },
+  {
+   "id": "t0460",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain what a subject you studied is actually about."
+  },
+  {
+   "id": "t0461",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to introduce yourself to a stranger."
+  },
+  {
+   "id": "t0462",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how a plant grows."
+  },
+  {
+   "id": "t0463",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain how to take a good photo."
+  },
+  {
+   "id": "t0464",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "easy",
+   "text": "Explain the difference between two things people confuse."
+  },
+  {
+   "id": "t0465",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain compound interest to a fifteen-year-old."
+  },
+  {
+   "id": "t0466",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how a vaccine works."
+  },
+  {
+   "id": "t0467",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain why the sky is blue without saying 'scattering' twice."
+  },
+  {
+   "id": "t0468",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how supply and demand set a price."
+  },
+  {
+   "id": "t0469",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain what a database is to someone non-technical."
+  },
+  {
+   "id": "t0470",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how elections work in your country."
+  },
+  {
+   "id": "t0471",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how airplanes stay up."
+  },
+  {
+   "id": "t0472",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain what inflation is and why it matters to a student."
+  },
+  {
+   "id": "t0473",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain the water cycle as if it were a story."
+  },
+  {
+   "id": "t0474",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain what makes a good argument, structurally."
+  },
+  {
+   "id": "t0475",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how credit scores work."
+  },
+  {
+   "id": "t0476",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain a concept from your field to a smart twelve-year-old."
+  },
+  {
+   "id": "t0477",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how GPS knows where you are."
+  },
+  {
+   "id": "t0478",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain probability using something from daily life."
+  },
+  {
+   "id": "t0479",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain how a law becomes a law."
+  },
+  {
+   "id": "t0480",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "medium",
+   "text": "Explain what an API is using a restaurant."
+  },
+  {
+   "id": "t0481",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain quantum entanglement without using a single metaphor you've heard before."
+  },
+  {
+   "id": "t0482",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain evolution to someone who is skeptical of it, respectfully."
+  },
+  {
+   "id": "t0483",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain how a neural network learns, in ninety seconds, no jargon."
+  },
+  {
+   "id": "t0484",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain a paradox you find genuinely confusing."
+  },
+  {
+   "id": "t0485",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain the concept of entropy so a child understands the point of it."
+  },
+  {
+   "id": "t0486",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain how money is created."
+  },
+  {
+   "id": "t0487",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain something you only half understand, and be honest about the seams."
+  },
+  {
+   "id": "t0488",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain relativity using only things in this room."
+  },
+  {
+   "id": "t0489",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain the hardest idea from your major to a total outsider."
+  },
+  {
+   "id": "t0490",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain what makes a proof a proof."
+  },
+  {
+   "id": "t0491",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain a complex system by describing what happens when it fails."
+  },
+  {
+   "id": "t0492",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain why correlation isn't causation using a real example."
+  },
+  {
+   "id": "t0493",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain a topic you hate to someone who loves it, fairly."
+  },
+  {
+   "id": "t0494",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain consciousness, knowing you'll fail, and make the failure interesting."
+  },
+  {
+   "id": "t0495",
+   "mode": "topic",
+   "category": "explain",
+   "difficulty": "hard",
+   "text": "Explain the same idea three ways for three different audiences."
+  },
+  {
+   "id": "t0496",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Pitch your favorite restaurant to someone who's never been."
+  },
+  {
+   "id": "t0497",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Sell me on a movie in sixty seconds."
+  },
+  {
+   "id": "t0498",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Convince me to try your hobby."
+  },
+  {
+   "id": "t0499",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Pitch the city you live in."
+  },
+  {
+   "id": "t0500",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Sell me the last product you bought."
+  },
+  {
+   "id": "t0501",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Convince someone to read a book you love."
+  },
+  {
+   "id": "t0502",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Pitch a weekend plan to a friend who wants to stay home."
+  },
+  {
+   "id": "t0503",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Sell me on waking up early."
+  },
+  {
+   "id": "t0504",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Convince a friend to take a class with you."
+  },
+  {
+   "id": "t0505",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Pitch your favorite app in three sentences."
+  },
+  {
+   "id": "t0506",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Sell me a pen. Yes, really."
+  },
+  {
+   "id": "t0507",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Convince someone to adopt a pet."
+  },
+  {
+   "id": "t0508",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Pitch a road trip route."
+  },
+  {
+   "id": "t0509",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "easy",
+   "text": "Sell me on your least favorite chore."
+  },
+  {
+   "id": "t0510",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch yourself for a job in ninety seconds."
+  },
+  {
+   "id": "t0511",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a product idea, including who it's for and why now."
+  },
+  {
+   "id": "t0512",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Convince a skeptical audience to fund your side project."
+  },
+  {
+   "id": "t0513",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a feature you'd add to an app you use daily."
+  },
+  {
+   "id": "t0514",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Sell an idea to a room that's already tired of ideas."
+  },
+  {
+   "id": "t0515",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a change to how your team or class works."
+  },
+  {
+   "id": "t0516",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Convince someone to switch from a tool they like."
+  },
+  {
+   "id": "t0517",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a business that could exist in your neighborhood."
+  },
+  {
+   "id": "t0518",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Make a two-minute case for a decision, with a clear recommendation."
+  },
+  {
+   "id": "t0519",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a nonprofit you'd start."
+  },
+  {
+   "id": "t0520",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Convince a friend to make a big life change."
+  },
+  {
+   "id": "t0521",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a podcast or show you'd create."
+  },
+  {
+   "id": "t0522",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Sell the value of something invisible, like maintenance or process."
+  },
+  {
+   "id": "t0523",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch your major to a parent who wanted you to do something else."
+  },
+  {
+   "id": "t0524",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Convince a customer to stay after a bad experience."
+  },
+  {
+   "id": "t0525",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "medium",
+   "text": "Pitch a price increase to people who won't like it."
+  },
+  {
+   "id": "t0526",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch an idea you don't personally believe in, convincingly."
+  },
+  {
+   "id": "t0527",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Make a two-minute investment case, including the strongest reason not to."
+  },
+  {
+   "id": "t0528",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch a difficult decision to the people it will hurt most."
+  },
+  {
+   "id": "t0529",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Sell a product with a real, serious flaw, honestly."
+  },
+  {
+   "id": "t0530",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Convince an audience to do the harder of two options."
+  },
+  {
+   "id": "t0531",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch a strategy, then take three hostile questions from yourself."
+  },
+  {
+   "id": "t0532",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Make the case for killing something you built."
+  },
+  {
+   "id": "t0533",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch a bet with a low chance of success and defend the math."
+  },
+  {
+   "id": "t0534",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Convince a room to change its mind after it already decided."
+  },
+  {
+   "id": "t0535",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch something to someone who has every reason to distrust you."
+  },
+  {
+   "id": "t0536",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Deliver a pitch where the strongest argument is emotional, but keep it honest."
+  },
+  {
+   "id": "t0537",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch a long-term investment to an audience that only cares about this quarter."
+  },
+  {
+   "id": "t0538",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Make the case for yourself for a job you're underqualified for."
+  },
+  {
+   "id": "t0539",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Pitch an unpopular truth as if it were an opportunity."
+  },
+  {
+   "id": "t0540",
+   "mode": "topic",
+   "category": "pitch",
+   "difficulty": "hard",
+   "text": "Give the same pitch twice: once for thirty seconds, once for two minutes."
+  },
+  {
+   "id": "t0541",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Complain about something trivial for a full minute."
+  },
+  {
+   "id": "t0542",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Describe a normal object as if you've never seen one before."
+  },
+  {
+   "id": "t0543",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Give an award acceptance speech for something dumb you did."
+  },
+  {
+   "id": "t0544",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Narrate a sport that isn't a sport, like folding laundry."
+  },
+  {
+   "id": "t0545",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Describe your worst fashion phase."
+  },
+  {
+   "id": "t0546",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Talk about a nickname you had and how you got it."
+  },
+  {
+   "id": "t0547",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Do a weather report for the inside of your fridge."
+  },
+  {
+   "id": "t0548",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Explain a children's movie plot as if it's a crime drama."
+  },
+  {
+   "id": "t0549",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Talk about the most embarrassing thing in your search history, sanitized."
+  },
+  {
+   "id": "t0550",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Describe a very ordinary morning in the voice of an action trailer."
+  },
+  {
+   "id": "t0551",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Rank three snacks with the seriousness of a supreme court ruling."
+  },
+  {
+   "id": "t0552",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Talk about your relationship with a household appliance."
+  },
+  {
+   "id": "t0553",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Give a tour of your bag, item by item."
+  },
+  {
+   "id": "t0554",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "easy",
+   "text": "Describe the last text you sent that you regret."
+  },
+  {
+   "id": "t0555",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Give a TED talk on the worst idea you've ever had."
+  },
+  {
+   "id": "t0556",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Deliver a eulogy for an item you lost."
+  },
+  {
+   "id": "t0557",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Make an infomercial for something nobody needs."
+  },
+  {
+   "id": "t0558",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Argue passionately for a position that is obviously wrong."
+  },
+  {
+   "id": "t0559",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Describe your life as a nature documentary."
+  },
+  {
+   "id": "t0560",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Give a motivational speech to a losing team of houseplants."
+  },
+  {
+   "id": "t0561",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Explain a conspiracy theory about something harmless."
+  },
+  {
+   "id": "t0562",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Do a product launch for a terrible invention."
+  },
+  {
+   "id": "t0563",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Roast yourself for ninety seconds, affectionately."
+  },
+  {
+   "id": "t0564",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Give a museum tour of your childhood bedroom."
+  },
+  {
+   "id": "t0565",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Pitch a movie that's clearly two movies stapled together."
+  },
+  {
+   "id": "t0566",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Deliver a wedding toast for two fictional characters."
+  },
+  {
+   "id": "t0567",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Explain a household argument as a geopolitical conflict."
+  },
+  {
+   "id": "t0568",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Complain like a Victorian aristocrat about modern inconveniences."
+  },
+  {
+   "id": "t0569",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Give a safety briefing for an ordinary activity."
+  },
+  {
+   "id": "t0570",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "medium",
+   "text": "Narrate your last grocery run as a heist."
+  },
+  {
+   "id": "t0571",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Be funny about something you're actually upset about."
+  },
+  {
+   "id": "t0572",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Tell a joke that takes ninety seconds to land, and land it."
+  },
+  {
+   "id": "t0573",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Do two minutes of stand-up about your own life, no notes."
+  },
+  {
+   "id": "t0574",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Make an audience laugh, then make them uncomfortable, then bring them back."
+  },
+  {
+   "id": "t0575",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Improvise a story with a running joke you plant early and pay off at the end."
+  },
+  {
+   "id": "t0576",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Be funny without saying anything mean."
+  },
+  {
+   "id": "t0577",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Describe a genuinely sad memory in a way that gets a laugh, respectfully."
+  },
+  {
+   "id": "t0578",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Do a bit where you play two characters arguing."
+  },
+  {
+   "id": "t0579",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Deliver a serious speech, but you're increasingly aware it's going badly."
+  },
+  {
+   "id": "t0580",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Make something boring genuinely funny: tax code, parking rules, terms of service."
+  },
+  {
+   "id": "t0581",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Tell a story where the joke is on you and it still stings."
+  },
+  {
+   "id": "t0582",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Do a fake apology speech, escalating."
+  },
+  {
+   "id": "t0583",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Take a completely absurd premise and defend it with rigorous logic."
+  },
+  {
+   "id": "t0584",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Be funny in a voice that isn't yours, and stay in it."
+  },
+  {
+   "id": "t0585",
+   "mode": "topic",
+   "category": "humor",
+   "difficulty": "hard",
+   "text": "Build a joke out of the room you're in right now."
+  },
+  {
+   "id": "w0001",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Key"
+  },
+  {
+   "id": "w0002",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Chair"
+  },
+  {
+   "id": "w0003",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Window"
+  },
+  {
+   "id": "w0004",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Backpack"
+  },
+  {
+   "id": "w0005",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Mirror"
+  },
+  {
+   "id": "w0006",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Clock"
+  },
+  {
+   "id": "w0007",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Umbrella"
+  },
+  {
+   "id": "w0008",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Bicycle"
+  },
+  {
+   "id": "w0009",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Shoes"
+  },
+  {
+   "id": "w0010",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Blanket"
+  },
+  {
+   "id": "w0011",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Camera"
+  },
+  {
+   "id": "w0012",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Coffee"
+  },
+  {
+   "id": "w0013",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Ladder"
+  },
+  {
+   "id": "w0014",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Pillow"
+  },
+  {
+   "id": "w0015",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Wallet"
+  },
+  {
+   "id": "w0016",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Notebook"
+  },
+  {
+   "id": "w0017",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Lamp"
+  },
+  {
+   "id": "w0018",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Bridge"
+  },
+  {
+   "id": "w0019",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Door"
+  },
+  {
+   "id": "w0020",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "easy",
+   "text": "Map"
+  },
+  {
+   "id": "w0021",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Compass"
+  },
+  {
+   "id": "w0022",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Typewriter"
+  },
+  {
+   "id": "w0023",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Suitcase"
+  },
+  {
+   "id": "w0024",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Anchor"
+  },
+  {
+   "id": "w0025",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Telescope"
+  },
+  {
+   "id": "w0026",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Matchbox"
+  },
+  {
+   "id": "w0027",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Vinyl"
+  },
+  {
+   "id": "w0028",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Fireplace"
+  },
+  {
+   "id": "w0029",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Passport"
+  },
+  {
+   "id": "w0030",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Hourglass"
+  },
+  {
+   "id": "w0031",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Scaffolding"
+  },
+  {
+   "id": "w0032",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Chandelier"
+  },
+  {
+   "id": "w0033",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Envelope"
+  },
+  {
+   "id": "w0034",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Kaleidoscope"
+  },
+  {
+   "id": "w0035",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Toolbox"
+  },
+  {
+   "id": "w0036",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Lantern"
+  },
+  {
+   "id": "w0037",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Rearview"
+  },
+  {
+   "id": "w0038",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Turnstile"
+  },
+  {
+   "id": "w0039",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Payphone"
+  },
+  {
+   "id": "w0040",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "medium",
+   "text": "Stethoscope"
+  },
+  {
+   "id": "w0041",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Artifact"
+  },
+  {
+   "id": "w0042",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Relic"
+  },
+  {
+   "id": "w0043",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Prosthetic"
+  },
+  {
+   "id": "w0044",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Monolith"
+  },
+  {
+   "id": "w0045",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Palimpsest"
+  },
+  {
+   "id": "w0046",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Talisman"
+  },
+  {
+   "id": "w0047",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Reliquary"
+  },
+  {
+   "id": "w0048",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Ledger"
+  },
+  {
+   "id": "w0049",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Cipher"
+  },
+  {
+   "id": "w0050",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Fossil"
+  },
+  {
+   "id": "w0051",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Effigy"
+  },
+  {
+   "id": "w0052",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Mausoleum"
+  },
+  {
+   "id": "w0053",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Contraption"
+  },
+  {
+   "id": "w0054",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Threshold"
+  },
+  {
+   "id": "w0055",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Vessel"
+  },
+  {
+   "id": "w0056",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Apparatus"
+  },
+  {
+   "id": "w0057",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Loom"
+  },
+  {
+   "id": "w0058",
+   "mode": "word",
+   "category": "objects",
+   "difficulty": "hard",
+   "text": "Sundial"
+  },
+  {
+   "id": "w0059",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Time"
+  },
+  {
+   "id": "w0060",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Luck"
+  },
+  {
+   "id": "w0061",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Home"
+  },
+  {
+   "id": "w0062",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Trust"
+  },
+  {
+   "id": "w0063",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Change"
+  },
+  {
+   "id": "w0064",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Money"
+  },
+  {
+   "id": "w0065",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Power"
+  },
+  {
+   "id": "w0066",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Habit"
+  },
+  {
+   "id": "w0067",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Choice"
+  },
+  {
+   "id": "w0068",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Balance"
+  },
+  {
+   "id": "w0069",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Growth"
+  },
+  {
+   "id": "w0070",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Rules"
+  },
+  {
+   "id": "w0071",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Speed"
+  },
+  {
+   "id": "w0072",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Silence"
+  },
+  {
+   "id": "w0073",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Distance"
+  },
+  {
+   "id": "w0074",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Comfort"
+  },
+  {
+   "id": "w0075",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Risk"
+  },
+  {
+   "id": "w0076",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Focus"
+  },
+  {
+   "id": "w0077",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Chance"
+  },
+  {
+   "id": "w0078",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "easy",
+   "text": "Order"
+  },
+  {
+   "id": "w0079",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Legacy"
+  },
+  {
+   "id": "w0080",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Momentum"
+  },
+  {
+   "id": "w0081",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Boundaries"
+  },
+  {
+   "id": "w0082",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Reputation"
+  },
+  {
+   "id": "w0083",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Sacrifice"
+  },
+  {
+   "id": "w0084",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Compromise"
+  },
+  {
+   "id": "w0085",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Discipline"
+  },
+  {
+   "id": "w0086",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Ambition"
+  },
+  {
+   "id": "w0087",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Loyalty"
+  },
+  {
+   "id": "w0088",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Perspective"
+  },
+  {
+   "id": "w0089",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Consequence"
+  },
+  {
+   "id": "w0090",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Tradition"
+  },
+  {
+   "id": "w0091",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Identity"
+  },
+  {
+   "id": "w0092",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Freedom"
+  },
+  {
+   "id": "w0093",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Justice"
+  },
+  {
+   "id": "w0094",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Privacy"
+  },
+  {
+   "id": "w0095",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Attention"
+  },
+  {
+   "id": "w0096",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Ownership"
+  },
+  {
+   "id": "w0097",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Patience"
+  },
+  {
+   "id": "w0098",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "medium",
+   "text": "Progress"
+  },
+  {
+   "id": "w0099",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Entropy"
+  },
+  {
+   "id": "w0100",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Impermanence"
+  },
+  {
+   "id": "w0101",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Autonomy"
+  },
+  {
+   "id": "w0102",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Hubris"
+  },
+  {
+   "id": "w0103",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Absurdity"
+  },
+  {
+   "id": "w0104",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Reciprocity"
+  },
+  {
+   "id": "w0105",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Sublimation"
+  },
+  {
+   "id": "w0106",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Liminality"
+  },
+  {
+   "id": "w0107",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Ineffable"
+  },
+  {
+   "id": "w0108",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Contingency"
+  },
+  {
+   "id": "w0109",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Emergence"
+  },
+  {
+   "id": "w0110",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Paradox"
+  },
+  {
+   "id": "w0111",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Sovereignty"
+  },
+  {
+   "id": "w0112",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Nihilism"
+  },
+  {
+   "id": "w0113",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Transcendence"
+  },
+  {
+   "id": "w0114",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Alienation"
+  },
+  {
+   "id": "w0115",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Ambiguity"
+  },
+  {
+   "id": "w0116",
+   "mode": "word",
+   "category": "abstract",
+   "difficulty": "hard",
+   "text": "Duty"
+  },
+  {
+   "id": "w0117",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Joy"
+  },
+  {
+   "id": "w0118",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Fear"
+  },
+  {
+   "id": "w0119",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Anger"
+  },
+  {
+   "id": "w0120",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Pride"
+  },
+  {
+   "id": "w0121",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Boredom"
+  },
+  {
+   "id": "w0122",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Excitement"
+  },
+  {
+   "id": "w0123",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Worry"
+  },
+  {
+   "id": "w0124",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Relief"
+  },
+  {
+   "id": "w0125",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Calm"
+  },
+  {
+   "id": "w0126",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Surprise"
+  },
+  {
+   "id": "w0127",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Love"
+  },
+  {
+   "id": "w0128",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Sadness"
+  },
+  {
+   "id": "w0129",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Hope"
+  },
+  {
+   "id": "w0130",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Guilt"
+  },
+  {
+   "id": "w0131",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Curiosity"
+  },
+  {
+   "id": "w0132",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Frustration"
+  },
+  {
+   "id": "w0133",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Gratitude"
+  },
+  {
+   "id": "w0134",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Loneliness"
+  },
+  {
+   "id": "w0135",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Jealousy"
+  },
+  {
+   "id": "w0136",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "easy",
+   "text": "Shame"
+  },
+  {
+   "id": "w0137",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Nostalgia"
+  },
+  {
+   "id": "w0138",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Resentment"
+  },
+  {
+   "id": "w0139",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Awe"
+  },
+  {
+   "id": "w0140",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Contempt"
+  },
+  {
+   "id": "w0141",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Longing"
+  },
+  {
+   "id": "w0142",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Restlessness"
+  },
+  {
+   "id": "w0143",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Dread"
+  },
+  {
+   "id": "w0144",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Tenderness"
+  },
+  {
+   "id": "w0145",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Envy"
+  },
+  {
+   "id": "w0146",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Regret"
+  },
+  {
+   "id": "w0147",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Anticipation"
+  },
+  {
+   "id": "w0148",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Vulnerability"
+  },
+  {
+   "id": "w0149",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Bitterness"
+  },
+  {
+   "id": "w0150",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Wonder"
+  },
+  {
+   "id": "w0151",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Grief"
+  },
+  {
+   "id": "w0152",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Embarrassment"
+  },
+  {
+   "id": "w0153",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Contentment"
+  },
+  {
+   "id": "w0154",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Panic"
+  },
+  {
+   "id": "w0155",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Devotion"
+  },
+  {
+   "id": "w0156",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "medium",
+   "text": "Numbness"
+  },
+  {
+   "id": "w0157",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Melancholy"
+  },
+  {
+   "id": "w0158",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Ambivalence"
+  },
+  {
+   "id": "w0159",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Catharsis"
+  },
+  {
+   "id": "w0160",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Schadenfreude"
+  },
+  {
+   "id": "w0161",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Yearning"
+  },
+  {
+   "id": "w0162",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Disillusionment"
+  },
+  {
+   "id": "w0163",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Reverence"
+  },
+  {
+   "id": "w0164",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Anguish"
+  },
+  {
+   "id": "w0165",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Euphoria"
+  },
+  {
+   "id": "w0166",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Malaise"
+  },
+  {
+   "id": "w0167",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Trepidation"
+  },
+  {
+   "id": "w0168",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Complacency"
+  },
+  {
+   "id": "w0169",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Indignation"
+  },
+  {
+   "id": "w0170",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Serenity"
+  },
+  {
+   "id": "w0171",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Apathy"
+  },
+  {
+   "id": "w0172",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Rapture"
+  },
+  {
+   "id": "w0173",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Remorse"
+  },
+  {
+   "id": "w0174",
+   "mode": "word",
+   "category": "emotions",
+   "difficulty": "hard",
+   "text": "Hysteria"
+  },
+  {
+   "id": "w0175",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Beach"
+  },
+  {
+   "id": "w0176",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Kitchen"
+  },
+  {
+   "id": "w0177",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "School"
+  },
+  {
+   "id": "w0178",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Park"
+  },
+  {
+   "id": "w0179",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Airport"
+  },
+  {
+   "id": "w0180",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Library"
+  },
+  {
+   "id": "w0181",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Hospital"
+  },
+  {
+   "id": "w0182",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Market"
+  },
+  {
+   "id": "w0183",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Garage"
+  },
+  {
+   "id": "w0184",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Rooftop"
+  },
+  {
+   "id": "w0185",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Elevator"
+  },
+  {
+   "id": "w0186",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Backyard"
+  },
+  {
+   "id": "w0187",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Diner"
+  },
+  {
+   "id": "w0188",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Subway"
+  },
+  {
+   "id": "w0189",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Hotel"
+  },
+  {
+   "id": "w0190",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Church"
+  },
+  {
+   "id": "w0191",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Stadium"
+  },
+  {
+   "id": "w0192",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Basement"
+  },
+  {
+   "id": "w0193",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Highway"
+  },
+  {
+   "id": "w0194",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "easy",
+   "text": "Campus"
+  },
+  {
+   "id": "w0195",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Border"
+  },
+  {
+   "id": "w0196",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Harbor"
+  },
+  {
+   "id": "w0197",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Suburb"
+  },
+  {
+   "id": "w0198",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Desert"
+  },
+  {
+   "id": "w0199",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Attic"
+  },
+  {
+   "id": "w0200",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Waiting room"
+  },
+  {
+   "id": "w0201",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Rest stop"
+  },
+  {
+   "id": "w0202",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Greenhouse"
+  },
+  {
+   "id": "w0203",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Ferry"
+  },
+  {
+   "id": "w0204",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Alleyway"
+  },
+  {
+   "id": "w0205",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Lighthouse"
+  },
+  {
+   "id": "w0206",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Courtroom"
+  },
+  {
+   "id": "w0207",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Warehouse"
+  },
+  {
+   "id": "w0208",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Observatory"
+  },
+  {
+   "id": "w0209",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Motel"
+  },
+  {
+   "id": "w0210",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Quarry"
+  },
+  {
+   "id": "w0211",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Dormitory"
+  },
+  {
+   "id": "w0212",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Marketplace"
+  },
+  {
+   "id": "w0213",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Terminal"
+  },
+  {
+   "id": "w0214",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "medium",
+   "text": "Overpass"
+  },
+  {
+   "id": "w0215",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Wilderness"
+  },
+  {
+   "id": "w0216",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Frontier"
+  },
+  {
+   "id": "w0217",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Ruins"
+  },
+  {
+   "id": "w0218",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Sanctuary"
+  },
+  {
+   "id": "w0219",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Wasteland"
+  },
+  {
+   "id": "w0220",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Crossroads"
+  },
+  {
+   "id": "w0221",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Labyrinth"
+  },
+  {
+   "id": "w0222",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Colony"
+  },
+  {
+   "id": "w0223",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Periphery"
+  },
+  {
+   "id": "w0224",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Archive"
+  },
+  {
+   "id": "w0225",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Asylum"
+  },
+  {
+   "id": "w0226",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Catacomb"
+  },
+  {
+   "id": "w0227",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Utopia"
+  },
+  {
+   "id": "w0228",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Exile"
+  },
+  {
+   "id": "w0229",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Hinterland"
+  },
+  {
+   "id": "w0230",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Citadel"
+  },
+  {
+   "id": "w0231",
+   "mode": "word",
+   "category": "places",
+   "difficulty": "hard",
+   "text": "Diaspora"
+  },
+  {
+   "id": "w0232",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Running"
+  },
+  {
+   "id": "w0233",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Waiting"
+  },
+  {
+   "id": "w0234",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Cooking"
+  },
+  {
+   "id": "w0235",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Cleaning"
+  },
+  {
+   "id": "w0236",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Packing"
+  },
+  {
+   "id": "w0237",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Driving"
+  },
+  {
+   "id": "w0238",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Singing"
+  },
+  {
+   "id": "w0239",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Dancing"
+  },
+  {
+   "id": "w0240",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Swimming"
+  },
+  {
+   "id": "w0241",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Building"
+  },
+  {
+   "id": "w0242",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Fixing"
+  },
+  {
+   "id": "w0243",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Sleeping"
+  },
+  {
+   "id": "w0244",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Traveling"
+  },
+  {
+   "id": "w0245",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Reading"
+  },
+  {
+   "id": "w0246",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Shopping"
+  },
+  {
+   "id": "w0247",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Climbing"
+  },
+  {
+   "id": "w0248",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Falling"
+  },
+  {
+   "id": "w0249",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Arriving"
+  },
+  {
+   "id": "w0250",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Leaving"
+  },
+  {
+   "id": "w0251",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "easy",
+   "text": "Starting"
+  },
+  {
+   "id": "w0252",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Negotiating"
+  },
+  {
+   "id": "w0253",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Apologizing"
+  },
+  {
+   "id": "w0254",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Quitting"
+  },
+  {
+   "id": "w0255",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Competing"
+  },
+  {
+   "id": "w0256",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Rehearsing"
+  },
+  {
+   "id": "w0257",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Repairing"
+  },
+  {
+   "id": "w0258",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Persuading"
+  },
+  {
+   "id": "w0259",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Delegating"
+  },
+  {
+   "id": "w0260",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Confronting"
+  },
+  {
+   "id": "w0261",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Rebuilding"
+  },
+  {
+   "id": "w0262",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Wandering"
+  },
+  {
+   "id": "w0263",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Bargaining"
+  },
+  {
+   "id": "w0264",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Improvising"
+  },
+  {
+   "id": "w0265",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Interrupting"
+  },
+  {
+   "id": "w0266",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Committing"
+  },
+  {
+   "id": "w0267",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Adapting"
+  },
+  {
+   "id": "w0268",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Escaping"
+  },
+  {
+   "id": "w0269",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Volunteering"
+  },
+  {
+   "id": "w0270",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Reconciling"
+  },
+  {
+   "id": "w0271",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "medium",
+   "text": "Migrating"
+  },
+  {
+   "id": "w0272",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Surrendering"
+  },
+  {
+   "id": "w0273",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Sacrificing"
+  },
+  {
+   "id": "w0274",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Betraying"
+  },
+  {
+   "id": "w0275",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Forgiving"
+  },
+  {
+   "id": "w0276",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Unlearning"
+  },
+  {
+   "id": "w0277",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Confessing"
+  },
+  {
+   "id": "w0278",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Rebelling"
+  },
+  {
+   "id": "w0279",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Enduring"
+  },
+  {
+   "id": "w0280",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Abandoning"
+  },
+  {
+   "id": "w0281",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Reckoning"
+  },
+  {
+   "id": "w0282",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Atoning"
+  },
+  {
+   "id": "w0283",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Withholding"
+  },
+  {
+   "id": "w0284",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Yielding"
+  },
+  {
+   "id": "w0285",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Excavating"
+  },
+  {
+   "id": "w0286",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Deceiving"
+  },
+  {
+   "id": "w0287",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Transforming"
+  },
+  {
+   "id": "w0288",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Grieving"
+  },
+  {
+   "id": "w0289",
+   "mode": "word",
+   "category": "actions",
+   "difficulty": "hard",
+   "text": "Beginning again"
+  },
+  {
+   "id": "w0290",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Rain"
+  },
+  {
+   "id": "w0291",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Ocean"
+  },
+  {
+   "id": "w0292",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Mountain"
+  },
+  {
+   "id": "w0293",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Tree"
+  },
+  {
+   "id": "w0294",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Fire"
+  },
+  {
+   "id": "w0295",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Snow"
+  },
+  {
+   "id": "w0296",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "River"
+  },
+  {
+   "id": "w0297",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Wind"
+  },
+  {
+   "id": "w0298",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Sunrise"
+  },
+  {
+   "id": "w0299",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Storm"
+  },
+  {
+   "id": "w0300",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Forest"
+  },
+  {
+   "id": "w0301",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Moon"
+  },
+  {
+   "id": "w0302",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Bird"
+  },
+  {
+   "id": "w0303",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Flower"
+  },
+  {
+   "id": "w0304",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Ice"
+  },
+  {
+   "id": "w0305",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Cloud"
+  },
+  {
+   "id": "w0306",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Island"
+  },
+  {
+   "id": "w0307",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Valley"
+  },
+  {
+   "id": "w0308",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "easy",
+   "text": "Dog"
+  },
+  {
+   "id": "w0309",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Tide"
+  },
+  {
+   "id": "w0310",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Drought"
+  },
+  {
+   "id": "w0311",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Wildfire"
+  },
+  {
+   "id": "w0312",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Migration"
+  },
+  {
+   "id": "w0313",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Glacier"
+  },
+  {
+   "id": "w0314",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Canyon"
+  },
+  {
+   "id": "w0315",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Swarm"
+  },
+  {
+   "id": "w0316",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Hibernation"
+  },
+  {
+   "id": "w0317",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Reef"
+  },
+  {
+   "id": "w0318",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Volcano"
+  },
+  {
+   "id": "w0319",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Fog"
+  },
+  {
+   "id": "w0320",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Bloom"
+  },
+  {
+   "id": "w0321",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Predator"
+  },
+  {
+   "id": "w0322",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Eclipse"
+  },
+  {
+   "id": "w0323",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Marsh"
+  },
+  {
+   "id": "w0324",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Avalanche"
+  },
+  {
+   "id": "w0325",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Roots"
+  },
+  {
+   "id": "w0326",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Season"
+  },
+  {
+   "id": "w0327",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Current"
+  },
+  {
+   "id": "w0328",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "medium",
+   "text": "Habitat"
+  },
+  {
+   "id": "w0329",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Ecosystem"
+  },
+  {
+   "id": "w0330",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Extinction"
+  },
+  {
+   "id": "w0331",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Symbiosis"
+  },
+  {
+   "id": "w0332",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Erosion"
+  },
+  {
+   "id": "w0333",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Decay"
+  },
+  {
+   "id": "w0334",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Sediment"
+  },
+  {
+   "id": "w0335",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Photosynthesis"
+  },
+  {
+   "id": "w0336",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Adaptation"
+  },
+  {
+   "id": "w0337",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Biodiversity"
+  },
+  {
+   "id": "w0338",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Permafrost"
+  },
+  {
+   "id": "w0339",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Watershed"
+  },
+  {
+   "id": "w0340",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Pollination"
+  },
+  {
+   "id": "w0341",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Metamorphosis"
+  },
+  {
+   "id": "w0342",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Equilibrium"
+  },
+  {
+   "id": "w0343",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Regeneration"
+  },
+  {
+   "id": "w0344",
+   "mode": "word",
+   "category": "nature",
+   "difficulty": "hard",
+   "text": "Scarcity"
+  },
+  {
+   "id": "w0345",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Teacher"
+  },
+  {
+   "id": "w0346",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Neighbor"
+  },
+  {
+   "id": "w0347",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Stranger"
+  },
+  {
+   "id": "w0348",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Parent"
+  },
+  {
+   "id": "w0349",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Friend"
+  },
+  {
+   "id": "w0350",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Coach"
+  },
+  {
+   "id": "w0351",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Doctor"
+  },
+  {
+   "id": "w0352",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Driver"
+  },
+  {
+   "id": "w0353",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Chef"
+  },
+  {
+   "id": "w0354",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Student"
+  },
+  {
+   "id": "w0355",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Boss"
+  },
+  {
+   "id": "w0356",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Sibling"
+  },
+  {
+   "id": "w0357",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Roommate"
+  },
+  {
+   "id": "w0358",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Barista"
+  },
+  {
+   "id": "w0359",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Nurse"
+  },
+  {
+   "id": "w0360",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Musician"
+  },
+  {
+   "id": "w0361",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Athlete"
+  },
+  {
+   "id": "w0362",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Farmer"
+  },
+  {
+   "id": "w0363",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Engineer"
+  },
+  {
+   "id": "w0364",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "easy",
+   "text": "Grandparent"
+  },
+  {
+   "id": "w0365",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Mentor"
+  },
+  {
+   "id": "w0366",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Rival"
+  },
+  {
+   "id": "w0367",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Immigrant"
+  },
+  {
+   "id": "w0368",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Founder"
+  },
+  {
+   "id": "w0369",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Volunteer"
+  },
+  {
+   "id": "w0370",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Referee"
+  },
+  {
+   "id": "w0371",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Janitor"
+  },
+  {
+   "id": "w0372",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Translator"
+  },
+  {
+   "id": "w0373",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Apprentice"
+  },
+  {
+   "id": "w0374",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Caretaker"
+  },
+  {
+   "id": "w0375",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Bystander"
+  },
+  {
+   "id": "w0376",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Newcomer"
+  },
+  {
+   "id": "w0377",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Veteran"
+  },
+  {
+   "id": "w0378",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Critic"
+  },
+  {
+   "id": "w0379",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Host"
+  },
+  {
+   "id": "w0380",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Skeptic"
+  },
+  {
+   "id": "w0381",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Organizer"
+  },
+  {
+   "id": "w0382",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Understudy"
+  },
+  {
+   "id": "w0383",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Regular"
+  },
+  {
+   "id": "w0384",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "medium",
+   "text": "Outsider"
+  },
+  {
+   "id": "w0385",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Successor"
+  },
+  {
+   "id": "w0386",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Dissident"
+  },
+  {
+   "id": "w0387",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Bureaucrat"
+  },
+  {
+   "id": "w0388",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Prodigy"
+  },
+  {
+   "id": "w0389",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Recluse"
+  },
+  {
+   "id": "w0390",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Martyr"
+  },
+  {
+   "id": "w0391",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Accomplice"
+  },
+  {
+   "id": "w0392",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Heir"
+  },
+  {
+   "id": "w0393",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Nomad"
+  },
+  {
+   "id": "w0394",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Whistleblower"
+  },
+  {
+   "id": "w0395",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Scapegoat"
+  },
+  {
+   "id": "w0396",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Gatekeeper"
+  },
+  {
+   "id": "w0397",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Impostor"
+  },
+  {
+   "id": "w0398",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Prophet"
+  },
+  {
+   "id": "w0399",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Custodian"
+  },
+  {
+   "id": "w0400",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Zealot"
+  },
+  {
+   "id": "w0401",
+   "mode": "word",
+   "category": "people",
+   "difficulty": "hard",
+   "text": "Confidant"
+  },
+  {
+   "id": "w0402",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Socks"
+  },
+  {
+   "id": "w0403",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Pickles"
+  },
+  {
+   "id": "w0404",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Traffic"
+  },
+  {
+   "id": "w0405",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Mondays"
+  },
+  {
+   "id": "w0406",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Elevators"
+  },
+  {
+   "id": "w0407",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Escalators"
+  },
+  {
+   "id": "w0408",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Receipts"
+  },
+  {
+   "id": "w0409",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Napkins"
+  },
+  {
+   "id": "w0410",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Doorbells"
+  },
+  {
+   "id": "w0411",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Parking"
+  },
+  {
+   "id": "w0412",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Laundry"
+  },
+  {
+   "id": "w0413",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Waiting rooms"
+  },
+  {
+   "id": "w0414",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Alarms"
+  },
+  {
+   "id": "w0415",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Junk drawers"
+  },
+  {
+   "id": "w0416",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Small talk"
+  },
+  {
+   "id": "w0417",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Group chats"
+  },
+  {
+   "id": "w0418",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Leftovers"
+  },
+  {
+   "id": "w0419",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Batteries"
+  },
+  {
+   "id": "w0420",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Passwords"
+  },
+  {
+   "id": "w0421",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "easy",
+   "text": "Lint"
+  },
+  {
+   "id": "w0422",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Deja vu"
+  },
+  {
+   "id": "w0423",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Superstition"
+  },
+  {
+   "id": "w0424",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Coincidence"
+  },
+  {
+   "id": "w0425",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Rituals"
+  },
+  {
+   "id": "w0426",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Rumors"
+  },
+  {
+   "id": "w0427",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Souvenirs"
+  },
+  {
+   "id": "w0428",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Deadlines"
+  },
+  {
+   "id": "w0429",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Queues"
+  },
+  {
+   "id": "w0430",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Instructions"
+  },
+  {
+   "id": "w0431",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Mascots"
+  },
+  {
+   "id": "w0432",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Elevator music"
+  },
+  {
+   "id": "w0433",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Terms of service"
+  },
+  {
+   "id": "w0434",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Icebreakers"
+  },
+  {
+   "id": "w0435",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Autopilot"
+  },
+  {
+   "id": "w0436",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Placebo"
+  },
+  {
+   "id": "w0437",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Countdowns"
+  },
+  {
+   "id": "w0438",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Loopholes"
+  },
+  {
+   "id": "w0439",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Backups"
+  },
+  {
+   "id": "w0440",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "medium",
+   "text": "Detours"
+  },
+  {
+   "id": "w0441",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Uncanny"
+  },
+  {
+   "id": "w0442",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Static"
+  },
+  {
+   "id": "w0443",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Glitch"
+  },
+  {
+   "id": "w0444",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Echo"
+  },
+  {
+   "id": "w0445",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Vacuum"
+  },
+  {
+   "id": "w0446",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Simulacrum"
+  },
+  {
+   "id": "w0447",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Doppelganger"
+  },
+  {
+   "id": "w0448",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Infinity"
+  },
+  {
+   "id": "w0449",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Recursion"
+  },
+  {
+   "id": "w0450",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Void"
+  },
+  {
+   "id": "w0451",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Mirage"
+  },
+  {
+   "id": "w0452",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Omen"
+  },
+  {
+   "id": "w0453",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Fracture"
+  },
+  {
+   "id": "w0454",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Static noise"
+  },
+  {
+   "id": "w0455",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Blind spot"
+  },
+  {
+   "id": "w0456",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Afterimage"
+  },
+  {
+   "id": "w0457",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Vertigo"
+  },
+  {
+   "id": "w0458",
+   "mode": "word",
+   "category": "weird",
+   "difficulty": "hard",
+   "text": "Machinery"
+  }
+ ]
+}
