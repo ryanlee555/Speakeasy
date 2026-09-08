@@ -61,6 +61,9 @@ body{
 .toggle .v{color:var(--ink-faint)}
 .toggle.on{border-color:rgba(221,146,87,.4);color:var(--ember)}
 .toggle.on .v{color:var(--ember)}
+.toggle--link{text-decoration:none}
+.lib-all{font-size:10px;letter-spacing:.06em;color:var(--ember);text-decoration:none;text-transform:none}
+.lib-all:hover{text-decoration:underline}
 .icn{display:none}
 
 /* hero */
@@ -312,6 +315,7 @@ body.is-review .scrub{display:flex}
   <div class="topbar">
     <div class="brandtab"><span class="icn"></span> Speakeasy</div>
     <div class="toggles">
+      <a class="toggle toggle--link" href="library.html">Library</a>
       <div class="toggle" id="authBtn">Sign in</div>
       <div class="toggle" id="crtBtn">CRT <span class="v">off</span></div>
       <div class="toggle" id="sfxBtn">SFX <span class="v">off</span></div>
@@ -472,7 +476,10 @@ body.is-review .scrub{display:flex}
       </div>
 
       <div class="panel">
-        <div class="phead"><span class="dot"></span> Library</div>
+        <div class="phead phead--split">
+          <span class="phead-title"><span class="dot"></span> Library</span>
+          <a class="lib-all" href="library.html">View all →</a>
+        </div>
         <ul class="lib" id="libList"></ul>
         <div class="sample" id="libEmpty">no recordings yet, hit record to start your history</div>
       </div>
@@ -7980,7 +7987,29 @@ const $ = s => document.querySelector(s);
 const screen = $('#screen'), overlay = $('#overlay'), status = $('#status');
 const recBtn = $('#recBtn'), saveRecBtn = $('#saveRecBtn'), timerEl = $('#timer');
 let stream=null, recorder=null, chunks=[], blobUrl=null, recording=false, t0=0, tick=null, targetSec=60;
-let pendingBlob=null, pendingBase=null, pendingMeta=null, audioOnly=false;
+let pendingBlob=null, pendingBase=null, pendingMeta=null, pendingPoster=null, audioOnly=false;
+
+/* Chrome's default MediaRecorder bitrate is ~2.5Mbps (~18MB/min), which fills
+   Supabase's 1GB free tier in under an hour. 1Mbps is plenty for reviewing
+   posture and delivery and gets ~2 hours into the same space. */
+const REC_BITRATE={videoBitsPerSecond:1000000, audioBitsPerSecond:96000};
+function makeRecorder(s){
+  const opts = audioOnly ? {audioBitsPerSecond:REC_BITRATE.audioBitsPerSecond} : REC_BITRATE;
+  try{ return new MediaRecorder(s,opts); }
+  catch(e){ return new MediaRecorder(s); } // browser rejected the bitrate hints
+}
+/* grab a poster frame off the live preview before we swap the element to playback */
+function capturePoster(){
+  try{
+    if(audioOnly||!screen.videoWidth) return null;
+    const w=480, h=Math.round(w*screen.videoHeight/screen.videoWidth)||270;
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    // deliberately NOT mirrored: the poster should match the saved file, which is unflipped
+    c.getContext('2d').drawImage(screen,0,0,w,h);
+    return c;
+  }catch(e){ return null; }
+}
+function canvasToBlob(c,q){ return new Promise(res=>{ try{ c.toBlob(b=>res(b),'image/jpeg',q||0.72); }catch(e){ res(null); } }); }
 
 /* SFX */
 let sfx=false, actx=null;
@@ -8340,16 +8369,51 @@ async function saveRecordingMeta(rec){
     tx.oncomplete=res; tx.onerror=e=>rej(e.target.error);
   });
   // additive cloud sync: local write above always happens, this only adds a row when signed in
-  if(session){
-    const {error}=await sb.from('recordings').insert({
-      user_id:session.user.id,
-      created_at:rec.dateISO,
-      duration_sec:rec.durationSec,
-      topic_text:rec.topicText||null,
-      mode:rec.mode
-    });
+  if(session) await cloudInsert(rec);
+}
+
+/* The extra columns only exist once supabase/2026-09-08_library.sql has been run.
+   Try the full row first and fall back to the original five columns, so an
+   un-migrated project keeps syncing instead of silently losing every insert. */
+async function cloudInsert(rec){
+  const base={
+    id:rec.id, user_id:session.user.id, created_at:rec.dateISO,
+    duration_sec:rec.durationSec, topic_text:rec.topicText||null, mode:rec.mode
+  };
+  const full={...base,
+    is_daily:!!rec.isDaily, audio_only:!!rec.audioOnly,
+    storage_path:rec.storagePath||null, thumb_path:rec.thumbPath||null
+  };
+  let {error}=await sb.from('recordings').insert(full);
+  if(error){
+    console.warn('speakeasy: full insert failed, retrying without library columns:',error.message);
+    ({error}=await sb.from('recordings').insert(base));
     if(error) console.error('speakeasy cloud save:',error);
   }
+}
+
+/* Upload the video (and its poster) into <user_id>/<recording_id>.* so storage
+   policies scope it to the owner. Failures are logged and swallowed: the local
+   save has already happened and the metadata row still lands. */
+async function uploadToCloud(rec, blob, posterBlob){
+  const out={storagePath:null, thumbPath:null};
+  if(!session) return out;
+  const dir=session.user.id;
+  try{
+    const p=dir+'/'+rec.id+'.webm';
+    const {error}=await sb.storage.from('recordings').upload(p, blob, {contentType:'video/webm', upsert:true});
+    if(error) throw error;
+    out.storagePath=p;
+  }catch(e){ console.error('speakeasy video upload:',e.message||e); }
+  if(posterBlob){
+    try{
+      const p=dir+'/'+rec.id+'.jpg';
+      const {error}=await sb.storage.from('recordings').upload(p, posterBlob, {contentType:'image/jpeg', upsert:true});
+      if(error) throw error;
+      out.thumbPath=p;
+    }catch(e){ console.error('speakeasy poster upload:',e.message||e); }
+  }
+  return out;
 }
 
 const saveBar=$('#saveBar'), saveStatus=$('#saveStatus');
@@ -8380,10 +8444,13 @@ function renderStats(records){
   $('#statMins').textContent=Math.round(totalSec/60);
 }
 async function fetchCloudRecordings(){
-  const {data,error}=await sb.from('recordings').select('created_at,duration_sec,topic_text,mode')
+  // select('*') so this works both before and after the library migration
+  const {data,error}=await sb.from('recordings').select('*')
     .eq('user_id',session.user.id).order('created_at',{ascending:false});
   if(error){ console.error('speakeasy cloud stats:',error); return []; }
-  return data.map(r=>({dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text, mode:r.mode}));
+  return data.map(r=>({id:r.id, dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text,
+    mode:r.mode, isDaily:!!r.is_daily, audioOnly:!!r.audio_only,
+    storagePath:r.storage_path||null, thumbPath:r.thumb_path||null}));
 }
 async function loadRecords(){
   const records = session ? await fetchCloudRecordings() : await getAllRecordings();
@@ -8613,14 +8680,15 @@ function startRecording(){
   chunks=[];
   document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
   if(!audioOnly){ screen.srcObject=stream; screen.muted=true; screen.controls=false; screen.removeAttribute('src'); screen.play().catch(()=>{}); }
-  pendingBlob=null; pendingBase=null; pendingMeta=null;
+  pendingBlob=null; pendingBase=null; pendingMeta=null; pendingPoster=null;
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
   capBar.hidden=true;
   document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
-  recorder=new MediaRecorder(stream);
+  recorder=makeRecorder(stream);
   recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
   recorder.onstop=()=>{
     const durationSec=Math.round((Date.now()-t0)/1000);
+    pendingPoster=capturePoster(); // while srcObject is still the live camera
     const blob=new Blob(chunks,{type:'video/webm'});
     if(blobUrl) URL.revokeObjectURL(blobUrl); blobUrl=URL.createObjectURL(blob);
     screen.srcObject=null; screen.src=blobUrl;
@@ -8640,7 +8708,10 @@ function startRecording(){
     const now=new Date();
     pendingBlob=blob;
     pendingBase=fsaaBase(now,recMode);
-    pendingMeta={id:Date.now().toString(),dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly};
+    // one client-generated uuid shared by the local record AND the cloud row, so
+    // the library can merge the two stores without guessing
+    const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
+    pendingMeta={id,dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly};
     recBtn.textContent='↺ Retake';
     saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
     status.textContent='click the clip to play it. Save keeps it, Retake starts over';
@@ -8651,7 +8722,7 @@ function startRecording(){
   document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
 }
 function resetToIdle(){
-  pendingBlob=null; pendingBase=null; pendingMeta=null;
+  pendingBlob=null; pendingBase=null; pendingMeta=null; pendingPoster=null;
   if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
   document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
@@ -8672,9 +8743,17 @@ recBtn.addEventListener('click',()=>{
 
 saveRecBtn.addEventListener('click', async ()=>{
   if(!pendingBlob) return;
-  saveRecBtn.disabled=true;
+  saveRecBtn.disabled=true; saveRecBtn.textContent='Saving…';
   const fsaaFile = dirHandle ? pendingBase+'.webm' : null;
-  try{ await saveRecordingMeta({...pendingMeta, fsaaFile}); }
+  const rec={...pendingMeta, fsaaFile};
+  // cloud first, so the metadata row can point straight at the uploaded file
+  if(session){
+    setSaveStatus('uploading to your library…');
+    const posterBlob = pendingPoster ? await canvasToBlob(pendingPoster) : null;
+    const up=await uploadToCloud(rec, pendingBlob, posterBlob);
+    rec.storagePath=up.storagePath; rec.thumbPath=up.thumbPath;
+  }
+  try{ await saveRecordingMeta(rec); }
   catch(e){ console.error('speakeasy meta:',e); }
   refreshStats();
   if(dirHandle){
@@ -8685,6 +8764,7 @@ saveRecBtn.addEventListener('click', async ()=>{
     const a=document.createElement('a'); a.href=blobUrl; a.download=pendingBase+'.webm'; a.click();
     setSaveStatus('downloaded '+pendingBase+'.webm');
   }
+  if(session) setSaveStatus(rec.storagePath ? 'saved to your library' : 'saved locally (cloud upload failed)');
   saveRecBtn.textContent='Saved ✓';
   status.textContent='saved. toggle FULL / CAM / AUDIO / TEXT, or hit Retake for another take';
 });

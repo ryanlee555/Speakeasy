@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library · Speakeasy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,440;0,9..144,560;1,9..144,440&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#100d0b;
+  --panel:#1a1512;
+  --panel-2:#201911;
+  --border:rgba(244,229,205,.09);
+  --border-soft:rgba(244,229,205,.16);
+  --ink:#f4ead8;
+  --ink-dim:#ab9c8b;
+  --ink-faint:#786c60;
+  --ember:#dd9257;
+  --ember-soft:rgba(221,146,87,.14);
+  --sage:#8fa892;
+  --rec:#cd7362;
+  --shadow:rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;font-family:'Inter',sans-serif;color:var(--ink);
+  background:
+    radial-gradient(1100px 560px at 50% -8%, rgba(221,146,87,.10), transparent 60%),
+    radial-gradient(800px 480px at 88% 6%, rgba(143,168,146,.07), transparent 60%),
+    var(--bg);
+  overflow-x:hidden;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+
+/* top bar */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px;flex-wrap:wrap;row-gap:12px}
+.brandtab{font-family:'Fraunces',serif;font-size:16px;font-weight:560;letter-spacing:.02em;color:var(--ink);text-decoration:none}
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.toggle{
+  display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;text-decoration:none;
+  font-size:11px;letter-spacing:.06em;color:var(--ink-faint);
+  background:transparent;border:1px solid var(--border);border-radius:999px;
+  padding:7px 12px;transition:border-color .15s,color .15s;
+}
+.toggle:hover{border-color:var(--border-soft);color:var(--ink-dim)}
+.toggle.on{border-color:rgba(221,146,87,.4);color:var(--ember)}
+@media (max-width:520px){ .topbar{flex-direction:column;align-items:flex-start} .toggles{width:100%} }
+
+/* buttons */
+.pbtn{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--ink-dim);cursor:pointer;
+  background:transparent;border:1px solid transparent;border-radius:999px;padding:9px 14px;letter-spacing:.02em;
+  transition:background .15s,color .15s,border-color .15s,opacity .15s;
+}
+.pbtn--rec{background:var(--ember);color:#1c1108;font-weight:600;font-size:13px;padding:13px 26px;border:1px solid var(--ember)}
+.pbtn--rec:hover:not(:disabled){filter:brightness(1.08)}
+.pbtn--ghost{background:transparent;border:1px solid var(--border-soft);color:var(--ink-dim)}
+.pbtn--ghost:hover:not(:disabled){border-color:var(--ember);color:var(--ember)}
+.pbtn--sm{font-size:11px;padding:9px 14px}
+.pbtn:disabled{opacity:.35;cursor:not-allowed}
+.pbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+/* ── sign-in gate ── */
+.gate{max-width:520px;margin:70px auto 0;text-align:center;
+  background:var(--panel);border:1px solid var(--border);border-radius:20px;
+  box-shadow:0 18px 40px -20px var(--shadow);padding:48px 34px}
+.gate .icn{font-size:30px;margin-bottom:18px}
+.gate h1{font-family:'Fraunces',serif;font-size:clamp(24px,4vw,32px);font-weight:440;line-height:1.2;margin-bottom:14px}
+.gate p{font-size:14.5px;line-height:1.7;color:var(--ink-faint);max-width:380px;margin:0 auto 26px}
+.gate-actions{display:flex;flex-direction:column;gap:12px;align-items:center}
+.gate-link{font-size:12.5px;color:var(--ink-faint);text-decoration:none;margin-top:4px}
+.gate-link:hover{color:var(--ink-dim);text-decoration:underline}
+
+/* ── library head ── */
+.libhead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.libhead h1{font-family:'Fraunces',serif;font-size:clamp(26px,4vw,34px);font-weight:440;line-height:1.1}
+.libmeta{font-size:12.5px;color:var(--ink-faint);margin-top:8px}
+.libmeta b{color:var(--ink-dim);font-weight:500}
+.quota{margin-top:10px;max-width:280px}
+.quota-bar{height:4px;border-radius:999px;background:var(--panel-2);border:1px solid var(--border);overflow:hidden}
+.quota-fill{height:100%;background:var(--ember);width:0%}
+.quota-txt{font-size:10.5px;color:var(--ink-faint);margin-top:5px;letter-spacing:.03em}
+
+/* toolbar */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+  font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;color:var(--ink-faint);
+  background:transparent;border:1px solid var(--border);border-radius:999px;padding:8px 13px;
+  transition:border-color .15s,color .15s,background .15s;
+}
+.chip:hover{color:var(--ink-dim);border-color:var(--border-soft)}
+.chip.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
+.viewseg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel-2);
+  border:1px solid var(--border);border-radius:999px;padding:4px}
+.viewseg .pbtn{padding:8px 16px}
+.viewseg .pbtn.is-active{background:var(--panel);color:var(--ink);box-shadow:0 1px 0 var(--border-soft)}
+
+/* ── gallery ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  box-shadow:0 14px 34px -22px var(--shadow);display:flex;flex-direction:column;
+  transition:border-color .15s,transform .1s;
+}
+.card:hover{border-color:var(--border-soft)}
+.card-thumb{
+  position:relative;aspect-ratio:16/10;background:#0b0908;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.card-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.card-thumb .play{
+  position:absolute;width:46px;height:46px;border-radius:50%;
+  background:rgba(16,13,11,.74);backdrop-filter:blur(4px);border:1px solid rgba(221,146,87,.55);
+  color:var(--ember);display:flex;align-items:center;justify-content:center;font-size:14px;padding-left:3px;
+  transition:background .15s,transform .1s;
+}
+.card-thumb:hover .play{background:rgba(221,146,87,.18);transform:scale(1.06)}
+.card-thumb.no-video{cursor:default}
+.card-thumb.no-video .play{display:none}
+/* one static equalizer tile for every audio-only take */
+.audio-tile{display:flex;gap:6px;align-items:flex-end;height:46px}
+.audio-tile i{width:5px;border-radius:3px;background:var(--ember);opacity:.8;display:block}
+/* a video whose poster is missing gets its own texture, not the audio bars */
+.np-tile{position:absolute;inset:0;background:
+  repeating-linear-gradient(135deg, rgba(244,229,205,.035) 0 9px, transparent 9px 18px)}
+.tile-label{position:absolute;bottom:12px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.card-body{padding:14px 15px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.card-title{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink)}
+.card-title.is-word{font-size:22px;color:var(--ember)}
+.card-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.card-when{font-size:11px;color:var(--ink-faint);line-height:1.5;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+
+/* mode badge */
+.badge-mode{
+  display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  border-radius:999px;padding:3px 9px;border:1px solid transparent;white-space:nowrap;
+}
+.badge-mode.topic{color:var(--ink-dim);border-color:var(--border-soft)}
+.badge-mode.words{color:var(--sage);border-color:rgba(143,168,146,.4)}
+.badge-mode.freeplay{color:var(--ink-faint);border-color:var(--border)}
+.badge-mode.daily{color:var(--ember);border-color:rgba(221,146,87,.45);background:rgba(221,146,87,.1)}
+.badge-local{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);
+  border:1px dashed var(--border-soft);border-radius:999px;padding:2px 7px}
+
+.card-del{background:transparent;border:0;color:var(--ink-faint);font-size:13px;cursor:pointer;padding:2px 5px;border-radius:6px}
+.card-del:hover{color:var(--rec)}
+
+/* ── list view ── */
+.ltable{width:100%;border-collapse:collapse;font-size:13.5px}
+.ltable thead th{
+  text-align:left;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);padding:0 14px 12px;border-bottom:1px solid var(--border);
+}
+.ltable td{padding:13px 14px;border-bottom:1px solid var(--border);color:var(--ink-dim);vertical-align:middle}
+.ltable tr:last-child td{border-bottom:0}
+.ltable tr.playable{cursor:pointer}
+.ltable tr.playable:hover td{background:rgba(244,229,205,.03);color:var(--ink)}
+.lt-title{font-family:'Fraunces',serif;font-size:15px;color:var(--ink);max-width:420px}
+.lt-num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ltable .col-del{width:40px;text-align:right}
+@media (max-width:720px){ .ltable .col-dur,.ltable thead th.col-dur{display:none} }
+
+.hide{display:none!important}
+.empty{text-align:center;padding:70px 20px;color:var(--ink-faint);font-size:14px}
+.empty .big{font-family:'Fraunces',serif;font-size:20px;color:var(--ink-dim);margin-bottom:10px}
+.notice{font-size:12px;color:var(--ink-faint);background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:11px 14px;margin-bottom:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.notice b{color:var(--ink-dim);font-weight:500}
+
+/* ── modals ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(16,13,11,.78);backdrop-filter:blur(5px);
+  display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal-backdrop.show{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border-soft);border-radius:20px;
+  box-shadow:0 24px 60px -20px var(--shadow);padding:24px;width:100%;max-width:360px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-tabs{display:flex;gap:6px;background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
+.modal-tab{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--ink-dim);background:transparent;
+  border:0;border-radius:999px;padding:7px 14px;cursor:pointer;transition:background .15s,color .15s}
+.modal-tab.is-active{background:var(--panel);color:var(--ink)}
+.modal-close{background:transparent;border:0;color:var(--ink-faint);font-size:20px;line-height:1;cursor:pointer;padding:4px 8px}
+.modal-close:hover{color:var(--ink)}
+.field{display:block;margin-bottom:14px;font-size:12px;color:var(--ink-faint)}
+.field span{display:block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;font-size:10px}
+.field input{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+  color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;outline:0}
+.field input:focus{border-color:var(--ember)}
+.auth-msg{font-size:12px;color:var(--rec);min-height:16px;margin-bottom:10px;line-height:1.5}
+.auth-msg.ok{color:var(--sage)}
+
+/* player modal */
+.player{max-width:820px;padding:18px}
+.player video{width:100%;border-radius:12px;background:#0b0908;display:block;max-height:66vh}
+.player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
+.player-title{font-family:'Fraunces',serif;font-size:18px;line-height:1.4;color:var(--ink)}
+.player-sub{font-size:11.5px;color:var(--ink-faint);margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.player-msg{padding:40px 20px;text-align:center;color:var(--ink-faint);font-size:13.5px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brandtab" href="index.html">Speakeasy</a>
+    <div class="toggles">
+      <a class="toggle" href="speakeasy.html">Studio</a>
+      <div class="toggle" id="authBtn">Sign in</div>
+    </div>
+  </div>
+
+  <!-- signed out -->
+  <section class="gate hide" id="gate">
+    <div class="icn">🎞️</div>
+    <h1>Your library lives with your account.</h1>
+    <p>
+      Recordings are private to whoever made them, so you need an account before
+      Speakeasy can keep a library for you. Sign up once and every take you save
+      from then on shows up here, on any computer you log in from.
+    </p>
+    <div class="gate-actions">
+      <button class="pbtn pbtn--rec" id="gateSignup" type="button">Create an account</button>
+      <button class="pbtn pbtn--ghost pbtn--sm" id="gateLogin" type="button">I already have one</button>
+      <a class="gate-link" href="speakeasy.html">Keep practicing without an account →</a>
+    </div>
+  </section>
+
+  <!-- signed in -->
+  <section class="hide" id="lib">
+    <div class="libhead">
+      <div>
+        <h1>Your library</h1>
+        <div class="libmeta" id="libMeta"></div>
+      </div>
+      <div class="quota" id="quotaWrap" style="display:none">
+        <div class="quota-bar"><div class="quota-fill" id="quotaFill"></div></div>
+        <div class="quota-txt" id="quotaTxt"></div>
+      </div>
+    </div>
+
+    <div class="notice hide" id="localNotice">
+      <span>Some takes are saved only on this computer. <b id="localCount"></b></span>
+      <button class="pbtn pbtn--ghost pbtn--sm" id="reconnectBtn" style="display:none">Reconnect save folder</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="chips" id="modeChips">
+        <button class="chip is-active" data-filter="all">All</button>
+        <button class="chip" data-filter="topic">Topic</button>
+        <button class="chip" data-filter="words">Words</button>
+        <button class="chip" data-filter="freeplay">Freeplay</button>
+        <button class="chip" data-filter="daily">Daily Challenge</button>
+      </div>
+      <div class="viewseg" id="viewSeg">
+        <button class="pbtn is-active" data-view="gallery" type="button">Gallery</button>
+        <button class="pbtn" data-view="list" type="button">List</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="hide" id="listWrap">
+      <table class="ltable">
+        <thead><tr>
+          <th>Title</th><th>Type</th><th>When</th><th class="col-dur">Length</th><th class="col-del"></th>
+        </tr></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <div class="empty hide" id="empty">
+      <div class="big">Nothing here yet.</div>
+      <div>Record something in the studio and hit Save, and it lands here.</div>
+    </div>
+    <div class="empty hide" id="loading"><div class="big">Loading your library…</div></div>
+  </section>
+</div>
+
+<!-- auth modal -->
+<div class="modal-backdrop" id="authBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-tabs">
+        <button class="modal-tab is-active" id="tabLogin" type="button">Log in</button>
+        <button class="modal-tab" id="tabSignup" type="button">Sign up</button>
+      </div>
+      <button class="modal-close" id="authClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <form id="authForm">
+      <label class="field"><span>Email</span><input type="email" id="authEmail" required autocomplete="email"></label>
+      <label class="field"><span>Password</span><input type="password" id="authPassword" required autocomplete="current-password" minlength="6"></label>
+      <div class="auth-msg" id="authMsg"></div>
+      <button class="pbtn pbtn--rec" id="authSubmit" type="submit" style="width:100%">Log in</button>
+    </form>
+  </div>
+</div>
+
+<!-- player modal -->
+<div class="modal-backdrop" id="playBackdrop">
+  <div class="modal player">
+    <div class="player-head">
+      <div>
+        <div class="player-title" id="playTitle"></div>
+        <div class="player-sub" id="playSub"></div>
+      </div>
+      <button class="modal-close" id="playClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <video id="playVideo" controls playsinline style="display:none"></video>
+    <div class="player-msg hide" id="playMsg"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const $ = s => document.querySelector(s);
+const sb = window.supabase.createClient(
+  'https://niqwjooeuougvvusjznp.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pcXdqb29ldW91Z3Z2dXNqem5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNTE1OTEsImV4cCI6MjEwMDgyNzU5MX0.PMSy1-B0rv5sgElycLnvFIOzXGyAJ_wdSPQAyfOwGRs'
+);
+const BUCKET='recordings';
+let session=null, records=[], filter='all', view='gallery';
+let dirHandle=null, localPlayable=false;
+
+/* ── local (IndexedDB) store, same DB the studio writes to ── */
+function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open('speakeasy-fs',2);
+    r.onupgradeneeded=e=>{
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('handles')) db.createObjectStore('handles');
+      if(!db.objectStoreNames.contains('recordings')) db.createObjectStore('recordings',{keyPath:'id'});
+    };
+    r.onsuccess=e=>res(e.target.result); r.onerror=e=>rej(e.target.error);
+  });
+}
+function idbGetAll(store){
+  return openDB().then(db=>new Promise((res,rej)=>{
+    const r=db.transaction(store,'readonly').objectStore(store).getAll();
+    r.onsuccess=e=>res(e.target.result||[]); r.onerror=e=>rej(e.target.error);
+  })).catch(()=>[]);
+}
+function idbDelete(store,key){
+  return openDB().then(db=>new Promise(res=>{
+    const tx=db.transaction(store,'readwrite'); tx.objectStore(store).delete(key); tx.oncomplete=res; tx.onerror=res;
+  })).catch(()=>{});
+}
+function idbGetHandle(){
+  return openDB().then(db=>new Promise(res=>{
+    const r=db.transaction('handles','readonly').objectStore('handles').get('saveDir');
+    r.onsuccess=e=>res(e.target.result||null); r.onerror=()=>res(null);
+  })).catch(()=>null);
+}
+
+/* ── helpers ── */
+const MODE_LABEL={topic:'Topic',words:'Words',freeplay:'Freeplay'};
+function modeInfo(r){
+  if(r.isDaily) return {key:'daily', label:'Daily Challenge'};
+  return {key:r.mode||'topic', label:MODE_LABEL[r.mode]||'Topic'};
+}
+function titleFor(r){
+  if(r.mode==='freeplay') return 'Freeplay session';
+  return (r.topicText||'').trim() || 'Untitled take';
+}
+function fmtDur(s){ s=Math.max(0,Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function fmtWhen(iso){
+  const d=new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})
+       + ' · ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+function fmtBytes(b){
+  if(b<1024) return b+' B';
+  if(b<1048576) return (b/1024).toFixed(0)+' KB';
+  if(b<1073741824) return (b/1048576).toFixed(1)+' MB';
+  return (b/1073741824).toFixed(2)+' GB';
+}
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ── loading + merging the two stores ── */
+async function fetchCloud(){
+  const {data,error}=await sb.from('recordings').select('*')
+    .eq('user_id',session.user.id).order('created_at',{ascending:false});
+  if(error){ console.error('speakeasy library:',error.message); return []; }
+  return data.map(r=>({
+    id:r.id, dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text,
+    mode:r.mode||'topic', isDaily:!!r.is_daily, audioOnly:!!r.audio_only,
+    storagePath:r.storage_path||null, thumbPath:r.thumb_path||null, source:'cloud'
+  }));
+}
+async function loadAll(){
+  const [cloud, local] = await Promise.all([fetchCloud(), idbGetAll('recordings')]);
+  const byId=new Map();
+  cloud.forEach(r=>byId.set(r.id,r));
+  local.forEach(l=>{
+    const hit=byId.get(l.id);
+    if(hit){ hit.fsaaFile = hit.fsaaFile || l.fsaaFile || null; return; }
+    // pre-UUID rows have no shared key, so fall back to a timestamp+duration match
+    const t=new Date(l.dateISO).getTime();
+    const legacy=cloud.find(c=>!c.fsaaFile
+      && Math.abs(new Date(c.dateISO).getTime()-t)<4000
+      && c.durationSec===l.durationSec);
+    if(legacy){ legacy.fsaaFile=l.fsaaFile||null; return; }
+    byId.set(l.id,{...l, mode:l.mode||'topic', source:'local', storagePath:null, thumbPath:null});
+  });
+  return [...byId.values()].sort((a,b)=>new Date(b.dateISO)-new Date(a.dateISO));
+}
+
+/* signed URLs for the poster images, in one batch */
+async function thumbUrls(recs){
+  const paths=recs.map(r=>r.thumbPath).filter(Boolean);
+  if(!paths.length) return {};
+  try{
+    const {data,error}=await sb.storage.from(BUCKET).createSignedUrls(paths,3600);
+    if(error) throw error;
+    const map={};
+    (data||[]).forEach(d=>{ if(d.path && d.signedUrl) map[d.path]=d.signedUrl; });
+    return map;
+  }catch(e){ console.warn('speakeasy thumbs:',e.message||e); return {}; }
+}
+
+async function readQuota(){
+  try{
+    const {data,error}=await sb.storage.from(BUCKET).list(session.user.id,{limit:1000});
+    if(error) throw error;
+    const used=(data||[]).reduce((s,o)=>s+((o.metadata&&o.metadata.size)||0),0);
+    const cap=1073741824; // Supabase free tier
+    $('#quotaWrap').style.display='';
+    $('#quotaFill').style.width=Math.min(100,used/cap*100).toFixed(1)+'%';
+    $('#quotaTxt').textContent=fmtBytes(used)+' of 1 GB used';
+  }catch(e){ $('#quotaWrap').style.display='none'; }
+}
+
+/* ── rendering ── */
+let thumbs={};
+function visible(){
+  if(filter==='all') return records;
+  if(filter==='daily') return records.filter(r=>r.isDaily);
+  return records.filter(r=>!r.isDaily && (r.mode||'topic')===filter);
+}
+function audioTile(){
+  // deliberately static: one identical tile for every audio-only take
+  const hs=[14,26,18,34,22,30,16];
+  return '<div class="audio-tile">'+hs.map(h=>'<i style="height:'+h+'px"></i>').join('')+'</div>'
+       + '<div class="tile-label">Audio only</div>';
+}
+function noPreviewTile(){ return '<div class="np-tile"></div><div class="tile-label">No preview</div>'; }
+function playableOf(r){ return !!(r.storagePath || (r.fsaaFile && localPlayable)); }
+
+function renderGallery(list){
+  $('#grid').innerHTML=list.map((r,i)=>{
+    const m=modeInfo(r), t=titleFor(r), can=playableOf(r);
+    const thumb = r.thumbPath && thumbs[r.thumbPath];
+    const inner = r.audioOnly ? audioTile()
+      : (thumb ? '<img src="'+esc(thumb)+'" alt="" loading="lazy">' : noPreviewTile());
+    return '<article class="card">'
+      + '<div class="card-thumb'+(can?'':' no-video')+'" data-idx="'+i+'">'+inner
+      + (can?'<div class="play">▶</div>':'')+'</div>'
+      + '<div class="card-body">'
+      +   '<div class="card-title'+(r.mode==='words'?' is-word':'')+'">'+esc(t)+'</div>'
+      +   '<div class="card-row">'
+      +     '<span class="badge-mode '+m.key+'">'+m.label+'</span>'
+      +     '<button class="card-del" data-del="'+i+'" title="Delete">✕</button>'
+      +   '</div>'
+      +   '<div class="card-when"><span>'+esc(fmtWhen(r.dateISO))+' · '+fmtDur(r.durationSec)+'</span>'
+      +     (r.source==='local'?'<span class="badge-local">local only</span>':'')+'</div>'
+      + '</div></article>';
+  }).join('');
+}
+function renderList(list){
+  $('#listBody').innerHTML=list.map((r,i)=>{
+    const m=modeInfo(r), can=playableOf(r);
+    return '<tr class="'+(can?'playable':'')+'" data-idx="'+i+'">'
+      + '<td class="lt-title">'+esc(titleFor(r))
+      +   (r.source==='local'?' <span class="badge-local">local only</span>':'')+'</td>'
+      + '<td><span class="badge-mode '+m.key+'">'+m.label+'</span></td>'
+      + '<td class="lt-num">'+esc(fmtWhen(r.dateISO))+'</td>'
+      + '<td class="lt-num col-dur">'+fmtDur(r.durationSec)+'</td>'
+      + '<td class="col-del"><button class="card-del" data-del="'+i+'" title="Delete">✕</button></td>'
+      + '</tr>';
+  }).join('');
+}
+function render(){
+  const list=visible();
+  const gallery = view==='gallery';
+  $('#grid').classList.toggle('hide', !gallery || !list.length);
+  $('#listWrap').classList.toggle('hide', gallery || !list.length);
+  $('#empty').classList.toggle('hide', !!list.length);
+  if(list.length){ gallery ? renderGallery(list) : renderList(list); }
+
+  const mins=Math.round(records.reduce((s,r)=>s+(r.durationSec||0),0)/60);
+  $('#libMeta').innerHTML='<b>'+records.length+'</b> recording'+(records.length===1?'':'s')
+    +' · <b>'+mins+'</b> min practiced';
+  const localOnly=records.filter(r=>r.source==='local').length;
+  $('#localNotice').classList.toggle('hide', !localOnly);
+  if(localOnly){
+    $('#localCount').textContent=localOnly+' of them '+(localOnly===1?'was':'were')
+      +' recorded before you signed in, so '+(localOnly===1?'it lives':'they live')+' only on this machine.';
+    $('#reconnectBtn').style.display = localPlayable ? 'none' : '';
+  }
+}
+
+/* ── playback ── */
+const playBackdrop=$('#playBackdrop'), playVideo=$('#playVideo'), playMsg=$('#playMsg');
+function closePlayer(){
+  playBackdrop.classList.remove('show');
+  playVideo.pause(); playVideo.removeAttribute('src'); playVideo.load();
+}
+$('#playClose').addEventListener('click',closePlayer);
+playBackdrop.addEventListener('click',e=>{ if(e.target===playBackdrop) closePlayer(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePlayer(); $('#authBackdrop').classList.remove('show'); } });
+
+async function openPlayer(r){
+  const m=modeInfo(r);
+  $('#playTitle').textContent=titleFor(r);
+  $('#playSub').innerHTML='<span class="badge-mode '+m.key+'">'+m.label+'</span> '
+    + esc(fmtWhen(r.dateISO)) + ' · ' + fmtDur(r.durationSec) + (r.audioOnly?' · audio only':'');
+  playVideo.style.display='none'; playMsg.classList.add('hide'); playMsg.textContent='';
+  playBackdrop.classList.add('show');
+
+  let url=null, cloudFailed=false;
+  if(r.storagePath){
+    try{
+      const {data,error}=await sb.storage.from(BUCKET).createSignedUrl(r.storagePath,3600);
+      if(error) throw error;
+      url=data.signedUrl;
+    }catch(e){ cloudFailed=true; console.warn('speakeasy signed url:',e.message||e); }
+  }
+  if(!url && r.fsaaFile && dirHandle){
+    try{
+      const fh=await dirHandle.getFileHandle(r.fsaaFile);
+      url=URL.createObjectURL(await fh.getFile());
+    }catch(e){ console.warn('speakeasy local file:',e.message||e); }
+  }
+  if(!url){
+    playMsg.classList.remove('hide');
+    playMsg.textContent =
+        cloudFailed ? "Couldn't load this video from storage. If you haven't run supabase/2026-09-08_library.sql yet, the recordings bucket doesn't exist."
+      : r.source==='local' ? 'This take is only on your computer. Reconnect your save folder to watch it.'
+      : 'No video file is saved for this take. It was recorded before cloud saving existed.';
+    return;
+  }
+  playVideo.style.display=''; playVideo.src=url; playVideo.play().catch(()=>{});
+}
+
+/* ── delete ── */
+async function removeRecord(r){
+  const t=titleFor(r);
+  if(!confirm('Delete this recording?\n\n'+t+'\n'+fmtWhen(r.dateISO)+'\n\nThis removes it from your account and cannot be undone.')) return;
+  if(r.storagePath||r.thumbPath){
+    const paths=[r.storagePath,r.thumbPath].filter(Boolean);
+    try{ await sb.storage.from(BUCKET).remove(paths); }
+    catch(e){ console.warn('speakeasy delete file:',e.message||e); }
+  }
+  if(r.source==='cloud'){
+    const {error}=await sb.from('recordings').delete().eq('id',r.id);
+    if(error) console.error('speakeasy delete row:',error.message);
+  }
+  await idbDelete('recordings', r.id);
+  records=records.filter(x=>x!==r);
+  render(); readQuota();
+}
+
+/* ── events ── */
+$('#grid').addEventListener('click',e=>{
+  const del=e.target.closest('[data-del]');
+  if(del){ removeRecord(visible()[+del.dataset.del]); return; }
+  const th=e.target.closest('.card-thumb:not(.no-video)');
+  if(th) openPlayer(visible()[+th.dataset.idx]);
+});
+$('#listBody').addEventListener('click',e=>{
+  const del=e.target.closest('[data-del]');
+  if(del){ removeRecord(visible()[+del.dataset.del]); return; }
+  const tr=e.target.closest('tr.playable');
+  if(tr) openPlayer(visible()[+tr.dataset.idx]);
+});
+$('#modeChips').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  filter=b.dataset.filter;
+  $('#modeChips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('is-active',x===b));
+  render();
+});
+$('#viewSeg').addEventListener('click',e=>{
+  const b=e.target.closest('.pbtn'); if(!b) return;
+  view=b.dataset.view;
+  $('#viewSeg').querySelectorAll('.pbtn').forEach(x=>x.classList.toggle('is-active',x===b));
+  render();
+});
+$('#reconnectBtn').addEventListener('click', async()=>{
+  const h=await idbGetHandle(); if(!h) return;
+  try{
+    const perm=await h.requestPermission({mode:'readwrite'});
+    if(perm==='granted'){ dirHandle=h; localPlayable=true; render(); }
+  }catch(e){ /* user dismissed */ }
+});
+
+/* ── auth ── */
+const authBtn=$('#authBtn'), authBackdrop=$('#authBackdrop'), authForm=$('#authForm');
+const authEmail=$('#authEmail'), authPassword=$('#authPassword'), authMsg=$('#authMsg'), authSubmit=$('#authSubmit');
+const tabLogin=$('#tabLogin'), tabSignup=$('#tabSignup');
+let authMode='login';
+function setAuthMode(m){
+  authMode=m;
+  tabLogin.classList.toggle('is-active',m==='login');
+  tabSignup.classList.toggle('is-active',m==='signup');
+  authSubmit.textContent = m==='login' ? 'Log in' : 'Sign up';
+  authMsg.textContent=''; authMsg.className='auth-msg';
+}
+function openAuth(m){ setAuthMode(m); authForm.reset(); authMsg.textContent=''; authBackdrop.classList.add('show'); authEmail.focus(); }
+tabLogin.addEventListener('click',()=>setAuthMode('login'));
+tabSignup.addEventListener('click',()=>setAuthMode('signup'));
+$('#authClose').addEventListener('click',()=>authBackdrop.classList.remove('show'));
+authBackdrop.addEventListener('click',e=>{ if(e.target===authBackdrop) authBackdrop.classList.remove('show'); });
+authBtn.addEventListener('click',()=>{ session ? sb.auth.signOut() : openAuth('login'); });
+$('#gateSignup').addEventListener('click',()=>openAuth('signup'));
+$('#gateLogin').addEventListener('click',()=>openAuth('login'));
+
+authForm.addEventListener('submit', async e=>{
+  e.preventDefault(); authSubmit.disabled=true;
+  const email=authEmail.value.trim(), password=authPassword.value;
+  authMsg.textContent=''; authMsg.className='auth-msg';
+  try{
+    if(authMode==='signup'){
+      const {error}=await sb.auth.signUp({email,password});
+      if(error) throw error;
+      authMsg.textContent='Check your email to confirm your account, then log in.';
+      authMsg.classList.add('ok');
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      authBackdrop.classList.remove('show');
+    }
+  }catch(err){
+    const msg=err&&err.message?err.message:'';
+    const offline=/failed to fetch|networkerror|load failed/i.test(msg);
+    authMsg.textContent = offline
+      ? "Can't reach the server right now. Your library needs a connection, but you can still practice offline."
+      : (msg||'Something went wrong.');
+  }finally{ authSubmit.disabled=false; }
+});
+
+/* ── boot ── */
+function renderAuthState(){
+  if(session){ authBtn.textContent=session.user.email; authBtn.classList.add('on'); authBtn.title='Click to log out'; }
+  else{ authBtn.textContent='Sign in'; authBtn.classList.remove('on'); authBtn.removeAttribute('title'); }
+}
+async function refresh(){
+  renderAuthState();
+  $('#gate').classList.toggle('hide', !!session);
+  $('#lib').classList.toggle('hide', !session);
+  if(!session){ records=[]; return; }
+  $('#loading').classList.remove('hide'); $('#empty').classList.add('hide');
+  // a previously granted save folder makes local-only takes playable
+  const h=await idbGetHandle();
+  if(h){
+    try{ const p=await h.queryPermission({mode:'readwrite'}); if(p==='granted'){ dirHandle=h; localPlayable=true; } }
+    catch(e){ /* handle no longer valid */ }
+  }
+  records=await loadAll();
+  thumbs=await thumbUrls(records);
+  $('#loading').classList.add('hide');
+  render(); readQuota();
+}
+sb.auth.onAuthStateChange((_e,s)=>{ session=s; refresh(); });
+sb.auth.getSession().then(({data})=>{ session=data.session; refresh(); });
+</script>
+</body>
+</html>
