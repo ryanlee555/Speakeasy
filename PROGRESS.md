@@ -373,6 +373,20 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   the in-memory `records` entry, and re-renders (so the badge changes live).
   `titleFor` now prefers a non-empty `topicText` even for freeplay (Freeplay
   *badge* unchanged). Menu closes on outside-click / Escape / scroll / resize.
+- **Delete now also removes the local FSAA files (2026-09-09).** `removeRecord`
+  calls `removeLocalFiles(r)` → `dirHandle.removeEntry()` on
+  `<base>.webm` **and** `<base>.json`, so deleting in the library frees the
+  space on disk too (not just the Supabase object + the row). Only runs when a
+  save folder is connected with readwrite permission (`dirHandle` set); silently
+  skipped otherwise (Safari, or no folder granted — those users have no local
+  file to sync anyway). `NotFoundError` is swallowed. The `confirm()` text now
+  says "and from your save folder" when it applies. The cloud storage meter
+  (`readQuota`) already dropped on delete via the existing
+  `sb.storage.remove()`; that is unchanged. One-time cleanup 2026-09-09: the
+  user's `Recordings - Speakeasy/` folder had two orphaned takes
+  (`2026-08-14_10-10`, a pre-sidecar file, and a 5s `2026-09-09_14-02` test)
+  that had been deleted from the library but not disk — removed by hand so the
+  folder matches the 3 library rows.
 - **Signed-out `library.html` gate reworked (2026-09-09).** The 🎞️ film-frame
   emoji is replaced with an inline SVG mug icon (ember steam curls + cream cup
   with an ember rim and handle — matches the favicon's palette). `.gate .icn`

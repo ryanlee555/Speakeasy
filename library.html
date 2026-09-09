@@ -808,9 +808,21 @@ async function openPlayer(r){
 }
 
 /* ── delete ── */
+// pull the local .webm + .json out of the connected save folder, so deleting
+// in the library also frees the space on disk. only possible when a folder is
+// connected with readwrite permission (dirHandle set); otherwise skipped.
+async function removeLocalFiles(r){
+  if(!dirHandle || !r.fsaaFile) return;
+  const webm = r.fsaaFile;
+  const json = webm.replace(/\.webm$/i, '.json');
+  for(const name of [webm, json]){
+    try{ await dirHandle.removeEntry(name); }
+    catch(e){ if(e && e.name!=='NotFoundError') console.warn('speakeasy delete local:',name,e.message||e); }
+  }
+}
 async function removeRecord(r){
   const t=titleFor(r);
-  if(!confirm('Delete this recording?\n\n'+t+'\n'+fmtWhen(r.dateISO)+'\n\nThis removes it from your account and cannot be undone.')) return;
+  if(!confirm('Delete this recording?\n\n'+t+'\n'+fmtWhen(r.dateISO)+'\n\nThis removes it from your account'+(dirHandle&&r.fsaaFile?' and from your save folder':'')+', and cannot be undone.')) return;
   if(r.storagePath||r.thumbPath){
     const paths=[r.storagePath,r.thumbPath].filter(Boolean);
     try{ await sb.storage.from(BUCKET).remove(paths); }
@@ -820,6 +832,7 @@ async function removeRecord(r){
     const {error}=await sb.from('recordings').delete().eq('id',r.id);
     if(error) console.error('speakeasy delete row:',error.message);
   }
+  await removeLocalFiles(r);
   await idbDelete('recordings', r.id);
   records=records.filter(x=>x!==r);
   render(); readQuota();
