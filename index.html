@@ -47,8 +47,13 @@ body{
   position:sticky;top:0;z-index:40;
   display:flex;align-items:center;justify-content:space-between;
   padding:18px 40px;
-  background:rgba(16,13,11,.75);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--border);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease;
+}
+/* at the very top the header melts into the hero; once you scroll it lifts out */
+.topbar.scrolled{
+  background:rgba(16,13,11,.72);backdrop-filter:blur(10px);
+  border-bottom-color:var(--border);
 }
 .brand{font-family:'Fraunces',serif;font-size:17px;font-weight:560;letter-spacing:.01em;color:var(--ink)}
 .topnav{display:flex;align-items:center;gap:30px}
@@ -326,6 +331,14 @@ body{
 
 <div class="foot">&copy; <span id="footYear">2026</span> Speakeasy. All rights reserved.</div>
 
-<script>document.getElementById('footYear').textContent=new Date().getFullYear();</script>
+<script>
+document.getElementById('footYear').textContent=new Date().getFullYear();
+(function(){
+  var tb=document.querySelector('.topbar');
+  function onScroll(){ tb.classList.toggle('scrolled', window.scrollY>16); }
+  onScroll();
+  window.addEventListener('scroll',onScroll,{passive:true});
+})();
+</script>
 </body>
 </html>
