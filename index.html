@@ -115,16 +115,11 @@ body{
 /* ---- how it works ---- */
 .how-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:44px}
 
-.video-placeholder{
-  aspect-ratio:16/9;border:1px dashed var(--border-soft);border-radius:16px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-  background:var(--panel);color:var(--ink-faint);
+.demo-video{
+  width:100%;height:auto;max-height:72vh;object-fit:contain;
+  border:1px solid var(--border);border-radius:16px;background:var(--panel);display:block;
+  box-shadow:0 18px 44px -22px var(--shadow);
 }
-.video-placeholder .play{
-  width:52px;height:52px;border-radius:50%;border:1px solid var(--border-soft);
-  display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-size:16px;
-}
-.video-placeholder span{font-size:12.5px}
 
 .how-steps{list-style:none;display:flex;flex-direction:column;gap:24px}
 .how-steps li{display:flex;gap:14px;align-items:flex-start}
@@ -226,10 +221,10 @@ body{
     <div class="section-sub">No better site to practice your public speaking skills, impromptu.</div>
 
     <div class="how-grid">
-      <div class="video-placeholder">
-        <div class="play">▶</div>
-        <span>demo video coming soon</span>
-      </div>
+      <video class="demo-video" autoplay loop muted playsinline preload="metadata" aria-label="A quick walkthrough of Speakeasy">
+        <source src="assets/demo.mp4" type="video/mp4">
+        <source src="assets/demo.mov" type="video/quicktime">
+      </video>
 
       <ol class="how-steps">
         <li>
