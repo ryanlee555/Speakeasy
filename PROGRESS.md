@@ -171,6 +171,11 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     - **More** expands the picker in place (`.pp-emojis.expanded`) into a
       scrollable 5-col grid of the initial option + all 30 icons, with a **Back**
       link. Picking any icon saves and collapses back to the compact grid.
+    - **Fix 2026-09-09:** picker buttons rebuild `ppEmojis` mid-click, detaching
+      the clicked node, so the bubbled click hit the document outside-close
+      handler with an orphaned target (`closest('.acct')` → null) and closed the
+      popover — "More didn't work". Fixed by `profilePop.addEventListener('click',
+      e=>e.stopPropagation())` so only real outside clicks reach that handler.
     - If the stored pick isn't one of the six featured, it's swapped into slot 7
       so the active icon is always visible in the compact grid.
   - **Storage:** display name and avatar live in Supabase Auth `user_metadata`
