@@ -8708,6 +8708,10 @@ function openProfile(){
   refreshRecCount();
 }
 avatarBtn.addEventListener('click',e=>{ e.stopPropagation(); toggleProfile(); });
+// keep clicks inside the popover from reaching the outside-close handler —
+// picker buttons rebuild ppEmojis and detach themselves mid-event, which
+// would otherwise make closest('.acct') null and close the popover.
+profilePop.addEventListener('click',e=>e.stopPropagation());
 document.addEventListener('click',e=>{ if(!profilePop.hidden && !e.target.closest('.acct')) closeProfile(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeProfile(); });
 
