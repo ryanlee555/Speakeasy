@@ -39,25 +39,27 @@ The Supabase side of the cloud library is fully set up and **verified end to end
    card tags (title, description, image) so a shared link previews as more than a
    bare URL, and optionally a real `favicon.svg` + `apple-touch-icon.png` for a
    proper phone home-screen icon.
-2. **Trim the studio sidebar** ("remove stats and library on main page"). The
-   studio (`speakeasy.html`) right column currently stacks: the prompt card, a
-   **Stats** panel (Words/min + Fillers/min are still `—` placeholders, only Day
-   Streak + Total Mins are real), and a **Library** panel (last 20, links to
-   `library.html`). Now that `library.html` exists as the real home for history,
-   the user wants this column decluttered. **Confirm with them before cutting:**
-   likely remove the sidebar Library panel entirely (redundant with the nav
-   "Library" link and "View all →"), and either remove Stats too or cut it down
-   to just Day Streak + Total Mins until real WPM/fillers exist. The "Library"
-   topbar pill and the studio→library links should stay.
+2. ~~**Trim the studio sidebar.**~~ **DONE 2026-09-09.** Both the **Stats** panel
+   and the **Library** panel were removed from `speakeasy.html` outright (the
+   user confirmed: "get rid of stats section and library section since that's
+   redundant"). The right column is now just the Rec Studio prompt card. The
+   topbar "Library" pill and the studio→library links stay. JS guards added so
+   `renderStats` / `renderLibrary` / the `#libList` click listener no-op when
+   their elements are absent, and `refreshStats()` early-returns (skips the
+   record fetch entirely) on `speakeasy.html`. `library.html` is unaffected — it
+   still shows the real stats + history.
 3. **Copy pass.** "Tweaking some phrases and wordings" — no specific list given
    yet. Do a read-through of all three pages with the user and fix whatever they
    flag. Keep the content style rule in mind (no em dashes in user-facing copy,
-   full sentences not comma-fragments).
+   full sentences not comma-fragments). *(Partial 2026-09-09: category filter "All"
+   chip is now "Random" in both Topic and Words modes — the user considers "all"
+   and "random" the same idea, so the standalone "Random" category chip is gone
+   too; `data-cat="all"` still means "whole pool".)*
 4. **"0 min practiced" reads as broken.** On `library.html` the header does
    `Math.round(totalSec/60)`, so several short test clips total "0 min". Show
-   seconds under a minute, or `<1 min`, or round up. Same rounding is in the
-   studio Stats panel (`#statMins`) — fix both or fix it in one shared helper if
-   Stats survives item 2.
+   seconds under a minute, or `<1 min`, or round up. *(The studio `#statMins`
+   copy of this bug is moot now — the Stats panel was removed from
+   `speakeasy.html` in item 2. Only `library.html` still needs the fix.)*
 
 ### P2 — video retention, so storage stops being a worry
 The 1 GB free tier is the real constraint. At the current capped 1 Mbps that is
@@ -139,6 +141,29 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Studio right column decluttered (2026-09-09).** `speakeasy.html`'s Stats and
+  Library sidebar panels are gone (see P1 item 2). Only the Rec Studio prompt
+  card remains there.
+- **Prompt filter + daily card polish (2026-09-09), all `speakeasy.html`:**
+  - Category chip **"All" → "Random"** in both Topic and Words modes, and the
+    standalone "Random" *category* chip is dropped (`renderCatFilters` filters
+    `c.id!=='random'` and normalises a stale `selected.cat==='random'` to
+    `'all'`). `data-cat="all"` still picks from the whole pool.
+  - A **hairline divider** (`.filterrow--sep`: `border-top` + `padding-top`)
+    separates the category chip rows from the difficulty row
+    (All levels / Easy / Medium / Hard).
+  - The **Daily Challenge / Daily Word card is more compact**: the difficulty
+    pill moved up into the `.daily-top` row, inline right after the
+    "◆ DAILY CHALLENGE" / "◆ DAILY WORD" label (date pushed right with
+    `margin-left:auto`); the standalone `#dailyDiff` pill that sat under the
+    prompt is gone; padding/margins tightened and the word-mode prompt dropped
+    24px → 20px.
+- **Profile icon picker: hover shows the icon name (2026-09-09).** Each picker
+  tile carries `data-tip` (the icon's label, e.g. "Microphone", or "Your
+  initial"). In the compact 8-grid a CSS `::after` tooltip fades in after a
+  **1s** hover (`transition-delay:1s`). The expanded (More) grid scrolls, so a
+  CSS tooltip would clip — those tiles use the native `title=` attribute
+  instead (same ~1s browser delay). Both `speakeasy.html` and `library.html`.
 - **Account avatar + profile popover (2026-09-09).** Replaces the old "email in a
   pill" signed-in state on both `speakeasy.html` and `library.html`.
   - **Top bar order** in the studio is now `Library · CRT · SFX · <account>` —
@@ -153,9 +178,9 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     **joined** (`session.user.created_at`, formatted "Mon YYYY") and
     **recordings** (`select id, count:exact, head:true` on `recordings` filtered
     by `user_id`); a **Display name** text input (24 char cap, Save button /
-    Enter); a **Picture** picker (see next bullet); a full-width **Log out**
+    Enter); an **Icon** picker (labelled "Icon" in the UI; see next bullet); a full-width **Log out**
     button that signs out and redirects to `index.html`.
-  - **Picture picker — custom SVG icon set (reworked 2026-09-09).** Replaces the
+  - **Icon picker — custom SVG icon set (reworked 2026-09-09).** Replaces the
     first-pass 12-emoji grid. The icons come from **`speakeasy-avatars.js`**
     (30 flat cream/ember icons, each `{id,label,svg}` for `viewBox="-32 -32 64
     64"`, plus a `window.avatarSvg(id,size)` helper). Following the prompt-library

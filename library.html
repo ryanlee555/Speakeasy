@@ -87,11 +87,22 @@ body{
 .pp-emojis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .pp-emojis.expanded{display:block}
 .pp-emojis .ava{
+  position:relative;
   aspect-ratio:1;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);
   line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;
   color:var(--ink-dim);transition:border-color .15s,background .15s;
 }
 .pp-emojis .ava:hover{border-color:var(--border-soft)}
+/* name-on-hover tooltip (compact grid only — expanded grid scrolls and would clip it, it uses title=) */
+.pp-emojis:not(.expanded) .ava[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);
+  padding:4px 8px;border-radius:7px;white-space:nowrap;
+  background:var(--panel-2);border:1px solid var(--border-soft);
+  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.02em;color:var(--ink);
+  opacity:0;pointer-events:none;transition:opacity .12s;z-index:10;
+}
+.pp-emojis:not(.expanded) .ava[data-tip]:hover::after{opacity:1;transition-delay:1s}
 .pp-emojis .ava.is-active{border-color:var(--ember);background:var(--ember-soft)}
 .pp-emojis .ava svg{width:24px;height:24px;display:block}
 .pp-emojis .ava.ini .ava-ini{font-family:'Fraunces',serif;font-size:15px;font-weight:560;color:var(--ember)}
@@ -798,13 +809,12 @@ function avaBtn(id){
   const cur=acctAvatarId();
   const b=document.createElement('button');
   b.type='button';
+  b.dataset.tip = id==='' ? 'Your initial' : avatarLabel(id);
   if(id===''){
     b.className='ava ini'+(cur===''?' is-active':'');
-    b.title='Your initial';
     b.innerHTML='<span class="ava-ini">'+initialChar()+'</span>';
   }else{
     b.className='ava'+(id===cur?' is-active':'');
-    b.title=avatarLabel(id);
     b.innerHTML=(window.avatarSvg?window.avatarSvg(id,24):'');
   }
   b.addEventListener('click',()=>saveProfile({avatar:id}));
@@ -836,8 +846,10 @@ function showAllIcons(){
   ppEmojis.appendChild(head);
   const grid=document.createElement('div');
   grid.className='pp-all-grid';
-  grid.appendChild(avaBtn(''));
-  (window.SPEAKEASY_AVATARS||[]).forEach(a=>grid.appendChild(avaBtn(a.id)));
+  // expanded grid scrolls, so the CSS tooltip would clip — use native title= here
+  const add=id=>{ const b=avaBtn(id); b.title=b.dataset.tip; grid.appendChild(b); };
+  add('');
+  (window.SPEAKEASY_AVATARS||[]).forEach(a=>add(a.id));
   ppEmojis.appendChild(grid);
 }
 async function refreshRecCount(){

@@ -103,11 +103,22 @@ body{
 .pp-emojis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .pp-emojis.expanded{display:block}
 .pp-emojis .ava{
+  position:relative;
   aspect-ratio:1;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);
   line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;
   color:var(--ink-dim);transition:border-color .15s,background .15s;
 }
 .pp-emojis .ava:hover{border-color:var(--border-soft)}
+/* name-on-hover tooltip (compact grid only — expanded grid scrolls and would clip it, it uses title=) */
+.pp-emojis:not(.expanded) .ava[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);
+  padding:4px 8px;border-radius:7px;white-space:nowrap;
+  background:var(--panel-2);border:1px solid var(--border-soft);
+  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.02em;color:var(--ink);
+  opacity:0;pointer-events:none;transition:opacity .12s;z-index:10;
+}
+.pp-emojis:not(.expanded) .ava[data-tip]:hover::after{opacity:1;transition-delay:1s}
 .pp-emojis .ava.is-active{border-color:var(--ember);background:var(--ember-soft)}
 .pp-emojis .ava svg{width:24px;height:24px;display:block}
 .pp-emojis .ava.ini .ava-ini{font-family:'Fraunces',serif;font-size:15px;font-weight:560;color:var(--ember)}
@@ -265,7 +276,7 @@ body.is-review .scrub{display:flex}
 .diff-pill.easy{color:var(--sage);border-color:rgba(143,168,146,.4)}
 .diff-pill.medium{color:var(--ember);border-color:rgba(221,146,87,.4)}
 .diff-pill.hard{color:var(--rec);border-color:rgba(205,115,98,.5)}
-.daily-diff{display:inline-block;margin-top:10px}
+.daily-diff{flex:0 0 auto;padding:2px 8px;font-size:9px}
 /* active: the daily gets louder, not hidden */
 .daily.is-active{
   border-color:var(--ember);background:rgba(221,146,87,.13);
@@ -294,19 +305,21 @@ body.is-review .scrub{display:flex}
 .freeplay-copy strong{display:block;font-family:'Fraunces',serif;font-size:20px;font-weight:440;
   color:var(--ink);margin-bottom:8px}
 .filterrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+/* visually split the category chips from the difficulty chips */
+.filterrow--sep{border-top:1px solid var(--border);padding-top:12px;margin-top:2px}
 .topic{font-family:'Fraunces',serif;font-size:22px;font-weight:440;line-height:1.4;min-height:84px;color:var(--ink);margin-top:6px}
 /* words mode: a single word gets room to breathe */
 .topic.is-word{display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:clamp(30px,6vw,44px);line-height:1.2;letter-spacing:-.01em;color:var(--ember)}
 /* daily challenge */
 .daily{border:1px solid rgba(221,146,87,.28);background:rgba(221,146,87,.06);
-  border-radius:14px;padding:14px;margin-bottom:14px}
-.daily-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.daily-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;
+  border-radius:14px;padding:11px 12px;margin-bottom:12px}
+.daily-top{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin-bottom:6px}
+.daily-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ember)}
-.daily-date{font-size:11px;color:var(--ink-faint);white-space:nowrap}
-.daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.5;color:var(--ink-dim);margin-bottom:12px}
-.daily-prompt.is-word{font-family:'Fraunces',serif;font-size:24px;color:var(--ember)}
+.daily-date{font-size:11px;color:var(--ink-faint);white-space:nowrap;margin-left:auto}
+.daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink-dim);margin-bottom:10px}
+.daily-prompt.is-word{font-family:'Fraunces',serif;font-size:20px;color:var(--ember);margin-bottom:10px}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
 .daily-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ember);margin:8px 0 -4px}
@@ -514,14 +527,14 @@ body.is-review .scrub{display:flex}
           <div class="daily" id="dailyCard" hidden>
             <div class="daily-top">
               <span class="daily-label" id="dailyLabel">◆ Daily Challenge</span>
+              <span class="diff-pill daily-diff" id="dailyDiff"></span>
               <span class="daily-date" id="dailyDate"></span>
             </div>
             <div class="daily-prompt" id="dailyPrompt"></div>
-            <span class="diff-pill daily-diff" id="dailyDiff"></span>
-            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center;margin-top:12px">Do today's challenge</button>
+            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Do today's challenge</button>
           </div>
           <div class="filterrow" id="catFilters"></div>
-          <div class="filterrow" id="diffFilters">
+          <div class="filterrow filterrow--sep" id="diffFilters">
             <button class="dur is-active" data-diff="all">All levels</button>
             <button class="dur" data-diff="easy">Easy</button>
             <button class="dur" data-diff="medium">Medium</button>
@@ -551,24 +564,6 @@ body.is-review .scrub{display:flex}
         <button class="pbtn pbtn--ghost pbtn--sm" id="newTopic" style="width:100%;text-align:center">↻ New topic</button>
       </div>
 
-      <div class="panel">
-        <div class="phead"><span class="dot"></span> Stats</div>
-        <div class="stats">
-          <div class="stat"><div class="n" id="statWpm">—</div><div class="l">Words / min</div></div>
-          <div class="stat"><div class="n" id="statFillers">—</div><div class="l">Fillers / min</div></div>
-          <div class="stat"><div class="n" id="statStreak">0</div><div class="l">Day streak</div></div>
-          <div class="stat"><div class="n" id="statMins">0</div><div class="l">Total mins</div></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="phead phead--split">
-          <span class="phead-title"><span class="dot"></span> Library</span>
-          <a class="lib-all" href="library.html">View all →</a>
-        </div>
-        <ul class="lib" id="libList"></ul>
-        <div class="sample" id="libEmpty">no recordings yet, hit record to start your history</div>
-      </div>
     </div>
   </div>
 
@@ -8172,8 +8167,12 @@ const recentIds=[], RECENT_MAX=60;
 
 function renderCatFilters(){
   if(!libOK||recMode==='freeplay') return;
-  const cats=window.categoriesFor(recMode), cur=selected[recMode].cat;
-  catFilters.innerHTML='<button class="dur'+(cur==='all'?' is-active':'')+'" data-cat="all">All</button>'+
+  // "All" and the "Random" category are the same idea, so show one chip: Random
+  // (= pick from the whole pool). Drop the standalone random category chip.
+  if(selected[recMode].cat==='random') selected[recMode].cat='all';
+  const cats=window.categoriesFor(recMode).filter(c=>c.id!=='random');
+  const cur=selected[recMode].cat;
+  catFilters.innerHTML='<button class="dur'+(cur==='all'?' is-active':'')+'" data-cat="all">Random</button>'+
     cats.map(c=>'<button class="dur'+(cur===c.id?' is-active':'')+'" data-cat="'+c.id+'">'+c.label+'</button>').join('');
 }
 function renderDiffFilters(){
@@ -8569,6 +8568,8 @@ function computeStreak(records){
   return streak;
 }
 function renderStats(records){
+  // the sidebar Stats panel was removed from speakeasy.html (lives on library.html now)
+  if(!$('#statMins')) return;
   const totalSec=records.reduce((s,r)=>s+(r.durationSec||0),0);
   $('#statWpm').textContent='—';
   $('#statFillers').textContent='—';
@@ -8595,6 +8596,7 @@ let libRecords=[];
 function fmtDur(s){ const m=Math.floor(s/60); return m+':'+String(Math.round(s%60)).padStart(2,'0'); }
 function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
 function renderLibrary(records){
+  if(!libList) return; // sidebar Library panel removed from speakeasy.html
   libRecords=records;
   if(!records.length){ libList.innerHTML=''; libEmpty.style.display=''; return; }
   libEmpty.style.display='none';
@@ -8628,7 +8630,7 @@ async function playLibraryRecord(rec){
     setSaveStatus("couldn't open that file, it may have moved");
   }
 }
-libList.addEventListener('click', e=>{
+if(libList) libList.addEventListener('click', e=>{
   const li=e.target.closest('li.playable[data-idx]');
   if(!li) return;
   const rec=libRecords[+li.dataset.idx];
@@ -8636,6 +8638,9 @@ libList.addEventListener('click', e=>{
 });
 /* ── end Library ── */
 async function refreshStats(){
+  // both consumers (Stats + Library sidebar panels) were removed from
+  // speakeasy.html; skip the record fetch entirely when neither is present
+  if(!$('#statMins') && !libList) return;
   try{
     const records=await loadRecords();
     renderStats(records);
@@ -8719,13 +8724,12 @@ function avaBtn(id){
   const cur=acctAvatarId();
   const b=document.createElement('button');
   b.type='button';
+  b.dataset.tip = id==='' ? 'Your initial' : avatarLabel(id);
   if(id===''){
     b.className='ava ini'+(cur===''?' is-active':'');
-    b.title='Your initial';
     b.innerHTML='<span class="ava-ini">'+initialChar()+'</span>';
   }else{
     b.className='ava'+(id===cur?' is-active':'');
-    b.title=avatarLabel(id);
     b.innerHTML=(window.avatarSvg?window.avatarSvg(id,24):'');
   }
   b.addEventListener('click',()=>saveProfile({avatar:id}));
@@ -8757,8 +8761,10 @@ function showAllIcons(){
   ppEmojis.appendChild(head);
   const grid=document.createElement('div');
   grid.className='pp-all-grid';
-  grid.appendChild(avaBtn(''));
-  (window.SPEAKEASY_AVATARS||[]).forEach(a=>grid.appendChild(avaBtn(a.id)));
+  // expanded grid scrolls, so the CSS tooltip would clip — use native title= here
+  const add=id=>{ const b=avaBtn(id); b.title=b.dataset.tip; grid.appendChild(b); };
+  add('');
+  (window.SPEAKEASY_AVATARS||[]).forEach(a=>add(a.id));
   ppEmojis.appendChild(grid);
 }
 
