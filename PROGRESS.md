@@ -184,14 +184,22 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     "No better site to practice your public speaking skills, impromptu."
   - Hero blurb → "A cozy little studio for practicing your public speaking, out
     loud." with `text-wrap:balance` for even lines.
-  - The 4 `how-steps` already carried the accurate feature copy (pick mode /
-    hit record / watch it back / build the habit) — unchanged. Freeplay
-    feature-card copy corrected to "watch it back in the library by full,
-    camera only, or audio only" (no longer claims a 4-way in-studio review).
+  - `how-steps` reworded (2026-09-09): step 1 "Choose a topic by category and
+    difficulty and how long to speak for, get a random word to riff on, or
+    switch to Freeplay with no prompt at all."; step 2 ends "Super simple, as
+    speaking should be." (was "There's no app to install."); step 3 now says
+    "...or a transcript (coming soon)."
   - Feature cards: green `.dot` replaced with per-card ember line-icon SVGs
     (`.feat-icn`: speech-bubble / dice / mic / pencil / diamond-check), and a
     subtle hover lift (`translateY(-4px)` + shadow, `prefers-reduced-motion`
-    respected).
+    respected). The "coming soon" pill on the Notes card is now
+    `position:absolute` top-right of the card (`.feature-card{position:relative}`)
+    rather than inline after the `<h3>`.
+  - Freeplay feature-card copy corrected to "watch it back in the library by
+    full, camera only, or audio only".
+  - **Background:** `body` now layers **7 radial gradients** (alternating
+    ember / sage, alpha .05–.12) positioned from ~-6% to 100% down the page so
+    the warm glow runs the whole length, not just the hero. `no-repeat`.
   - Footer "speakeasy · v0.1" → the copyright line (new 1-line `<script>` for
     the year, `index.html` had no script before).
 - **Review modes moved from the studio to the library (2026-09-09).**

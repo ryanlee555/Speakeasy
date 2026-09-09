@@ -31,9 +31,15 @@ body{
   font-family:'Inter',sans-serif;
   color:var(--ink);
   background:
-    radial-gradient(1100px 560px at 50% -8%, rgba(221,146,87,.10), transparent 60%),
-    radial-gradient(800px 480px at 88% 6%, rgba(143,168,146,.07), transparent 60%),
+    radial-gradient(1100px 600px at 50% -6%, rgba(221,146,87,.12), transparent 62%),
+    radial-gradient(820px 520px at 90% 3%, rgba(143,168,146,.08), transparent 60%),
+    radial-gradient(760px 560px at 4% 22%, rgba(221,146,87,.06), transparent 60%),
+    radial-gradient(920px 640px at 96% 44%, rgba(143,168,146,.055), transparent 58%),
+    radial-gradient(840px 620px at 8% 64%, rgba(221,146,87,.055), transparent 60%),
+    radial-gradient(780px 560px at 92% 82%, rgba(143,168,146,.05), transparent 58%),
+    radial-gradient(1100px 720px at 50% 100%, rgba(221,146,87,.08), transparent 62%),
     var(--bg);
+  background-repeat:no-repeat;
 }
 
 /* ---- header ---- */
@@ -134,6 +140,7 @@ body{
 /* ---- features ---- */
 .features-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:44px}
 .feature-card{
+  position:relative;
   border:1px solid var(--border);border-radius:16px;padding:24px 20px;background:var(--panel);
   transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
@@ -144,9 +151,10 @@ body{
 .feature-card p{font-size:13px;line-height:1.6;color:var(--ink-faint)}
 @media(prefers-reduced-motion:reduce){.feature-card,.feature-card:hover{transition:none;transform:none}}
 .soon{
-  display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  position:absolute;top:16px;right:16px;
+  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   color:var(--sage);border:1px solid rgba(143,168,146,.35);border-radius:999px;
-  padding:2px 7px;margin-left:6px;vertical-align:middle;
+  padding:3px 8px;background:var(--panel);
 }
 
 @media(max-width:1080px){.features-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
@@ -216,15 +224,15 @@ body{
       <ol class="how-steps">
         <li>
           <span class="num">1</span>
-          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty, get a single random word to riff on, or switch to Freeplay and record with no prompt at all.</span>
+          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty and how long to speak for, get a random word to riff on, or switch to Freeplay with no prompt at all.</span>
         </li>
         <li>
           <span class="num">2</span>
-          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic right in the browser. There's no app to install.</span>
+          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic right in the browser. Super simple, as speaking should be.</span>
         </li>
         <li>
           <span class="num">3</span>
-          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript. Pick whichever helps you notice the most.</span>
+          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript (coming soon). Pick whichever helps you notice the most.</span>
         </li>
         <li>
           <span class="num">4</span>
@@ -257,8 +265,9 @@ body{
         <p>No prompt at all. Record yourself for as long as you set, then watch it back in the library by full, camera only, or audio only.</p>
       </div>
       <div class="feature-card">
+        <span class="soon">coming soon</span>
         <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></div>
-        <h3>Notes on every take <span class="soon">coming soon</span></h3>
+        <h3>Notes on every take</h3>
         <p>Attach notes to any recording so you can look back through your history and actually see the progress you've made.</p>
       </div>
       <div class="feature-card">
