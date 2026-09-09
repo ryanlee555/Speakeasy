@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#100d0b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%233A2A20'/%3E%3Crect x='4' y='24' width='8' height='16' rx='4' fill='%23F2E4D4'/%3E%3Crect x='16' y='18' width='8' height='28' rx='4' fill='%23F2E4D4'/%3E%3Crect x='28' y='12' width='8' height='40' rx='4' fill='%23C87941'/%3E%3Crect x='40' y='18' width='8' height='28' rx='4' fill='%23F2E4D4'/%3E%3Crect x='52' y='24' width='8' height='16' rx='4' fill='%23F2E4D4'/%3E%3C/svg%3E">
-<title>library · speakeasy</title>
+<title>speakeasy</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,440;0,9..144,560;1,9..144,440&family=Inter:wght@400;500;600&display=swap');
 
@@ -67,7 +67,8 @@ body{
 .gate{max-width:520px;margin:70px auto 0;text-align:center;
   background:var(--panel);border:1px solid var(--border);border-radius:20px;
   box-shadow:0 18px 40px -20px var(--shadow);padding:48px 34px}
-.gate .icn{font-size:30px;margin-bottom:18px}
+.gate .icn{margin-bottom:18px;line-height:0}
+.gate .icn svg{display:inline-block}
 .gate h1{font-family:'Fraunces',serif;font-size:clamp(24px,4vw,32px);font-weight:440;line-height:1.2;margin-bottom:14px}
 .gate p{font-size:14.5px;line-height:1.7;color:var(--ink-faint);max-width:380px;margin:0 auto 26px}
 .gate-actions{display:flex;flex-direction:column;gap:12px;align-items:center}
@@ -213,12 +214,20 @@ body{
 
   <!-- signed out -->
   <section class="gate hide" id="gate">
-    <div class="icn">🎞️</div>
-    <h1>Your library lives with your account.</h1>
+    <div class="icn">
+      <svg width="44" height="44" viewBox="-32 -56 64 88" aria-hidden="true">
+        <path d="M-6 -22 Q-11 -29 -6 -36 Q-1 -43 -6 -48" fill="none" stroke="#C87941" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M8 -22 Q3 -29 8 -36 Q13 -43 8 -48" fill="none" stroke="#C87941" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M16 -6 Q28 -3 26 5 Q24 12 15 12" fill="none" stroke="#C87941" stroke-width="3.5" stroke-linecap="round"/>
+        <rect x="-16" y="-12" width="32" height="32" rx="6" fill="#F2E4D4"/>
+        <rect x="-16" y="0" width="32" height="4" fill="#C87941"/>
+      </svg>
+    </div>
+    <h1>Sign in to access your library</h1>
     <p>
-      Recordings are private to whoever made them, so you need an account before
-      Speakeasy can keep a library for you. Sign up once and every take you save
-      from then on shows up here, on any computer you log in from.
+      Recordings are private and personal to whoever created them. Create an
+      account to access your own library, and revisit your speaking progress to
+      see how much you improved!
     </p>
     <div class="gate-actions">
       <button class="pbtn pbtn--rec" id="gateSignup" type="button">Create an account</button>

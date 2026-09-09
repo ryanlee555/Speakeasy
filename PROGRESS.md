@@ -139,6 +139,20 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Tab identity is just "speakeasy" everywhere (2026-09-09).** All three pages
+  now carry `<title>speakeasy</title>` (was `Speakeasy` / `SPEAKEASY` /
+  `Library · Speakeasy`), lowercase, no per-page qualifier. No JS mutates
+  `document.title`. Each `<head>` also has the inline SVG data-URI favicon (see
+  P1 note) and `<meta name="theme-color" content="#100d0b">`.
+- **Signed-out `library.html` gate reworked (2026-09-09).** The 🎞️ film-frame
+  emoji is replaced with an inline SVG mug icon (ember steam curls + cream cup
+  with an ember rim and handle — matches the favicon's palette). `.gate .icn`
+  lost its `font-size:30px` and gained `line-height:0` + `svg{display:inline-block}`.
+  Heading: "Sign in to access your library" (was "Your library lives with your
+  account."). Body copy: "Recordings are private and personal to whoever created
+  them. Create an account to access your own library, and revisit your speaking
+  progress to see how much you improved!" Buttons and the "Keep practicing
+  without an account →" link are unchanged.
 - **Brand wordmark routes to the studio, not the landing page (2026-09-09).** The
   top-left "Speakeasy" wordmark in `speakeasy.html` and `library.html` now links
   to `speakeasy.html` (the recording studio). It was a plain `<div>` in the
