@@ -147,6 +147,38 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Habit panel: streak + contribution grid (2026-09-09, `speakeasy.html`).**
+  New `#streakCard` `.panel` in the left column, under the Rec Studio panel.
+  Three tiles (day streak / recordings / min practiced), then a
+  **GitHub-style contribution grid** — 26 weeks × 7 days, `.sg-cell` coloured
+  `lvl1..lvl4` by that day's recording count, future days dashed/faint, native
+  `title=` on every past cell ("3 recordings · Mon, Sep 7" / "No recordings ·
+  Sat, Sep 5"). Fed by `renderStreakCard(await loadRecords())` from
+  `refreshStats()` (boot, auth change, after each save). The dead sidebar
+  Stats/Library JS (`renderStats`, `renderLibrary`, `playLibraryRecord`,
+  `libList`, `MODE_LABELS`, `truncate`, the 2nd `fmtDur`) was deleted in the
+  same pass.
+- **Daily challenge: completed state (2026-09-09).** After you **save** a daily
+  take, `markDailyDone(mode)` writes a localStorage flag keyed by the UTC day
+  (same math as `computeDaily`, resets with the prompt). `renderDailyCard` has
+  three button states by priority: in-progress ("✓ Attempting…") >
+  completed-today (green `.daily-btn--done` "✓ Challenge/Word completed",
+  disabled, with a **Try again** button beside it that re-arms via
+  `armDaily()`) > not-started. `#dailyBtn` + `#dailyRetry` in a `.daily-actions`
+  flex row.
+- **Daily cloud tagging fixed by the `2026-09-10_daily_limit.sql` run.** A daily
+  take was showing as plain "Topic" in the library. Cause: from commit
+  `3402b4b` until the migration ran, `cloudInsert`'s full-row insert included
+  `target_sec` (not yet a column), so it **fell back to the 6-column base
+  insert every time** — dropping `is_daily`, `audio_only`, `storage_path`,
+  `thumb_path`. Fixed now. Takes saved in that window are mistagged in the
+  cloud (delete + re-record to fix). `cloudInsert`'s all-or-nothing fallback is
+  a latent footgun for the next migration — make it per-column-tolerant if
+  another column is ever added.
+- **Copy:** hero tagline → "Practice out loud and watch your public speaking
+  improve, day by day." Footer → "© \<year\> Speakeasy. All rights reserved."
+  (year from JS). `startStream`'s overlay-sub reset string updated to match the
+  new HTML default.
 - **Review modes moved from the studio to the library (2026-09-09).**
   - `speakeasy.html` **no longer has the Full / Cam / Audio / Text button row.**
     After a recording stops (or Retake→record again) the studio just plays the

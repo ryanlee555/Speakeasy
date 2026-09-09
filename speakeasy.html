@@ -316,6 +316,11 @@ body.is-review .scrub{display:flex}
 .daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink-dim);margin-bottom:10px}
 .daily-prompt.is-word{font-family:'Fraunces',serif;font-size:20px;color:var(--ember);margin-bottom:10px}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
+.daily-actions{display:flex;gap:8px}
+.daily-actions .daily-btn{flex:1;text-align:center}
+.daily-btn.daily-btn--done{background:rgba(143,168,146,.2);border-color:rgba(143,168,146,.6);color:var(--sage);opacity:1;cursor:default}
+.daily-retry{flex:0 0 auto;text-align:center}
+.daily-retry[hidden]{display:none}
 .daily-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ember);margin:8px 0 -4px}
 .lib .daily-mark{color:var(--ember)}
@@ -338,21 +343,25 @@ body.is-review .scrub{display:flex}
 .dur-custom.is-active input{color:var(--ember)}
 .dur-custom:focus-within{outline:2px solid var(--ember);outline-offset:2px}
 
-/* stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:14px}
-.stat .n{font-family:'Fraunces',serif;font-size:32px;font-weight:440;line-height:1;color:var(--ember)}
-.stat .l{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
-
-/* library */
-.lib{list-style:none;font-size:14px}
-.lib li{padding:11px 2px;border-bottom:1px solid var(--border);color:var(--ink-dim);display:flex;gap:8px}
-.lib li:last-child{border-bottom:0}
-.lib .c{color:var(--ink-faint)}
-.lib li.playable{cursor:pointer}
-.lib li.playable:hover{color:var(--ink)}
-.lib li.playable:hover .c{color:var(--ember)}
-.sample{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:var(--ink-faint);margin-top:12px}
+/* habit: streak + contribution grid */
+.streak-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.streak-row>div{background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:13px 12px;text-align:center}
+.streak-row span{display:block;font-family:'Fraunces',serif;font-size:26px;font-weight:440;line-height:1;color:var(--ember);margin-bottom:5px}
+.streak-row small{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.sg-wrap{overflow-x:auto;padding-bottom:2px}
+.sg{display:flex;gap:3px;width:max-content}
+.sg-col{display:flex;flex-direction:column;gap:3px}
+.sg-cell{width:12px;height:12px;border-radius:3px;background:var(--panel-2);border:1px solid var(--border);flex:0 0 auto}
+.sg-cell.future{opacity:.2;border-style:dashed}
+.sg-cell.lvl1{background:rgba(221,146,87,.28);border-color:transparent}
+.sg-cell.lvl2{background:rgba(221,146,87,.5);border-color:transparent}
+.sg-cell.lvl3{background:rgba(221,146,87,.74);border-color:transparent}
+.sg-cell.lvl4{background:var(--ember);border-color:transparent}
+.sg-legend{display:flex;align-items:center;gap:4px;margin-top:10px;font-size:9px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-faint)}
+.sg-legend .sg-cell{width:10px;height:10px}
+.sg-legend span:first-child{margin-right:2px}
+.sg-legend span:last-child{margin-left:2px}
 
 .foot{text-align:center;margin-top:40px;font-size:12px;color:var(--ink-faint)}
 .foot .fill{color:var(--ember);border:0}
@@ -438,7 +447,7 @@ body.is-review .scrub{display:flex}
 
   <div class="hero">
     <div class="logo">Speakeasy</div>
-    <div class="tag">practice out loud. watch yourself level up.</div>
+    <div class="tag">Practice out loud and watch your public speaking improve, day by day.</div>
   </div>
 
   <div class="grid">
@@ -487,6 +496,17 @@ body.is-review .scrub{display:flex}
           <span class="status" id="saveStatus" style="font-size:12px"></span>
         </div>
       </div>
+
+      <div class="panel" id="streakCard">
+        <div class="phead">Your habit</div>
+        <div class="streak-row">
+          <div><span id="streakNum">0</span><small>day streak</small></div>
+          <div><span id="streakRecs">0</span><small>recordings</small></div>
+          <div><span id="streakMin">0</span><small>min practiced</small></div>
+        </div>
+        <div class="sg-wrap"><div class="sg" id="streakGrid"></div></div>
+        <div class="sg-legend"><span>Less</span><i class="sg-cell"></i><i class="sg-cell lvl1"></i><i class="sg-cell lvl2"></i><i class="sg-cell lvl3"></i><i class="sg-cell lvl4"></i><span>More</span></div>
+      </div>
     </div>
 
     <!-- SIDE -->
@@ -513,7 +533,10 @@ body.is-review .scrub{display:flex}
               <span class="daily-dur-label">Time limit</span>
               <div class="daily-dur-row" id="dailyDurRow"></div>
             </div>
-            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Attempt today's challenge</button>
+            <div class="daily-actions">
+              <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn">Attempt today's challenge</button>
+              <button class="pbtn pbtn--ghost pbtn--sm daily-retry" type="button" id="dailyRetry" hidden>Try again</button>
+            </div>
           </div>
           <div class="filterrow" id="catFilters"></div>
           <div class="filterrow filterrow--sep" id="diffFilters">
@@ -549,7 +572,7 @@ body.is-review .scrub{display:flex}
     </div>
   </div>
 
-  <div class="foot">built as a starting point · camera + record + playback are <span class="fill">real</span> · run it locally + allow permissions</div>
+  <div class="foot">&copy; <span id="footYear">2026</span> Speakeasy. All rights reserved.</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -8187,8 +8210,18 @@ diffFilters.addEventListener('click',e=>{
    a given UTC day, chosen with no backend. Topic mode gets a daily topic, Words
    mode gets a daily word. A given date maps to fixed prompts forever, which is
    what lets two people compare their takes. ── */
-const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag');
+const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyRetry=$('#dailyRetry'), dailyTag=$('#dailyTag');
 const dailyDur=$('#dailyDur'), dailyDurRow=$('#dailyDurRow');
+
+// "did I finish today's daily in this mode?" — kept in localStorage, keyed by the
+// same UTC day computeDaily() uses, so it resets at UTC midnight with the prompt.
+function dailyDoneKey(m){
+  const d=new Date();
+  const day=d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0');
+  return 'speakeasy:dailydone:'+day+':'+m;
+}
+function dailyDoneToday(m){ try{ return !!localStorage.getItem(dailyDoneKey(m)); }catch(e){ return false; } }
+function markDailyDone(m){ try{ localStorage.setItem(dailyDoneKey(m),'1'); }catch(e){} }
 const dailyItems={topic:null,words:null};
 // only one daily can be in progress at a time: 'topic' | 'words' | null.
 // attempting the daily in one mode clears it in the other.
@@ -8225,9 +8258,16 @@ function renderDailyCard(){
   const p=$('#dailyPrompt'); p.textContent=item.text; p.classList.toggle('is-word',isWord);
   const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
   dailyCard.classList.toggle('is-active',on);
+  // three states, in priority order: in progress > completed today > not started
+  const done = !on && dailyDoneToday(m);
   dailyBtn.classList.toggle('is-active',on);
-  dailyBtn.textContent=on ? (isWord?"✓ Attempting today's word":"✓ Attempting today's challenge")
-                          : (isWord?"Attempt today's word":"Attempt today's challenge");
+  dailyBtn.classList.toggle('daily-btn--done',done);
+  dailyBtn.disabled = done;                 // "Completed" is a label, not an action
+  dailyBtn.textContent =
+      on   ? (isWord?"✓ Attempting today's word":"✓ Attempting today's challenge")
+    : done ? (isWord?"✓ Word completed":"✓ Challenge completed")
+    :        (isWord?"Attempt today's word":"Attempt today's challenge");
+  dailyRetry.hidden = !done;
   dailyTag.hidden=!on;
   dailyTag.textContent=isWord?"◆ Today's Daily Word":"◆ Today's Daily Challenge";
 }
@@ -8238,18 +8278,22 @@ function setDailyActive(on){
   else if(dailyActiveMode===m){ dailyActiveMode=null; } // only this mode's own reroll/filter clears it
   renderDailyCard();
 }
-dailyBtn.addEventListener('click',()=>{
+function armDaily(){
   const m=recMode;
   if(m!=='topic'&&m!=='words') return;
   const item=dailyItems[m];
   if(!item) return;
-  if(dailyActiveMode===m){ setDailyActive(false); return; }
   currentText[m]=item.text;
   currentItem[m]=item;
   topicEl.textContent=item.text;
   if(recentIds.indexOf(item.id)===-1) recentIds.push(item.id);
   setDailyActive(true);
+}
+dailyBtn.addEventListener('click',()=>{
+  if(dailyActiveMode===recMode){ setDailyActive(false); return; } // toggle off
+  armDaily();
 });
+dailyRetry.addEventListener('click',armDaily); // re-attempt after completing it today
 computeDaily();
 
 /* rec mode: topic vs words vs freeplay */
@@ -8355,7 +8399,7 @@ function updateCapBar(){
 }
 async function startStream(withVideo){
   overlay.querySelector('.big').textContent='Ready when you are';
-  overlay.querySelector('.sub').textContent='record with camera and mic, or audio only. nothing leaves your machine.';
+  overlay.querySelector('.sub').textContent='Record yourself speaking. Enabling the camera is recommended.';
   status.textContent='requesting '+(withVideo?'camera + mic':'mic')+'…';
   try{
     if(stream) stream.getTracks().forEach(t=>t.stop());
@@ -8568,15 +8612,6 @@ function computeStreak(records){
   while(days.has(fmt(d))){ streak++; d.setDate(d.getDate()-1); }
   return streak;
 }
-function renderStats(records){
-  // the sidebar Stats panel was removed from speakeasy.html (lives on library.html now)
-  if(!$('#statMins')) return;
-  const totalSec=records.reduce((s,r)=>s+(r.durationSec||0),0);
-  $('#statWpm').textContent='—';
-  $('#statFillers').textContent='—';
-  $('#statStreak').textContent=computeStreak(records);
-  $('#statMins').textContent=Math.round(totalSec/60);
-}
 async function fetchCloudRecordings(){
   // select('*') so this works both before and after the library migration
   const {data,error}=await sb.from('recordings').select('*')
@@ -8590,64 +8625,45 @@ async function loadRecords(){
   const records = session ? await fetchCloudRecordings() : await getAllRecordings();
   return records.slice().sort((a,b)=>new Date(b.dateISO)-new Date(a.dateISO));
 }
-/* ── Library ── */
-const libList=$('#libList'), libEmpty=$('#libEmpty');
-const MODE_LABELS={topic:'Topic',words:'Words',freeplay:'Freeplay'};
-let libRecords=[];
-function fmtDur(s){ const m=Math.floor(s/60); return m+':'+String(Math.round(s%60)).padStart(2,'0'); }
-function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
-function renderLibrary(records){
-  if(!libList) return; // sidebar Library panel removed from speakeasy.html
-  libRecords=records;
-  if(!records.length){ libList.innerHTML=''; libEmpty.style.display=''; return; }
-  libEmpty.style.display='none';
-  libList.innerHTML=records.map((rec,i)=>{
-    const dateStr=new Date(rec.dateISO).toLocaleDateString(undefined,{month:'short',day:'numeric'});
-    const modeLabel=(rec.isDaily ? 'Daily' : MODE_LABELS[rec.mode]) || 'Topic';
-    const topicPart=rec.mode==='freeplay' ? '' : (rec.topicText ? ' · "'+truncate(rec.topicText,36)+'"' : '');
-    const avPart=rec.audioOnly ? ' · audio' : '';
-    const mark=rec.isDaily ? '<span class="daily-mark">◆</span> ' : '<span class="c">·</span> ';
-    const playable=!!rec.fsaaFile;
-    return '<li class="'+(playable?'playable':'')+'" data-idx="'+i+'">'+mark+dateStr+' · '+modeLabel+' · '+fmtDur(rec.durationSec||0)+topicPart+avPart+'</li>';
-  }).join('');
-}
-async function playLibraryRecord(rec){
-  if(!rec.fsaaFile){ setSaveStatus('no local video saved for that one'); return; }
-  if(!dirHandle){ setSaveStatus('reconnect your save folder (SET SAVE DIR) to watch local recordings'); return; }
-  try{
-    const fh=await dirHandle.getFileHandle(rec.fsaaFile);
-    const file=await fh.getFile();
-    const url=URL.createObjectURL(file);
-    if(blobUrl) URL.revokeObjectURL(blobUrl);
-    blobUrl=url;
-    screen.srcObject=null; screen.src=url;
-    document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
-    document.body.classList.add('is-review','paused');
-    screen.muted=false; screen.pause(); try{ screen.currentTime=0; }catch(e){}
-    stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
-    status.textContent='click the clip to play it · '+rec.fsaaFile;
-  }catch(e){
-    setSaveStatus("couldn't open that file, it may have moved");
+/* ── Your habit: streak number + a GitHub-style contribution grid ── */
+const SG_WEEKS=26; // ~6 months back — wide enough to feel like a habit, narrow enough for the column
+function renderStreakCard(records){
+  const card=$('#streakCard'); if(!card) return;
+  const totalMin=Math.round(records.reduce((s,r)=>s+(r.durationSec||0),0)/60);
+  $('#streakNum').textContent=computeStreak(records);
+  $('#streakRecs').textContent=records.length;
+  $('#streakMin').textContent=totalMin;
+
+  const counts={};
+  records.forEach(r=>{ const k=toLocalDateStr(r.dateISO); counts[k]=(counts[k]||0)+1; });
+
+  const today=new Date(); today.setHours(0,0,0,0);
+  const start=new Date(today);
+  start.setDate(start.getDate() - ((SG_WEEKS-1)*7 + today.getDay())); // back to the Sunday that starts the window
+  const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+  const grid=$('#streakGrid'); grid.innerHTML='';
+  for(let w=0; w<SG_WEEKS; w++){
+    const col=document.createElement('div'); col.className='sg-col';
+    for(let dow=0; dow<7; dow++){
+      const d=new Date(start); d.setDate(start.getDate()+w*7+dow);
+      const n=counts[key(d)]||0;
+      const cell=document.createElement('div');
+      const future=d>today;
+      cell.className='sg-cell'+(future?' future':(n?' lvl'+Math.min(4,n):''));
+      const nice=d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+      cell.title=future ? '' : (n ? (n+' recording'+(n===1?'':'s')+' · '+nice) : 'No recordings · '+nice);
+      col.appendChild(cell);
+    }
+    grid.appendChild(col);
   }
 }
-if(libList) libList.addEventListener('click', e=>{
-  const li=e.target.closest('li.playable[data-idx]');
-  if(!li) return;
-  const rec=libRecords[+li.dataset.idx];
-  if(rec) playLibraryRecord(rec);
-});
-/* ── end Library ── */
 async function refreshStats(){
-  // both consumers (Stats + Library sidebar panels) were removed from
-  // speakeasy.html; skip the record fetch entirely when neither is present
-  if(!$('#statMins') && !libList) return;
-  try{
-    const records=await loadRecords();
-    renderStats(records);
-    renderLibrary(records.slice(0,20));
-  }catch(e){ console.error('speakeasy stats:',e); }
+  if(!$('#streakCard')) return;
+  try{ renderStreakCard(await loadRecords()); }
+  catch(e){ console.error('speakeasy habit:',e); }
 }
-/* ── end Stats ── */
+/* ── end habit ── */
 
 /* ── Auth ── */
 const sb = window.supabase.createClient(
@@ -9011,6 +9027,7 @@ saveRecBtn.addEventListener('click', async ()=>{
   }
   try{ await saveRecordingMeta(rec); }
   catch(e){ console.error('speakeasy meta:',e); }
+  if(rec.isDaily){ markDailyDone(rec.mode); if(dailyActiveMode===rec.mode) dailyActiveMode=null; renderDailyCard(); }
   refreshStats();
   if(dirHandle){
     setSaveStatus('saving…');
@@ -9024,6 +9041,8 @@ saveRecBtn.addEventListener('click', async ()=>{
   saveRecBtn.textContent='Saved ✓';
   status.textContent='saved. hit Retake for another take, or open the Library to review it by camera or audio';
 });
+
+$('#footYear').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
