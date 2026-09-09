@@ -8,6 +8,99 @@ Living doc. Updated after every change made in this project so any new chat can 
 ## Deployment (2026-08-10)
 Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
+## 🎯 WHAT TO WORK ON NEXT (priority order, set 2026-09-08)
+
+Read this first. Everything above P3 is small; the big lifts are flagged.
+
+### P0 — blocked on the user, do these in the Supabase dashboard
+Nothing in code can proceed past these. Both are dashboard-only, so a Claude
+session cannot do them.
+
+1. **Run the library migration.** Supabase → SQL Editor → New query → paste
+   [supabase/2026-09-08_library.sql](supabase/2026-09-08_library.sql) → Run.
+   Adds `storage_path` / `thumb_path` / `is_daily` / `audio_only` columns, a
+   `(user_id, created_at desc)` index, the **private `recordings` bucket**, and
+   the per-user storage policies. **Until this runs the entire cloud library is
+   inert:** uploads fail (logged and swallowed), `library.html` lists rows it
+   cannot play, and the player names this file in its error. Local FSAA save,
+   metadata sync and stats keep working regardless — `cloudInsert()` falls back
+   to the original five columns.
+2. **Turn off "Confirm email."** Authentication → Providers → Email → disable
+   *Confirm email*. This has been outstanding since 2026-07-28. Right now every
+   new signup needs a confirmation click before it can log in, which makes the
+   library's "Create an account" button lead to a dead end for a first-time user.
+
+**After P0 is done, ask Claude to verify the round trip:** sign in, record, save,
+then confirm the object lands in the bucket and plays back from `library.html`.
+That is the one path that has never been tested end to end.
+
+### P1 — video retention, so storage stops being a worry
+The 1 GB free tier is the real constraint. At the current capped 1 Mbps that is
+roughly **2 hours of video**, and the library already shows a usage meter so it
+will be visible when it starts filling.
+
+**Design decision to make first: expire the file, keep the row.** Deleting a
+recording's metadata would break Day Streak and Total Mins retroactively, which
+is the opposite of what a habit app should do. So a retention sweep should
+`storage.remove()` the `.webm` + `.jpg` and then `update` the row to null out
+`storage_path` / `thumb_path`. The row survives, stats survive, and the library
+renders it exactly like today's pre-cloud rows: listed, no video, explained.
+
+**And note the framing this gives you for free:** the cloud becomes a rolling
+window (last N days) while the **local FSAA folder stays the permanent archive**,
+which fits CLAUDE.md's rule that local save is never replaced by cloud. Worth
+saying that in the UI so expiry reads as intentional, not as data loss.
+
+Two ways to run the sweep:
+- **(a) Client-side on library load — recommended first pass.** In
+  `library.html`, after `loadAll()`, find rows older than the cutoff that still
+  have a `storage_path`, remove the objects, null the columns. No backend, fits
+  the project's zero-infra pattern. Weakness: only runs when someone opens the
+  page, so a dormant account never reclaims space.
+- **(b) A scheduled Supabase Edge Function + `pg_cron`.** Correct and runs
+  regardless of visits, but it is real backend setup and `pg_cron` has to be
+  enabled. Do this only if (a) proves insufficient.
+
+Still to decide: the window (30 / 60 / 90 days), whether it is user-configurable
+or fixed, and whether cards should show "expires in N days".
+
+### P2 — site icon (favicon)
+None of the three pages has one, so browser tabs show a blank sheet and any
+bookmark or phone home-screen shortcut looks unfinished. Cheapest approach that
+fits "no build step": an **inline SVG data-URI favicon** in each page's `<head>`
+(an ember dot or a Fraunces "S" on the dark ground), which adds no new file and
+cannot 404 the way the prompt library did. A real `favicon.svg` + `apple-touch-icon.png`
+is the alternative if a proper home-screen icon is wanted. Also worth adding at
+the same time: `<meta name="theme-color" content="#100d0b">` and basic Open Graph
+tags, so a shared link previews as something other than a bare URL.
+
+### P3 — product features already scoped
+- **Per-recording notes** (roadmap §2.5). Was next before the library work
+  jumped the queue. Now easier than it was: `library.html` is the natural home
+  for writing and reading notes, and a `notes text` column is a one-line addition
+  to the migration pattern already established.
+- **Real stats** (roadmap §3). Words/Min and Fillers/Min are still `—`
+  placeholders and TEXT mode still shows a hardcoded transcript. Needs a
+  speech-to-text decision first (Web Speech API for a free fast path vs. a
+  Whisper-style service for accuracy). This is the biggest remaining lift and
+  everything in §4 depends on it.
+- **Claude coaching layer** (roadmap §4). Blocked on real transcripts existing.
+  Remember the constraint: any API key must go through a server-side function,
+  never client-side.
+
+### P4 — housekeeping worth doing eventually
+- **`index.html` still has three placeholders**: the "demo video coming soon"
+  box in How It Works, and two empty photo slots in About.
+- **Shared CSS.** Three pages now duplicate the same ~200 lines of variables and
+  base styles. It was tolerable at two pages; at three it is worth extracting,
+  but only if the `file://` lesson from the prompt library is respected (a
+  stylesheet link has the same second-file failure mode, so inline-at-build or
+  accept the duplication).
+- **`recentIds` does not persist** across reloads, so prompt repeat-avoidance
+  resets each session. Low impact with 1,043 items.
+- **The daily prompt is computed once at page load**, so a tab left open across
+  UTC midnight shows yesterday's until reloaded.
+
 ## ✅ RESOLVED (2026-08-14): the Supabase project is back
 
 The 2026-08-13 blocker below is **fixed — no code change was needed.** The project had been paused, not destroyed; it now resolves and responds normally. Verified 2026-08-14 from the shell:
@@ -28,19 +121,6 @@ Consequences while this is unfixed: every auth call fails identically, no stats 
 
 ## Content style rule (2026-08-13)
 No em dashes anywhere in user-facing copy on either page, and avoid comma-spliced "fragment, fragment" titles/headlines (e.g. the old "Everything you need, nothing you don't." pattern) — write full sentences instead. Applies to both `index.html` and `speakeasy.html`. (The `—` used as an empty-stat placeholder in `speakeasy.html`, e.g. `#statWpm`, is a typographic glyph, not prose, and is exempt.)
-
-## ⚠️ ACTION REQUIRED (2026-09-08): run the library migration
-
-The cloud video library is built and deployed, but it needs a one-time setup step
-the user has to do, because it requires Supabase dashboard access:
-
-**Open Supabase → SQL Editor → New query, paste [supabase/2026-09-08_library.sql](supabase/2026-09-08_library.sql), run it.**
-
-It adds four columns to `recordings`, creates the private `recordings` storage
-bucket, and adds the per-user access policies. Until it runs: video uploads fail
-(logged, swallowed), `library.html` lists rows but can't play them, and the
-player says so by name. Local FSAA save, metadata sync and stats are unaffected
-either way — `cloudInsert()` falls back to the original five columns.
 
 ## Current state (last updated 2026-09-08)
 
@@ -133,6 +213,10 @@ Grouped by dependency, not strict priority order — reorder freely.
 - [x] Postgres schema — `recordings` table keyed by `user_id` — SQL in [supabase/schema.sql](supabase/schema.sql), **applied to the live project 2026-07-28**
 - [x] **Supabase Storage bucket for video files — done 2026-09-08.** Private `recordings` bucket, objects at `<user_id>/<recording_id>.webm` + `.jpg` poster, policies keyed on the first path segment vs `auth.uid()`. Needs [supabase/2026-09-08_library.sql](supabase/2026-09-08_library.sql) run once. Full detail in Current state.
 - [x] **Save-destination decided 2026-09-08: both, automatically.** Signed in, a saved take goes to Supabase Storage *and* the local FSAA folder; signed out it stays local. Deliberately not exposed as a user-facing toggle — CLAUDE.md makes local save permanent, and auto-upload matches how metadata already syncs, so there was nothing meaningful left to choose. Revisit only if the 1 GB ceiling starts to bite.
+- [ ] **Run [supabase/2026-09-08_library.sql](supabase/2026-09-08_library.sql) in the dashboard** — user action, blocks everything cloud-video. See P0 at the top.
+- [ ] **Turn off "Confirm email"** in Authentication → Providers → Email — user action, outstanding since 2026-07-28. See P0.
+- [ ] **Verify the upload round trip end to end** once the two P0 items are done. Sign in → record → Save → object appears in the bucket → plays back in `library.html`. This path has been written and unit-checked but never run against a live bucket.
+- [ ] **Video retention / expiry (NEW, requested 2026-09-08)** — auto-remove cloud video files older than N days so the 1 GB tier stops being a ceiling. **Expire the file, keep the row**: `storage.remove()` the `.webm` + `.jpg`, then null `storage_path`/`thumb_path`, so Day Streak and Total Mins are never rewritten by a cleanup. Cloud becomes a rolling window; the local FSAA folder stays the permanent archive, which is consistent with CLAUDE.md. Start with a client-side sweep on `library.html` load (no backend, fits the project); escalate to a `pg_cron` + Edge Function only if dormant accounts holding space becomes a real problem. Open: window length (30/60/90), fixed vs. user-configurable, and whether to show "expires in N days" on cards. Full reasoning in P1 at the top.
 
 ### 2.5 Practice modes + history (agreed 2026-08-13)
 - [x] **Freeplay mode** — no-prompt recording, default 5:00, reviewed via the existing full/cam/audio/text toggles. Done 2026-08-13.
@@ -143,6 +227,10 @@ Grouped by dependency, not strict priority order — reorder freely.
   - **Verified in-browser 2026-08-14** by injecting real records via the app's own `saveRecordingMeta()`/`refreshStats()` functions (camera/mic aren't available in the automated browser environment, so an actual end-to-end recording couldn't be driven there): list renders correctly with real dates/modes/durations/topics, empty-state message shows/hides correctly, the local ↔ cloud source switch was exercised directly (toggling `session`) and both branches render without errors, and the playable-row click path was confirmed to hit `playLibraryRecord()` and show the correct fallback message when no folder is connected. **Click-to-replay against a real saved `.webm` file confirmed working by the user 2026-08-14** — recorded locally with a real folder granted, clicked the row in the Library list, and the clip played back. Library panel is fully done, both the list and local playback.
 - [ ] **Per-recording notes** — attach a text note to any recording so the user can look back and see progress. Needs a `notes` column (or a `notes` table) added to the Supabase schema, plus the same field on the local IndexedDB record. Depends on Library being real first.
 - [x] **Daily Challenge — done 2026-09-08.** One globally-shared prompt per day, identical for every user, at the top of Topic mode. Went with the date-seeded no-backend approach: `(utcEpochDay*362 + 61) % 585` over the topic prompts, 362 chosen so the sequence is a full permutation that also doesn't alias with the category blocks. Recordings tagged `isDaily` locally; a `◆`/"Daily" marker in the Library. Cloud tagging (an `is_daily` column) deferred to bundle with the next Supabase change — the shared-prompt feature works regardless. Full detail + verification in Current state above.
+
+### 2.6 Polish + presentation
+- [ ] **Site icon / favicon (NEW, requested 2026-09-08)** — no page has one, so tabs and bookmarks show a blank sheet. Prefer an **inline SVG data-URI** in each `<head>` so no second file can 404 (the same failure that bit the prompt library). Bundle with `theme-color` and Open Graph tags so shared links preview properly. See P2 at the top.
+- [ ] Replace the three `index.html` placeholders: the "demo video coming soon" box and the two About photo slots.
 
 ### 3. Real stats
 - [ ] Pick a speech-to-text approach (candidates: browser-native Web Speech API for a fast free path, vs. server-side Whisper for better accuracy — tradeoffs to discuss when we get here)
