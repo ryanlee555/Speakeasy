@@ -161,9 +161,8 @@ body{
 .panel + .panel{margin-top:20px}
 .phead{
   font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-faint);margin-bottom:18px;display:flex;align-items:center;gap:8px;
+  color:var(--ink);margin-bottom:18px;display:flex;align-items:center;gap:8px;
 }
-.phead .dot{width:5px;height:5px;border-radius:50%;background:var(--ember)}
 
 /* camera */
 .screen{
@@ -172,9 +171,6 @@ body{
 }
 .screen video{width:100%;height:100%;object-fit:cover;display:block;background:#0b0908}
 .screen video.mirror{transform:scaleX(-1)}
-.scrline{position:absolute;inset:0;pointer-events:none;display:none;opacity:.5;
-  background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(221,146,87,.05) 3px 4px)}
-body.crt .scrline{display:block}
 .overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:16px;text-align:center;padding:24px;z-index:5;
@@ -295,8 +291,7 @@ body.is-review .scrub{display:flex}
   background:var(--panel);border:1px solid var(--border);border-radius:20px;
   box-shadow:0 18px 40px -20px var(--shadow);padding:22px;
 }
-.rpg .phead{color:var(--ink-faint)}
-.rpg .phead .dot{background:var(--sage)}
+.rpg .phead{color:var(--ink)}
 .modeseg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px;
   background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
 .modeseg .pbtn{padding:9px 6px}
@@ -386,8 +381,6 @@ body.is-review .scrub{display:flex}
     <a class="brandtab" href="speakeasy.html"><span class="icn"></span> Speakeasy</a>
     <div class="toggles">
       <a class="toggle toggle--link" href="library.html">Library</a>
-      <div class="toggle" id="crtBtn">CRT <span class="v">off</span></div>
-      <div class="toggle" id="sfxBtn">SFX <span class="v">off</span></div>
       <div class="acct" id="acct">
         <div class="toggle" id="authBtn">Sign in</div>
         <button class="avatar" id="avatarBtn" type="button" hidden aria-label="Your profile"></button>
@@ -444,7 +437,7 @@ body.is-review .scrub{display:flex}
   </div>
 
   <div class="hero">
-    <div class="logo">Speakeasy<span class="ver">v0.1</span></div>
+    <div class="logo">Speakeasy</div>
     <div class="tag">practice out loud. watch yourself level up.</div>
   </div>
 
@@ -453,12 +446,11 @@ body.is-review .scrub{display:flex}
     <div>
       <div class="panel">
         <div class="phead phead--split">
-          <span class="phead-title"><span class="dot"></span> Rec Studio</span>
+          <span class="phead-title">Rec Studio</span>
           <button class="toggle toggle--mini" id="mirrorBtn" type="button">Mirror <span class="v">off</span></button>
         </div>
         <div class="screen">
           <video id="screen" playsinline></video>
-          <div class="scrline"></div>
           <div class="badge"><span class="recdot"></span><span id="timer">0:00</span></div>
           <div class="playhint">▶</div>
           <div class="audioviz">
@@ -475,10 +467,10 @@ body.is-review .scrub{display:flex}
           </div>
           <div class="overlay" id="overlay">
             <div class="big">Ready when you are</div>
-            <div class="sub">record with camera and mic, or audio only. nothing leaves your machine.</div>
+            <div class="sub">Record yourself speaking. Enabling the camera is recommended.</div>
             <div class="overlay-btns">
               <button class="pbtn pbtn--rec" id="enableBtn">Enable camera</button>
-              <button class="pbtn pbtn--ghost pbtn--sm" id="enableAudioBtn">Just record audio</button>
+              <button class="pbtn pbtn--ghost pbtn--sm" id="enableAudioBtn">Audio only</button>
             </div>
           </div>
         </div>
@@ -515,7 +507,7 @@ body.is-review .scrub{display:flex}
     <!-- SIDE -->
     <div>
       <div class="rpg">
-        <div class="phead"><span class="dot"></span> <span id="rpgTitle">Today's topic</span></div>
+        <div class="phead"><span id="rpgTitle">Practice mode</span></div>
 
         <div class="modeseg" id="recModeSeg">
           <button class="pbtn is-active" type="button" data-recmode="topic">Topic</button>
@@ -531,7 +523,7 @@ body.is-review .scrub{display:flex}
               <span class="daily-date" id="dailyDate"></span>
             </div>
             <div class="daily-prompt" id="dailyPrompt"></div>
-            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Do today's challenge</button>
+            <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Attempt today's challenge</button>
           </div>
           <div class="filterrow" id="catFilters"></div>
           <div class="filterrow filterrow--sep" id="diffFilters">
@@ -545,10 +537,10 @@ body.is-review .scrub{display:flex}
         </div>
 
         <div class="freeplay-copy" id="freeplayPane" style="display:none">
-          <strong>No prompt. Just talk.</strong>
-          Record yourself for as long as you set, then review the clip four ways:
-          full, camera only, audio only, and transcript. Watching yourself back is
-          the whole point.
+          <strong>Speak with no prompt</strong>
+          Record for as long as you set, then review the clip four ways: full,
+          camera only, audio only, and transcript. Watching yourself and your
+          mannerisms back is how you get better at speaking.
         </div>
 
         <div class="dursel" id="dursel">
@@ -8138,19 +8130,8 @@ function capturePoster(){
 }
 function canvasToBlob(c,q){ return new Promise(res=>{ try{ c.toBlob(b=>res(b),'image/jpeg',q||0.72); }catch(e){ res(null); } }); }
 
-/* SFX */
-let sfx=false, actx=null;
-function beep(f=440,d=0.05){ if(!sfx) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-  const o=actx.createOscillator(),g=actx.createGain(); o.type='square'; o.frequency.value=f;
-  g.gain.value=0.05; o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+d);}catch(e){} }
-document.addEventListener('click',e=>{ if(e.target.closest('.pbtn,.dur,.toggle')) beep(520,0.04); },true);
-
-$('#crtBtn').addEventListener('click',function(){ document.body.classList.toggle('crt');
-  const on=document.body.classList.contains('crt'); this.classList.toggle('on',on); this.querySelector('.v').textContent=on?'ON':'OFF'; });
 $('#mirrorBtn').addEventListener('click',function(){ screen.classList.toggle('mirror');
   const on=screen.classList.contains('mirror'); this.classList.toggle('on',on); this.querySelector('.v').textContent=on?'ON':'OFF'; });
-$('#sfxBtn').addEventListener('click',function(){ sfx=!sfx; this.classList.toggle('on',sfx);
-  this.querySelector('.v').textContent=sfx?'ON':'OFF'; beep(660,0.06); });
 
 /* topics + words: from the inlined SPEAKEASY_LIBRARY (canonical source: speakeasy-library.json) */
 const LIB=window.SPEAKEASY_LIBRARY;
@@ -8247,8 +8228,8 @@ function renderDailyCard(){
   const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
   dailyCard.classList.toggle('is-active',on);
   dailyBtn.classList.toggle('is-active',on);
-  dailyBtn.textContent=on ? (isWord?"✓ Doing today's word":"✓ Doing today's challenge")
-                          : (isWord?"Do today's word":"Do today's challenge");
+  dailyBtn.textContent=on ? (isWord?"✓ Attempting today's word":"✓ Attempting today's challenge")
+                          : (isWord?"Attempt today's word":"Attempt today's challenge");
   dailyTag.hidden=!on;
   dailyTag.textContent=isWord?"◆ Today's Daily Word":"◆ Today's Daily Challenge";
 }
@@ -8312,7 +8293,6 @@ function applyRecMode(mode){
   freeplayPane.style.display = isFreeplay ? '' : 'none';
   newTopicBtn.style.display = isFreeplay ? 'none' : '';
   newTopicBtn.textContent = mode==='words' ? '↻ New word' : '↻ New topic';
-  rpgTitle.textContent = mode==='topic' ? "Today's topic" : (mode==='words' ? 'Your word' : 'Freeplay');
   topicEl.classList.toggle('is-word', mode==='words');
   if(!isFreeplay){
     renderCatFilters(); renderDiffFilters(); renderDailyCard();

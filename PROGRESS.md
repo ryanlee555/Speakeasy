@@ -141,6 +141,27 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Studio UI revamp pass (2026-09-09), all `speakeasy.html`:**
+  - **CRT and SFX toggles removed** entirely — buttons, the `crt`/`sfx` JS, the
+    `beep()` Web-Audio machinery, the global click-beep listener, the `.scrline`
+    element + its CSS. The top bar is now just `Library` + the account control.
+    Mirror toggle (in the Rec Studio header) is untouched.
+  - **`v0.1` version pill removed** from the hero title.
+  - **Panel headings ("REC STUDIO", the practice panel) lost their ember/sage
+    dot** and are now `color:var(--ink)` (full ink) instead of `--ink-faint`, so
+    they read clearly. `.phead .dot` / `.rpg .phead .dot` CSS deleted.
+  - The practice-panel heading is now a **static "Practice mode"** (was
+    per-mode: "Today's topic" / "Your word" / "Freeplay"). The `rpgTitle`
+    reassignment in `applyRecMode` is gone; the `rpgTitle` const is now unused.
+  - **Rec Studio overlay copy:** sub-line is now "Record yourself speaking.
+    Enabling the camera is recommended." and the secondary button reads
+    **"Audio only"** (was "Just record audio").
+  - **Daily button verb:** "Do today's challenge/word" → **"Attempt today's
+    challenge/word"** (and the active state "✓ Attempting today's …").
+  - **Freeplay copy:** title "No prompt. Just talk." → **"Speak with no
+    prompt"**; body reworded to "Record for as long as you set, then review the
+    clip four ways: full, camera only, audio only, and transcript. Watching
+    yourself and your mannerisms back is how you get better at speaking."
 - **Studio right column decluttered (2026-09-09).** `speakeasy.html`'s Stats and
   Library sidebar panels are gone (see P1 item 2). Only the Rec Studio prompt
   card remains there.
