@@ -30,14 +30,15 @@ The Supabase side of the cloud library is fully set up and **verified end to end
   Authentication → Users. Harmless; delete them whenever.
 
 ### P1 — quick UI cleanups the user asked for 2026-09-09 (all small, do together)
-1. **Favicon + tab identity.** No page has an icon, so tabs and bookmarks look
-   unfinished. Add an **inline SVG data-URI favicon** to each `<head>` (an ember
-   dot or a Fraunces "S" on the dark `#100d0b` ground) — no new file, cannot 404
-   the way the prompt library did. Add `<meta name="theme-color" content="#100d0b">`
-   and basic Open Graph tags (title, description, and ideally an image) in the
-   same pass so a shared link previews as more than a bare URL. A real
-   `favicon.svg` + `apple-touch-icon.png` is the fuller option if a proper
-   phone home-screen icon is wanted later.
+1. **Favicon + tab identity.** ~~No page has an icon.~~ **Partly done 2026-09-09:**
+   an inline SVG data-URI favicon (a waveform — five rounded bars, the centre bar
+   ember `#C87941`, the rest cream `#F2E4D4`, on a `#3A2A20` circle; user-supplied
+   markup) plus `<meta name="theme-color" content="#100d0b">` are now in the
+   `<head>` of all three pages (`index.html`, `speakeasy.html`, `library.html`),
+   inserted right after the viewport meta. **Still to do:** Open Graph / Twitter
+   card tags (title, description, image) so a shared link previews as more than a
+   bare URL, and optionally a real `favicon.svg` + `apple-touch-icon.png` for a
+   proper phone home-screen icon.
 2. **Trim the studio sidebar** ("remove stats and library on main page"). The
    studio (`speakeasy.html`) right column currently stacks: the prompt card, a
    **Stats** panel (Words/min + Fillers/min are still `—` placeholders, only Day
