@@ -195,19 +195,12 @@ body.is-review .recdot{background:var(--sage);animation:none}
   position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
   justify-content:center;gap:20px;background:#0b0908;color:var(--ink-dim);pointer-events:none;
 }
-body.mode-audio .audioviz,body.mode-text .audioviz{display:flex}
-body.audio-only:not(.mode-text) .audioviz{display:flex}
+body.audio-only .audioviz{display:flex}
 .bars{display:flex;gap:7px;align-items:flex-end;height:56px}
 .bars i{width:6px;border-radius:3px;background:var(--ember);display:block;opacity:.85}
-.transcript{display:none;padding:22px;font-family:'Fraunces',serif;font-size:17px;line-height:1.75;color:var(--ink)}
-body.mode-text .audioviz{display:none}
-body.mode-text .transcript{display:block;position:absolute;inset:0;background:#0b0908;overflow:auto}
 .fill{background:none;color:var(--ember);border-bottom:1px solid rgba(221,146,87,.5)}
 
-/* mode buttons */
-.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:16px 0;
-  background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
-.recrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
+.recrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
 .status{font-size:13px;color:var(--ink-faint)}
 
 /* buttons */
@@ -217,8 +210,6 @@ body.mode-text .transcript{display:block;position:absolute;inset:0;background:#0
   padding:9px 12px;letter-spacing:.02em;
   transition:background .15s,color .15s,border-color .15s,opacity .15s;
 }
-.modes .pbtn{padding:9px 6px}
-.modes .pbtn:hover:not(:disabled){color:var(--ink)}
 .pbtn.is-active{background:var(--panel);color:var(--ink);box-shadow:0 1px 0 var(--border-soft)}
 .pbtn:disabled{opacity:.35;cursor:not-allowed}
 .pbtn--rec{
@@ -243,7 +234,7 @@ body.is-rec .pbtn--rec{background:var(--rec);border-color:var(--rec);color:#fff}
   border:1px solid var(--border-soft);color:var(--ink);font-size:17px;
   display:none;align-items:center;justify-content:center;pointer-events:none;z-index:3;
 }
-body.is-review.paused:not(.mode-text) .playhint{display:flex}
+body.is-review.paused .playhint{display:flex}
 body.is-review .screen{cursor:pointer}
 .scrub{margin:12px 0 0;display:none;flex-direction:column;gap:6px}
 body.is-review .scrub{display:flex}
@@ -457,14 +448,6 @@ body.is-review .scrub{display:flex}
             <div class="bars"><i style="height:16px"></i><i style="height:38px"></i><i style="height:24px"></i><i style="height:52px"></i><i style="height:30px"></i><i style="height:44px"></i><i style="height:18px"></i></div>
             <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)">Audio only</div>
           </div>
-          <div class="transcript">
-            <strong style="color:var(--ember);font-style:italic">Transcript</strong><br><br>
-            So today I wanted to talk about, <span class="fill">um</span>, the one habit that
-            changed how I prepare. <span class="fill">like</span>, most people think it's about
-            talking more, but <span class="fill">uh</span> it's actually about the pause...
-            <br><br>
-            <span style="font-family:'Inter',sans-serif;color:var(--ink-faint);font-size:13px">filler words auto-highlighted once you wire up Whisper. 3 fillers in 14s.</span>
-          </div>
           <div class="overlay" id="overlay">
             <div class="big">Ready when you are</div>
             <div class="sub">Record yourself speaking. Enabling the camera is recommended.</div>
@@ -482,13 +465,6 @@ body.is-review .scrub{display:flex}
         <div class="scrub" id="scrubBar">
           <input type="range" id="scrub" min="0" max="1000" value="0" step="any" aria-label="Playback position">
           <div class="scrub-time"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
-        </div>
-
-        <div class="modes">
-          <button class="pbtn" data-mode="full" disabled>Full</button>
-          <button class="pbtn" data-mode="cam" disabled>Cam</button>
-          <button class="pbtn" data-mode="audio" disabled>Audio</button>
-          <button class="pbtn" data-mode="text" disabled>Text</button>
         </div>
 
         <div class="recrow">
@@ -538,9 +514,9 @@ body.is-review .scrub{display:flex}
 
         <div class="freeplay-copy" id="freeplayPane" style="display:none">
           <strong>Speak with no prompt</strong>
-          Record for as long as you set, then review the clip four ways: full,
-          camera only, audio only, and transcript. Watching yourself and your
-          mannerisms back is how you get better at speaking.
+          Record for as long as you set and watch it back here, then open the
+          Library to review any take by camera only or audio only. Watching
+          yourself and your mannerisms back is how you get better at speaking.
         </div>
 
         <div class="dursel" id="dursel">
@@ -8426,7 +8402,7 @@ screen.addEventListener('play',()=>{ reflectPaused(); startScrubRaf(); });
 screen.addEventListener('pause',()=>{ reflectPaused(); stopScrubRaf(); });
 screen.addEventListener('ended',stopScrubRaf);
 screen.addEventListener('click',()=>{
-  if(!document.body.classList.contains('is-review')||document.body.classList.contains('mode-text')) return;
+  if(!document.body.classList.contains('is-review')) return;
   if(screen.paused) screen.play().catch(()=>{}); else screen.pause();
 });
 
@@ -8602,8 +8578,7 @@ async function playLibraryRecord(rec){
     screen.srcObject=null; screen.src=url;
     document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
     document.body.classList.add('is-review','paused');
-    document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
-    setMode('full'); screen.pause(); try{ screen.currentTime=0; }catch(e){}
+    screen.muted=false; screen.pause(); try{ screen.currentTime=0; }catch(e){}
     stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
     status.textContent='click the clip to play it · '+rec.fsaaFile;
   }catch(e){
@@ -8927,7 +8902,6 @@ function startRecording(){
   pendingBlob=null; pendingBase=null; pendingMeta=null; pendingPoster=null;
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
   capBar.hidden=true;
-  document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
   recorder=makeRecorder(stream);
   recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
   recorder.onstop=()=>{
@@ -8937,13 +8911,7 @@ function startRecording(){
     if(blobUrl) URL.revokeObjectURL(blobUrl); blobUrl=URL.createObjectURL(blob);
     screen.srcObject=null; screen.src=blobUrl;
     document.body.classList.add('is-review','paused');
-    if(audioOnly){
-      document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=(b.dataset.mode==='full'||b.dataset.mode==='cam'); });
-      setMode('audio');
-    } else {
-      document.querySelectorAll('.modes .pbtn').forEach(b=>b.disabled=false);
-      setMode('full');
-    }
+    screen.muted=false; // studio review just plays the clip back; cam/audio-only review lives in the Library
     screen.pause(); try{ screen.currentTime=0; }catch(e){}
     stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
     timerEl.textContent=fmtDur(durationSec); timerEl.style.color='#fff'; // badge shows clip length during review
@@ -8970,7 +8938,6 @@ function resetToIdle(){
   if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
   document.body.className=document.body.className.replace(/\bis-review\b|\bmode-\w+\b|\bpaused\b/g,'').trim();
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
-  document.querySelectorAll('.modes .pbtn').forEach(b=>{ b.disabled=true; b.classList.remove('is-active'); });
   stopScrubRaf(); paintScrub(0); curTime.textContent='0:00'; durTime.textContent='0:00';
   recBtn.textContent='● Rec';
   screen.pause(); screen.removeAttribute('src');
@@ -9010,17 +8977,8 @@ saveRecBtn.addEventListener('click', async ()=>{
   }
   if(session) setSaveStatus(rec.storagePath ? 'saved to your library' : 'saved locally (cloud upload failed)');
   saveRecBtn.textContent='Saved ✓';
-  status.textContent='saved. toggle FULL / CAM / AUDIO / TEXT, or hit Retake for another take';
+  status.textContent='saved. hit Retake for another take, or open the Library to review it by camera or audio';
 });
-
-function setMode(m){
-  document.body.className=document.body.className.replace(/\bmode-\w+\b/g,'').trim();
-  document.body.classList.add('mode-'+m);
-  document.querySelectorAll('.modes .pbtn').forEach(b=>b.classList.toggle('is-active',b.dataset.mode===m));
-  screen.muted = (m==='cam');
-  if(m==='text'){ screen.pause(); } else { screen.play().catch(()=>{}); }
-}
-document.querySelectorAll('.modes .pbtn').forEach(b=>b.addEventListener('click',()=>{ if(!b.disabled) setMode(b.dataset.mode); }));
 </script>
 </body>
 </html>

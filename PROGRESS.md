@@ -141,6 +141,29 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Review modes moved from the studio to the library (2026-09-09).**
+  - `speakeasy.html` **no longer has the Full / Cam / Audio / Text button row.**
+    After a recording stops (or Retake→record again) the studio just plays the
+    clip straight back with the existing click-to-play + scrubber, sound on.
+    Removed: the `.modes` markup, `setMode()` + its listener, the `.transcript`
+    overlay div + CSS, all `body.mode-*` CSS (audioviz now keys only off
+    `body.audio-only`, playhint only off `body.is-review.paused`), and the
+    `mode-text` guard in the screen click handler. Audio-only captures still
+    show the static equalizer via `body.audio-only .audioviz`.
+  - `library.html` **player modal gained a review-mode switch**: a 4-segment
+    control under the video — **Full** (video + sound), **Camera only**
+    (`playVideo.muted=true`, video visible), **Audio only** (video hidden, a
+    static equalizer tile shown, sound on), and **Transcript · soon**
+    (permanently `disabled` until STT exists). `.player-stage` wraps the
+    `<video>` + `.player-audio` tile; `.is-audio` on the stage swaps them.
+    Audio-only takes open in Audio mode with Full/Cam disabled. `setReviewMode()`
+    + a delegated click listener on `#reviewModes`; `openPlayer()` shows the
+    stage + switch once a URL resolves, `closePlayer()` hides them and clears
+    `muted`.
+  - Transcript ("Text") is **dropped from the studio entirely** and shown as a
+    disabled "coming soon" tab in the library. Still needs a speech-to-text
+    decision (roadmap §3) before it can be built; the user plans to surface it
+    on the home page later too.
 - **Studio UI revamp pass (2026-09-09), all `speakeasy.html`:**
   - **CRT and SFX toggles removed** entirely — buttons, the `crt`/`sfx` JS, the
     `beep()` Web-Audio machinery, the global click-beep listener, the `.scrline`
@@ -330,7 +353,7 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   - **Verified in-browser 2026-09-08** against a stubbed session and a representative record set: gate shows signed out and the list never renders; gallery and list both render correct titles, badges, dates and durations; filters count correctly (daily pulls its items out of the topic/words buckets); poster / no-preview / audio tiles each render for the right case; play affordance appears only on playable rows; both "no video" fallbacks show the right explanation (missing bucket vs. local-only vs. never uploaded); delete removes the item and recomputes the header stats without crashing when the backend call fails; 375px mobile is single-column with no overflow.
 - Duration: **DONE** — 4 presets plus a custom `m:ss` input (5s–30min range) that becomes the active duration on Enter/blur. Presets are **mode-dependent** (1:00/1:30/2:00/3:00 in Topic, 0:30/1:00/1:30/2:00 in Words, 3:00/5:00/10:00/15:00 in Freeplay) and each mode remembers its own choice. **A 5th "No limit" button (`data-sec="0"`, `.dur-nolimit`) was added 2026-09-08** — see the timer entry below.
 - **Timer is a countdown, not a stopwatch (2026-09-08).** `setTimer()` (called every 250ms while `recording`): if `targetSec > 0` it shows **time remaining** counting down from the chosen duration, goes red in the last 5s, and calls `stopRecording()` the instant `remain <= 0` — so a 1:00 topic starts at 1:00 and ends itself at 0:00. If `targetSec === 0` ("No limit" selected) it counts **up** from 0:00 and never auto-stops — the user hits STOP whenever. `renderDurations()` treats `chosenSec[mode] === 0` as the no-limit state (activates `.dur-nolimit`, no preset/custom match). `stopRecording()` was extracted from the old inline stop branch so `setTimer` can call it; the record button handler is `recording → stopRecording` / `is-review → resetToIdle` / else `startRecording`. During review the badge shows the finished clip's length.
-- Modes: FULL / CAM / AUDIO / TEXT toggle what's visible after a recording. TEXT mode still shows a **hardcoded sample transcript**, not the real recording's speech (unchanged — still phase 3 work). For an **audio-only** take FULL and CAM are disabled and the player opens in AUDIO.
+- Review modes: **as of 2026-09-09 these live in `library.html`'s player modal, not the studio** (see the "Review modes moved" entry near the top). Full / Camera only / Audio only, plus a disabled "Transcript · soon" tab. TEXT/transcript was removed from `speakeasy.html` and never had real content anywhere (hardcoded sample) — still phase 3 work. The studio's post-record view is now a plain playback (scrubber only). Audio-only takes open in Audio mode with Full/Cam disabled.
 - Library panel rows label all three modes as of 2026-09-08 (`MODE_LABELS`), so a Words take reads e.g. `Sep 8 · Words · 1:00 · "Complacency"`. Library panel (recent-recordings list in the sidebar) **now shows real data** (local IndexedDB or Supabase, no more hardcoded rows) with click-to-replay for local recordings. Done 2026-08-14, see roadmap §2.5 for detail. This was the blocker for per-recording notes — that item is next.
 - UI: warm, dark, cozy aesthetic — Fraunces serif + Inter sans, brown/ember palette, pill-shaped buttons, soft glow background, minimal hairline borders. Shared visual system across both pages; the new auth modal follows the same system.
 

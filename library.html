@@ -265,6 +265,22 @@ body{
 .player-title{font-family:'Fraunces',serif;font-size:18px;line-height:1.4;color:var(--ink)}
 .player-sub{font-size:11.5px;color:var(--ink-faint);margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .player-msg{padding:40px 20px;text-align:center;color:var(--ink-faint);font-size:13.5px;line-height:1.7}
+/* review-mode switch: full / camera only / audio only / transcript(soon) */
+.player-stage[hidden]{display:none}
+.player-stage.is-audio video{display:none}
+.player-audio{position:relative;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;height:240px;background:#0b0908;border-radius:12px;color:var(--ink-faint);
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.player-stage.is-audio .player-audio{display:flex}
+.review-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;
+  background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
+.review-modes[hidden]{display:none}
+.review-modes button{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:var(--ink-dim);
+  cursor:pointer;background:transparent;border:0;border-radius:999px;padding:8px 4px;
+  transition:background .15s,color .15s}
+.review-modes button:hover:not(:disabled){color:var(--ink)}
+.review-modes button.is-active{background:var(--panel);color:var(--ink);box-shadow:0 1px 0 var(--border-soft)}
+.review-modes button:disabled{opacity:.4;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -410,7 +426,16 @@ body{
       </div>
       <button class="modal-close" id="playClose" type="button" aria-label="Close">&times;</button>
     </div>
-    <video id="playVideo" controls playsinline style="display:none"></video>
+    <div class="player-stage" id="playStage" hidden>
+      <video id="playVideo" controls playsinline></video>
+      <div class="player-audio" id="playAudio"></div>
+    </div>
+    <div class="review-modes" id="reviewModes" hidden>
+      <button type="button" data-rmode="full" class="is-active">Full</button>
+      <button type="button" data-rmode="cam">Camera only</button>
+      <button type="button" data-rmode="audio">Audio only</button>
+      <button type="button" data-rmode="text" disabled>Transcript &middot; soon</button>
+    </div>
     <div class="player-msg hide" id="playMsg"></div>
   </div>
 </div>
@@ -651,11 +676,25 @@ function render(){
 
 /* ── playback ── */
 const playBackdrop=$('#playBackdrop'), playVideo=$('#playVideo'), playMsg=$('#playMsg');
+const playStage=$('#playStage'), playAudio=$('#playAudio'), reviewModes=$('#reviewModes');
 function closePlayer(){
   playBackdrop.classList.remove('show');
   playVideo.pause(); playVideo.removeAttribute('src'); playVideo.load();
+  playVideo.muted=false;
+  playStage.hidden=true; playStage.classList.remove('is-audio');
+  reviewModes.hidden=true;
 }
 $('#playClose').addEventListener('click',closePlayer);
+
+function setReviewMode(mode){
+  reviewModes.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.rmode===mode));
+  playStage.classList.toggle('is-audio', mode==='audio');
+  playVideo.muted = (mode==='cam');           // camera only = watch without sound
+}
+reviewModes.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-rmode]');
+  if(b && !b.disabled) setReviewMode(b.dataset.rmode);
+});
 playBackdrop.addEventListener('click',e=>{ if(e.target===playBackdrop) closePlayer(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePlayer(); $('#authBackdrop').classList.remove('show'); } });
 
@@ -664,7 +703,7 @@ async function openPlayer(r){
   $('#playTitle').textContent=titleFor(r);
   $('#playSub').innerHTML='<span class="badge-mode '+m.key+'">'+m.label+'</span> '
     + esc(fmtWhen(r.dateISO)) + ' · ' + fmtDur(r.durationSec) + (r.audioOnly?' · audio only':'');
-  playVideo.style.display='none'; playMsg.classList.add('hide'); playMsg.textContent='';
+  playStage.hidden=true; reviewModes.hidden=true; playMsg.classList.add('hide'); playMsg.textContent='';
   playBackdrop.classList.add('show');
 
   let url=null, cloudFailed=false;
@@ -689,7 +728,13 @@ async function openPlayer(r){
       : 'No video file is saved for this take. It was recorded before cloud saving existed.';
     return;
   }
-  playVideo.style.display=''; playVideo.src=url; playVideo.play().catch(()=>{});
+  playAudio.innerHTML=audioTile();
+  const isAudioTake=!!r.audioOnly;
+  reviewModes.querySelector('[data-rmode="full"]').disabled=isAudioTake;
+  reviewModes.querySelector('[data-rmode="cam"]').disabled=isAudioTake;
+  setReviewMode(isAudioTake?'audio':'full');
+  playStage.hidden=false; reviewModes.hidden=false;
+  playVideo.src=url; playVideo.play().catch(()=>{});
 }
 
 /* ── delete ── */
