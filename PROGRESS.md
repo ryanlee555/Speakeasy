@@ -12,12 +12,11 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
 
 Read this first. Everything above P3 is small; the big lifts are flagged.
 
-### ⚠️ RUN THIS: `supabase/2026-09-10_daily_limit.sql`
-One-line migration (`add column target_sec integer`). Until it's run in the
-Supabase SQL Editor, the per-recording time limit only saves to local IndexedDB,
-not the cloud row — `cloudInsert` falls back to the 6-column base insert and the
-library just won't show "· 2:00 limit" for signed-in takes. No breakage, just
-missing data. Run it and the daily-limit label works end to end.
+### ✅ `supabase/2026-09-10_daily_limit.sql` — RUN 2026-09-09
+`target_sec integer` column added to `public.recordings` (user ran it in the
+Supabase SQL Editor, "Success. No rows returned"). The daily time-limit now
+round-trips to the cloud, so signed-in library rows show the limit time. Nothing
+outstanding on the Supabase side.
 
 ### ✅ P0 — DONE 2026-09-09
 The Supabase side of the cloud library is fully set up and **verified end to end.**
@@ -208,10 +207,10 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     a row; same in Words mode). Clicking one sets `chosenSec[recMode]`/
     `targetSec` and calls `renderDurations()`, so it stays in lockstep with the
     main duration selector below (and vice versa). The chosen limit is saved on
-    every recording as `targetSec` (0 = no limit), local IndexedDB always and
-    the cloud row when `supabase/2026-09-10_daily_limit.sql` has been run
-    (`cloudInsert` sends `target_sec`, falling back to the 6-col base insert if
-    the column is missing).
+    every recording as `targetSec` (0 = no limit) — local IndexedDB always, and
+    the cloud row via the `target_sec` column
+    (`supabase/2026-09-10_daily_limit.sql`, **run 2026-09-09**). `cloudInsert`
+    still keeps the 6-col base-insert fallback as belt-and-suspenders.
   - **Library shows one clean time per row (`slotTime(r)`).** A daily attempted
     with a fixed limit shows that limit verbatim ("1:00", "1:30", …); a
     "No limit" daily, a pre-column daily, and every non-daily take show the
