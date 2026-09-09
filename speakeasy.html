@@ -308,6 +308,10 @@ body.is-review .scrub{display:flex}
   font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.11em;
   text-transform:uppercase;color:var(--sage)}
 .daily-inprogress[hidden]{display:none}
+.daily-dur{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px}
+.daily-dur-label{font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
+.daily-dur .dur{font-size:11px;padding:6px 10px}
 .daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink-dim);margin-bottom:10px}
 .daily-prompt.is-word{font-family:'Fraunces',serif;font-size:20px;color:var(--ember);margin-bottom:10px}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
@@ -504,6 +508,7 @@ body.is-review .scrub{display:flex}
             </div>
             <div class="daily-inprogress" id="dailyInProgress" hidden>● In progress</div>
             <div class="daily-prompt" id="dailyPrompt"></div>
+            <div class="daily-dur" id="dailyDur"><span class="daily-dur-label">Time limit</span></div>
             <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Attempt today's challenge</button>
           </div>
           <div class="filterrow" id="catFilters"></div>
@@ -8176,9 +8181,11 @@ diffFilters.addEventListener('click',e=>{
    a given UTC day, chosen with no backend. Topic mode gets a daily topic, Words
    mode gets a daily word. A given date maps to fixed prompts forever, which is
    what lets two people compare their takes. ── */
-const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag');
+const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag'), dailyDur=$('#dailyDur');
 const dailyItems={topic:null,words:null};
-const dailyActive={topic:false,words:false};
+// only one daily can be in progress at a time: 'topic' | 'words' | null.
+// attempting the daily in one mode clears it in the other.
+let dailyActiveMode=null;
 
 function computeDaily(){
   if(!libOK) return;
@@ -8202,11 +8209,12 @@ function renderDailyCard(){
   if(!item){ dailyCard.hidden=true; return; }
   dailyCard.hidden=false;
   const isWord=m==='words';
-  const on=dailyActive[m];
+  const on=dailyActiveMode===m;
   const base=isWord?'Daily Word':'Daily Challenge';
   $('#dailyLabel').textContent=(on?'✓ ':'◆ ')+base;
   $('#dailyInProgress').hidden=!on;
   $('#dailyInProgress').textContent=isWord ? "● In progress on today's word" : "● In progress on today's challenge";
+  renderDailyDur();
   const p=$('#dailyPrompt'); p.textContent=item.text; p.classList.toggle('is-word',isWord);
   const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
   dailyCard.classList.toggle('is-active',on);
@@ -8219,7 +8227,8 @@ function renderDailyCard(){
 function setDailyActive(on){
   const m=recMode;
   if(m!=='topic'&&m!=='words') return;
-  dailyActive[m]=on&&!!dailyItems[m];
+  if(on){ if(dailyItems[m]) dailyActiveMode=m; }        // switches the attempt to this mode
+  else if(dailyActiveMode===m){ dailyActiveMode=null; } // only this mode's own reroll/filter clears it
   renderDailyCard();
 }
 dailyBtn.addEventListener('click',()=>{
@@ -8227,7 +8236,7 @@ dailyBtn.addEventListener('click',()=>{
   if(m!=='topic'&&m!=='words') return;
   const item=dailyItems[m];
   if(!item) return;
-  if(dailyActive[m]){ setDailyActive(false); return; }
+  if(dailyActiveMode===m){ setDailyActive(false); return; }
   currentText[m]=item.text;
   currentItem[m]=item;
   topicEl.textContent=item.text;
@@ -8266,7 +8275,28 @@ function renderDurations(){
   customDurWrap.classList.toggle('is-active',!matched);
   customDur.value = matched ? '' : fmtDur(cur);
   targetSec=cur;
+  renderDailyDur();
 }
+
+// the daily card's own time-limit chips: the mode's presets plus No limit.
+// they drive the same chosenSec/targetSec as the main selector, so the two stay in sync.
+function renderDailyDur(){
+  if(recMode==='freeplay') return;
+  const cur=chosenSec[recMode];
+  dailyDur.querySelectorAll('.dur').forEach(b=>b.remove());
+  DUR_PRESETS[recMode].concat(0).forEach(sec=>{
+    const b=document.createElement('button');
+    b.type='button'; b.className='dur'+(sec===cur?' is-active':'');
+    b.dataset.sec=sec;
+    b.textContent = sec===0 ? 'No limit' : fmtDur(sec);
+    dailyDur.appendChild(b);
+  });
+}
+dailyDur.addEventListener('click',e=>{
+  const b=e.target.closest('.dur[data-sec]'); if(!b) return;
+  chosenSec[recMode]=+b.dataset.sec;
+  renderDurations();   // re-syncs the main selector + re-renders these chips
+});
 
 function applyRecMode(mode){
   recMode=mode;
@@ -8476,6 +8506,7 @@ async function cloudInsert(rec){
   };
   const full={...base,
     is_daily:!!rec.isDaily, audio_only:!!rec.audioOnly,
+    target_sec: (typeof rec.targetSec==='number' ? rec.targetSec : null),
     storage_path:rec.storagePath||null, thumb_path:rec.thumbPath||null
   };
   let {error}=await sb.from('recordings').insert(full);
@@ -8923,14 +8954,14 @@ function startRecording(){
     stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
     timerEl.textContent=fmtDur(durationSec); timerEl.style.color='#fff'; // badge shows clip length during review
     const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
-    const isDaily = recMode!=='freeplay' && dailyActive[recMode];
+    const isDaily = recMode!=='freeplay' && dailyActiveMode===recMode;
     const now=new Date();
     pendingBlob=blob;
     pendingBase=fsaaBase(now,recMode);
     // one client-generated uuid shared by the local record AND the cloud row, so
     // the library can merge the two stores without guessing
     const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
-    pendingMeta={id,dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly};
+    pendingMeta={id,dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly,targetSec};
     recBtn.textContent='↺ Retake';
     saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
     status.textContent='click the clip to play it. Save keeps it, Retake starts over';

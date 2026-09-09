@@ -538,6 +538,12 @@ function titleFor(r){
   return (r.topicText||'').trim() || 'Untitled take';
 }
 function fmtDur(s){ s=Math.max(0,Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+// for a daily take, show the limit it was attempted under (or "no limit").
+// non-daily takes and pre-column takes get nothing.
+function limitLabel(r){
+  if(!r.isDaily || r.targetSec==null) return '';
+  return r.targetSec>0 ? ' · '+fmtDur(r.targetSec)+' limit' : ' · no limit';
+}
 function fmtWhen(iso){
   const d=new Date(iso);
   return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})
@@ -559,6 +565,7 @@ async function fetchCloud(){
   return data.map(r=>({
     id:r.id, dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text,
     mode:r.mode||'topic', isDaily:!!r.is_daily, audioOnly:!!r.audio_only,
+    targetSec:(r.target_sec==null?null:r.target_sec),
     storagePath:r.storage_path||null, thumbPath:r.thumb_path||null, source:'cloud'
   }));
 }
@@ -636,7 +643,7 @@ function renderGallery(list){
       +     '<span class="badge-mode '+m.key+'">'+m.label+'</span>'
       +     '<button class="card-del" data-del="'+i+'" title="Delete">✕</button>'
       +   '</div>'
-      +   '<div class="card-when"><span>'+esc(fmtWhen(r.dateISO))+' · '+fmtDur(r.durationSec)+'</span>'
+      +   '<div class="card-when"><span>'+esc(fmtWhen(r.dateISO))+' · '+fmtDur(r.durationSec)+limitLabel(r)+'</span>'
       +     (r.source==='local'?'<span class="badge-local">local only</span>':'')+'</div>'
       + '</div></article>';
   }).join('');
@@ -649,7 +656,7 @@ function renderList(list){
       +   (r.source==='local'?' <span class="badge-local">local only</span>':'')+'</td>'
       + '<td><span class="badge-mode '+m.key+'">'+m.label+'</span></td>'
       + '<td class="lt-num">'+esc(fmtWhen(r.dateISO))+'</td>'
-      + '<td class="lt-num col-dur">'+fmtDur(r.durationSec)+'</td>'
+      + '<td class="lt-num col-dur">'+fmtDur(r.durationSec)+limitLabel(r)+'</td>'
       + '<td class="col-del"><button class="card-del" data-del="'+i+'" title="Delete">✕</button></td>'
       + '</tr>';
   }).join('');
@@ -702,7 +709,7 @@ async function openPlayer(r){
   const m=modeInfo(r);
   $('#playTitle').textContent=titleFor(r);
   $('#playSub').innerHTML='<span class="badge-mode '+m.key+'">'+m.label+'</span> '
-    + esc(fmtWhen(r.dateISO)) + ' · ' + fmtDur(r.durationSec) + (r.audioOnly?' · audio only':'');
+    + esc(fmtWhen(r.dateISO)) + ' · ' + fmtDur(r.durationSec) + limitLabel(r) + (r.audioOnly?' · audio only':'');
   playStage.hidden=true; reviewModes.hidden=true; playMsg.classList.add('hide'); playMsg.textContent='';
   playBackdrop.classList.add('show');
 

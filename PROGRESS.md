@@ -12,6 +12,13 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
 
 Read this first. Everything above P3 is small; the big lifts are flagged.
 
+### ⚠️ RUN THIS: `supabase/2026-09-10_daily_limit.sql`
+One-line migration (`add column target_sec integer`). Until it's run in the
+Supabase SQL Editor, the per-recording time limit only saves to local IndexedDB,
+not the cloud row — `cloudInsert` falls back to the 6-column base insert and the
+library just won't show "· 2:00 limit" for signed-in takes. No breakage, just
+missing data. Run it and the daily-limit label works end to end.
+
 ### ✅ P0 — DONE 2026-09-09
 The Supabase side of the cloud library is fully set up and **verified end to end.**
 - `supabase/2026-09-08_library.sql` was run: the four columns exist, the private
@@ -187,6 +194,27 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     `.daily-top` row (`#dailyInProgress`, toggled by `renderDailyCard`). It used
     to be appended inline as "· in progress" on the label, which crowded the
     label/pill/date row.
+  - **Only one daily attempt at a time (2026-09-09).** `dailyActive` (a
+    `{topic,words}` object where both could be armed) is replaced by a single
+    `let dailyActiveMode` = `'topic'` | `'words'` | `null`. Attempting the daily
+    in one mode switches the attempt to that mode and clears the other.
+    Rerolling / filtering only clears the daily if it's *this* mode's
+    (`setDailyActive(false)` no-ops when `dailyActiveMode!==recMode`).
+    `isDaily` at save time is now `dailyActiveMode===recMode`.
+  - **Time-limit control on the daily card (2026-09-09).** `.daily-dur`
+    (`#dailyDur`) renders the mode's `DUR_PRESETS` + "No limit" as chips;
+    clicking one sets `chosenSec[recMode]`/`targetSec` and calls
+    `renderDurations()`, so it stays in lockstep with the main duration
+    selector below (and vice versa — `renderDurations` re-renders the daily
+    chips). The chosen limit is saved on every recording as `targetSec`
+    (0 = no limit), local IndexedDB always and the cloud row when
+    `supabase/2026-09-10_daily_limit.sql` has been run (`cloudInsert` sends
+    `target_sec`, falling back to the 6-col base insert if the column is
+    missing). `library.html` shows it for **daily** takes only —
+    `limitLabel(r)` appends " · 2:00 limit" / " · no limit" to the
+    date-duration line in gallery, list, and the player sub; non-daily takes
+    and pre-column takes get nothing, so the library reads clearly as "this
+    was a timed daily attempt" vs "this was a free recording".
   - **Freeplay copy:** title "No prompt. Just talk." → **"Speak with no
     prompt"**; body reworded to "Record for as long as you set, then review the
     clip four ways: full, camera only, audio only, and transcript. Watching
