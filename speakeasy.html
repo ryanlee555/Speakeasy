@@ -8621,6 +8621,12 @@ async function refreshStats(){
   try{ renderStreakCard(await loadRecords()); }
   catch(e){ console.error('speakeasy activity:',e); }
 }
+// stay in sync with the Library: it broadcasts when a recording is deleted or
+// edited, and re-pull whenever this tab is shown again.
+const recBC = ('BroadcastChannel' in window) ? new BroadcastChannel('speakeasy-records') : null;
+function notifyRecordsChanged(){ try{ recBC && recBC.postMessage('changed'); }catch(e){} }
+if(recBC) recBC.onmessage = e=>{ if(e.data==='changed') refreshStats(); };
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshStats(); });
 /* ── end activity ── */
 
 /* ── Auth ── */
@@ -8986,7 +8992,7 @@ saveRecBtn.addEventListener('click', async ()=>{
   try{ await saveRecordingMeta(rec); }
   catch(e){ console.error('speakeasy meta:',e); }
   if(rec.isDaily){ markDailyDone(rec.mode); if(dailyActiveMode===rec.mode) dailyActiveMode=null; renderDailyCard(); }
-  refreshStats();
+  refreshStats(); notifyRecordsChanged();
   if(dirHandle){
     setSaveStatus('saving…');
     const name=await autoSave(pendingBlob, pendingBase, pendingMeta.durationSec, pendingMeta.topicText, pendingMeta.mode);

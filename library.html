@@ -835,7 +835,7 @@ async function removeRecord(r){
   await removeLocalFiles(r);
   await idbDelete('recordings', r.id);
   records=records.filter(x=>x!==r);
-  render(); readQuota();
+  render(); readQuota(); notifyRecordsChanged();
 }
 
 /* ── per-row menu (⋯): edit title / delete ── */
@@ -898,7 +898,7 @@ $('#editSave').addEventListener('click',async ()=>{
   r.topicText=title; r.mode=mode; r.isDaily=isDaily;
   $('#editSave').disabled=false;
   closeEditModal();
-  render();
+  render(); notifyRecordsChanged();
 });
 
 /* ── events ── */
@@ -1136,6 +1136,12 @@ async function refresh(){
 }
 sb.auth.onAuthStateChange((_e,s)=>{ session=s; refresh(); });
 sb.auth.getSession().then(({data})=>{ session=data.session; refresh(); });
+
+/* keep the studio's Daily activity (and this page) in sync across tabs */
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('speakeasy-records') : null;
+function notifyRecordsChanged(){ try{ bc && bc.postMessage('changed'); }catch(e){} }
+if(bc) bc.onmessage = e=>{ if(e.data==='changed') refresh(); };
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && session) refresh(); });
 </script>
 </body>
 </html>

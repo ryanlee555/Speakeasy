@@ -373,6 +373,15 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   the in-memory `records` entry, and re-renders (so the badge changes live).
   `titleFor` now prefers a non-empty `topicText` even for freeplay (Freeplay
   *badge* unchanged). Menu closes on outside-click / Escape / scroll / resize.
+- **Studio "Daily activity" stays in sync with the Library (2026-09-09).** Both
+  pages open a `BroadcastChannel('speakeasy-records')`. Library posts `'changed'`
+  after a delete or an edit; the studio posts after a save. Each side re-pulls on
+  receive (studio → `refreshStats()`, library → `refresh()`). Both also re-pull
+  on `visibilitychange` (tab shown again) as the fallback for
+  single-tab navigation and browsers without `BroadcastChannel`. So deleting a
+  recording in the library now updates the studio's **day streak / recordings /
+  min practiced** without a manual reload. (The Library's own
+  "N recordings · M min" header already recomputed on every `render()`.)
 - **Delete now also removes the local FSAA files (2026-09-09).** `removeRecord`
   calls `removeLocalFiles(r)` → `dirHandle.removeEntry()` on
   `<base>.webm` **and** `<base>.json`, so deleting in the library frees the
