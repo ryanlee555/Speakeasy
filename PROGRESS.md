@@ -153,18 +153,37 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     **joined** (`session.user.created_at`, formatted "Mon YYYY") and
     **recordings** (`select id, count:exact, head:true` on `recordings` filtered
     by `user_id`); a **Display name** text input (24 char cap, Save button /
-    Enter); a **Picture** picker — a 6-col grid of 12 emoji
-    (`☕ 🎙️ 🔥 🌙 🌿 ⭐ 🎧 📖 🪵 🍵 🦉 ✨`), click to apply immediately; a
-    full-width **Log out** button that signs out and redirects to `index.html`.
+    Enter); a **Picture** picker (see next bullet); a full-width **Log out**
+    button that signs out and redirects to `index.html`.
+  - **Picture picker — custom SVG icon set (reworked 2026-09-09).** Replaces the
+    first-pass 12-emoji grid. The icons come from **`speakeasy-avatars.js`**
+    (30 flat cream/ember icons, each `{id,label,svg}` for `viewBox="-32 -32 64
+    64"`, plus a `window.avatarSvg(id,size)` helper). Following the prompt-library
+    lesson, the file is **inlined** as its own `<script>` block in both
+    `speakeasy.html` and `library.html` (right before each page's app script);
+    `speakeasy-avatars.js` stays in the repo as the canonical/portable copy.
+    `avatar-preview.html` is a standalone reference sheet of all 30, also moved
+    into the repo.
+    - The compact picker is a **4×2 grid, 8 slots**: slot 1 is the user's
+      **initial** on the ember circle (same as the default avatar; selecting it
+      stores `avatar:''`), slots 2–7 are six featured icons
+      (`mug, mic, waveform, flame, star, leaf`), slot 8 is **More**.
+    - **More** expands the picker in place (`.pp-emojis.expanded`) into a
+      scrollable 5-col grid of the initial option + all 30 icons, with a **Back**
+      link. Picking any icon saves and collapses back to the compact grid.
+    - If the stored pick isn't one of the six featured, it's swapped into slot 7
+      so the active icon is always visible in the compact grid.
   - **Storage:** display name and avatar live in Supabase Auth `user_metadata`
-    (`{username, avatar}`), written with `sb.auth.updateUser({data})`. No schema
-    change, no new bucket. On save we also set `session.user` from the returned
-    user and re-render, so the avatar/name update without a round trip.
-    `onAuthStateChange` ('USER_UPDATED') keeps it in sync across tabs.
-  - **Not done:** real image upload for the picture (would need an `avatars`
-    bucket + policies) — emoji only for now. The signup modal still says "check
-    your email to confirm" even though confirm-email is off; unrelated, left as
-    is.
+    (`{username, avatar}`) where `avatar` is now an **icon id string** (e.g.
+    `"waveform"`) or `''` for the initial. Written with
+    `sb.auth.updateUser({data})`. No schema change, no new bucket. On save we
+    also set `session.user` from the returned user and re-render.
+    `onAuthStateChange` ('USER_UPDATED') keeps it in sync across tabs. Legacy
+    emoji values from the first-pass build fall back to the initial (an emoji
+    that somehow persisted renders as-is).
+  - **Not done:** real uploaded-image avatars (would need an `avatars` bucket +
+    policies). The signup modal still says "check your email to confirm" even
+    though confirm-email is off; unrelated, left as is.
 - **Tab identity is just "speakeasy" everywhere (2026-09-09).** All three pages
   now carry `<title>speakeasy</title>` (was `Speakeasy` / `SPEAKEASY` /
   `Library · Speakeasy`), lowercase, no per-page qualifier. No JS mutates
@@ -187,7 +206,10 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   `.brandtab` in `speakeasy.html`). `index.html`'s `.brand` is still a
   non-clickable `<div>` — it is the landing page and its job is to funnel to
   sign-in, so the wordmark there was left alone.
-- Three static HTML files plus one data file, no build step:
+- Three app HTML files, no build step, plus support files: `speakeasy-library.json`
+  (canonical prompt data), `speakeasy-avatars.js` (canonical avatar-icon data,
+  inlined into the pages), and `avatar-preview.html` (a static reference sheet of
+  the 30 avatar icons, not linked from the app).
   - **The prompt/word library (added 2026-09-08) is now inlined directly into `speakeasy.html`** as its first `<script>` block, ahead of the app script. 1,043 items: 585 topic prompts + 458 single words, every item tagged `{id, mode, category, difficulty, text}`. It defines `window.SPEAKEASY_LIBRARY` plus two helpers, `pickPrompt(mode, category, difficulty, {recent})` and `categoriesFor(mode)`. This is what pushes `speakeasy.html` to ~197KB.
     - **Why inlined, not a `<script src>` (changed same day 2026-09-08):** it first shipped as a separate `speakeasy-library.js` loaded by a script tag, and that broke — the page showed "Prompt library didn't load" for the user even though localhost and Vercel both served the file fine (200, correct bytes). A second-file dependency fails in too many ordinary situations: opening `speakeasy.html` straight from Finder (`file://`), a stale HTML cache paired with a not-yet-propagated JS file, a flaky network on first load. Inlining removes the whole class of failure and matches the project's single-file nature. `speakeasy-library.js` has been deleted from the repo.
     - `speakeasy-library.json` is kept as the **canonical, portable copy of the data** (same 1,043 items). The app does not read it — it exists for a future server/build step, and as the thing to regenerate the inlined block from.
