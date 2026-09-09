@@ -139,6 +139,32 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
+- **Account avatar + profile popover (2026-09-09).** Replaces the old "email in a
+  pill" signed-in state on both `speakeasy.html` and `library.html`.
+  - **Top bar order** in the studio is now `Library · CRT · SFX · <account>` —
+    the account control sits at the far right (was between Library and CRT).
+  - **Signed out:** a plain "Sign in" toggle (opens the existing auth modal).
+  - **Signed in:** a 32px circular `.avatar` button. Glyph is the chosen emoji,
+    else the first letter of the display name / email local-part. Clicking it
+    opens `.profile-pop`, a 272px dropdown anchored to the control's right edge
+    (`max-width:calc(100vw - 24px)` so it can't overflow on mobile; closes on
+    outside-click or Escape).
+  - **Popover contents:** big avatar + display name + email; two stat tiles —
+    **joined** (`session.user.created_at`, formatted "Mon YYYY") and
+    **recordings** (`select id, count:exact, head:true` on `recordings` filtered
+    by `user_id`); a **Display name** text input (24 char cap, Save button /
+    Enter); a **Picture** picker — a 6-col grid of 12 emoji
+    (`☕ 🎙️ 🔥 🌙 🌿 ⭐ 🎧 📖 🪵 🍵 🦉 ✨`), click to apply immediately; a
+    full-width **Log out** button that signs out and redirects to `index.html`.
+  - **Storage:** display name and avatar live in Supabase Auth `user_metadata`
+    (`{username, avatar}`), written with `sb.auth.updateUser({data})`. No schema
+    change, no new bucket. On save we also set `session.user` from the returned
+    user and re-render, so the avatar/name update without a round trip.
+    `onAuthStateChange` ('USER_UPDATED') keeps it in sync across tabs.
+  - **Not done:** real image upload for the picture (would need an `avatars`
+    bucket + policies) — emoji only for now. The signup modal still says "check
+    your email to confirm" even though confirm-email is off; unrelated, left as
+    is.
 - **Tab identity is just "speakeasy" everywhere (2026-09-09).** All three pages
   now carry `<title>speakeasy</title>` (was `Speakeasy` / `SPEAKEASY` /
   `Library · Speakeasy`), lowercase, no per-page qualifier. No JS mutates
