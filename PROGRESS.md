@@ -137,8 +137,16 @@ Consequences while this is unfixed: every auth call fails identically, no stats 
 ## Content style rule (2026-08-13)
 No em dashes anywhere in user-facing copy on either page, and avoid comma-spliced "fragment, fragment" titles/headlines (e.g. the old "Everything you need, nothing you don't." pattern) — write full sentences instead. Applies to both `index.html` and `speakeasy.html`. (The `—` used as an empty-stat placeholder in `speakeasy.html`, e.g. `#statWpm`, is a typographic glyph, not prose, and is exempt.)
 
-## Current state (last updated 2026-09-08)
+## Current state (last updated 2026-09-09)
 
+- **Brand wordmark routes to the studio, not the landing page (2026-09-09).** The
+  top-left "Speakeasy" wordmark in `speakeasy.html` and `library.html` now links
+  to `speakeasy.html` (the recording studio). It was a plain `<div>` in the
+  studio and an `<a href="index.html">` in the library; both are now
+  `<a class="brandtab" href="speakeasy.html">` (added `text-decoration:none` to
+  `.brandtab` in `speakeasy.html`). `index.html`'s `.brand` is still a
+  non-clickable `<div>` — it is the landing page and its job is to funnel to
+  sign-in, so the wordmark there was left alone.
 - Three static HTML files plus one data file, no build step:
   - **The prompt/word library (added 2026-09-08) is now inlined directly into `speakeasy.html`** as its first `<script>` block, ahead of the app script. 1,043 items: 585 topic prompts + 458 single words, every item tagged `{id, mode, category, difficulty, text}`. It defines `window.SPEAKEASY_LIBRARY` plus two helpers, `pickPrompt(mode, category, difficulty, {recent})` and `categoriesFor(mode)`. This is what pushes `speakeasy.html` to ~197KB.
     - **Why inlined, not a `<script src>` (changed same day 2026-09-08):** it first shipped as a separate `speakeasy-library.js` loaded by a script tag, and that broke — the page showed "Prompt library didn't load" for the user even though localhost and Vercel both served the file fine (200, correct bytes). A second-file dependency fails in too many ordinary situations: opening `speakeasy.html` straight from Finder (`file://`), a stale HTML cache paired with a not-yet-propagated JS file, a flaky network on first load. Inlining removes the whole class of failure and matches the project's single-file nature. `speakeasy-library.js` has been deleted from the repo.

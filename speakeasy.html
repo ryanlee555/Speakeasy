@@ -45,7 +45,7 @@ body{
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px;flex-wrap:wrap;row-gap:12px}
 .brandtab{
   font-family:'Fraunces',serif;font-size:16px;font-weight:560;letter-spacing:.02em;
-  color:var(--ink);display:flex;align-items:center;gap:8px;
+  color:var(--ink);display:flex;align-items:center;gap:8px;text-decoration:none;
 }
 .brandtab .icn{width:6px;height:6px;border-radius:50%;background:var(--ember)}
 .toggles{display:flex;gap:8px;flex-wrap:wrap}
@@ -315,7 +315,7 @@ body.is-review .scrub{display:flex}
 <body>
 <div class="wrap">
   <div class="topbar">
-    <div class="brandtab"><span class="icn"></span> Speakeasy</div>
+    <a class="brandtab" href="speakeasy.html"><span class="icn"></span> Speakeasy</a>
     <div class="toggles">
       <a class="toggle toggle--link" href="library.html">Library</a>
       <div class="toggle" id="authBtn">Sign in</div>
