@@ -181,6 +181,12 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     **"Audio only"** (was "Just record audio").
   - **Daily button verb:** "Do today's challenge/word" → **"Attempt today's
     challenge/word"** (and the active state "✓ Attempting today's …").
+  - **"In progress" is its own line now.** When the daily is active, the label
+    stays "✓ Daily Challenge" and a separate sage `.daily-inprogress` line
+    ("● In progress on today's challenge/word") shows underneath the
+    `.daily-top` row (`#dailyInProgress`, toggled by `renderDailyCard`). It used
+    to be appended inline as "· in progress" on the label, which crowded the
+    label/pill/date row.
   - **Freeplay copy:** title "No prompt. Just talk." → **"Speak with no
     prompt"**; body reworded to "Record for as long as you set, then review the
     clip four ways: full, camera only, audio only, and transcript. Watching

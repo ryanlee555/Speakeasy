@@ -304,6 +304,10 @@ body.is-review .scrub{display:flex}
 .daily-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ember)}
 .daily-date{font-size:11px;color:var(--ink-faint);white-space:nowrap;margin-left:auto}
+.daily-inprogress{display:flex;align-items:center;gap:6px;margin:-2px 0 8px;
+  font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--sage)}
+.daily-inprogress[hidden]{display:none}
 .daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink-dim);margin-bottom:10px}
 .daily-prompt.is-word{font-family:'Fraunces',serif;font-size:20px;color:var(--ember);margin-bottom:10px}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
@@ -498,6 +502,7 @@ body.is-review .scrub{display:flex}
               <span class="diff-pill daily-diff" id="dailyDiff"></span>
               <span class="daily-date" id="dailyDate"></span>
             </div>
+            <div class="daily-inprogress" id="dailyInProgress" hidden>● In progress</div>
             <div class="daily-prompt" id="dailyPrompt"></div>
             <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Attempt today's challenge</button>
           </div>
@@ -8199,7 +8204,9 @@ function renderDailyCard(){
   const isWord=m==='words';
   const on=dailyActive[m];
   const base=isWord?'Daily Word':'Daily Challenge';
-  $('#dailyLabel').textContent=(on?'✓ ':'◆ ')+base+(on?' · in progress':'');
+  $('#dailyLabel').textContent=(on?'✓ ':'◆ ')+base;
+  $('#dailyInProgress').hidden=!on;
+  $('#dailyInProgress').textContent=isWord ? "● In progress on today's word" : "● In progress on today's challenge";
   const p=$('#dailyPrompt'); p.textContent=item.text; p.classList.toggle('is-word',isWord);
   const d=$('#dailyDiff'); d.textContent=item.difficulty; d.className='diff-pill daily-diff '+item.difficulty;
   dailyCard.classList.toggle('is-active',on);
