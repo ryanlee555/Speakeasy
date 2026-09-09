@@ -212,8 +212,22 @@ body{
 .badge-local{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);
   border:1px dashed var(--border-soft);border-radius:999px;padding:2px 7px}
 
-.card-del{background:transparent;border:0;color:var(--ink-faint);font-size:13px;cursor:pointer;padding:2px 5px;border-radius:6px}
-.card-del:hover{color:var(--rec)}
+.card-menu{background:transparent;border:0;color:var(--ink-faint);font-size:15px;line-height:1;cursor:pointer;
+  padding:2px 6px;border-radius:6px;letter-spacing:1px}
+.card-menu:hover{color:var(--ink)}
+.row-menu{position:fixed;z-index:80;min-width:140px;background:var(--panel);border:1px solid var(--border-soft);
+  border-radius:10px;padding:5px;box-shadow:0 18px 44px -18px var(--shadow)}
+.row-menu[hidden]{display:none}
+.row-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:7px;
+  padding:8px 10px;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--ink-dim);cursor:pointer}
+.row-menu button:hover{background:var(--panel-2);color:var(--ink)}
+.row-menu button.danger:hover{color:var(--rec)}
+.edit-field{display:block;margin-bottom:14px}
+.edit-field span{display:block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:var(--ink-faint)}
+.edit-field input{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;outline:0;box-sizing:border-box}
+.edit-field input:focus{border-color:var(--ember)}
+.edit-actions{display:flex;gap:8px;justify-content:flex-end}
 
 /* ── list view ── */
 .ltable{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -440,6 +454,29 @@ body{
   </div>
 </div>
 
+<!-- per-row action menu -->
+<div class="row-menu" id="rowMenu" hidden>
+  <button type="button" data-act="edit">Edit title</button>
+  <button type="button" data-act="delete" class="danger">Delete</button>
+</div>
+
+<!-- edit-title modal -->
+<div class="modal-backdrop" id="editBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="player-title">Edit title</div>
+      <button class="modal-close" id="editClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <label class="edit-field"><span>Title</span>
+      <input type="text" id="editInput" maxlength="120" autocomplete="off">
+    </label>
+    <div class="edit-actions">
+      <button class="pbtn pbtn--ghost pbtn--sm" id="editCancel" type="button">Cancel</button>
+      <button class="pbtn pbtn--rec" id="editSave" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // SpeakEasy avatar icons — inlined (canonical copy: speakeasy-avatars.js).
@@ -520,6 +557,17 @@ function idbDelete(store,key){
     const tx=db.transaction(store,'readwrite'); tx.objectStore(store).delete(key); tx.oncomplete=res; tx.onerror=res;
   })).catch(()=>{});
 }
+function idbGet(store,key){
+  return openDB().then(db=>new Promise(res=>{
+    const r=db.transaction(store,'readonly').objectStore(store).get(key);
+    r.onsuccess=e=>res(e.target.result||null); r.onerror=()=>res(null);
+  })).catch(()=>null);
+}
+function idbPut(store,val){
+  return openDB().then(db=>new Promise(res=>{
+    const tx=db.transaction(store,'readwrite'); tx.objectStore(store).put(val); tx.oncomplete=res; tx.onerror=res;
+  })).catch(()=>{});
+}
 function idbGetHandle(){
   return openDB().then(db=>new Promise(res=>{
     const r=db.transaction('handles','readonly').objectStore('handles').get('saveDir');
@@ -534,8 +582,9 @@ function modeInfo(r){
   return {key:r.mode||'topic', label:MODE_LABEL[r.mode]||'Topic'};
 }
 function titleFor(r){
-  if(r.mode==='freeplay') return 'Freeplay session';
-  return (r.topicText||'').trim() || 'Untitled take';
+  const t=(r.topicText||'').trim();
+  if(t) return t;
+  return r.mode==='freeplay' ? 'Freeplay session' : 'Untitled take';
 }
 function fmtDur(s){ s=Math.max(0,Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 // the time shown on a library row: a daily attempted with a fixed limit shows
@@ -641,7 +690,7 @@ function renderGallery(list){
       +   '<div class="card-title'+(r.mode==='words'?' is-word':'')+'">'+esc(t)+'</div>'
       +   '<div class="card-row">'
       +     '<span class="badge-mode '+m.key+'">'+m.label+'</span>'
-      +     '<button class="card-del" data-del="'+i+'" title="Delete">✕</button>'
+      +     '<button class="card-menu" data-menu="'+i+'" title="More" aria-label="More">⋯</button>'
       +   '</div>'
       +   '<div class="card-when"><span>'+esc(fmtWhen(r.dateISO))+' · '+slotTime(r)+'</span>'
       +     (r.source==='local'?'<span class="badge-local">local only</span>':'')+'</div>'
@@ -657,7 +706,7 @@ function renderList(list){
       + '<td><span class="badge-mode '+m.key+'">'+m.label+'</span></td>'
       + '<td class="lt-num">'+esc(fmtWhen(r.dateISO))+'</td>'
       + '<td class="lt-num col-dur">'+slotTime(r)+'</td>'
-      + '<td class="col-del"><button class="card-del" data-del="'+i+'" title="Delete">✕</button></td>'
+      + '<td class="col-del"><button class="card-menu" data-menu="'+i+'" title="More" aria-label="More">⋯</button></td>'
       + '</tr>';
   }).join('');
 }
@@ -703,7 +752,7 @@ reviewModes.addEventListener('click',e=>{
   if(b && !b.disabled) setReviewMode(b.dataset.rmode);
 });
 playBackdrop.addEventListener('click',e=>{ if(e.target===playBackdrop) closePlayer(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePlayer(); $('#authBackdrop').classList.remove('show'); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePlayer(); $('#authBackdrop').classList.remove('show'); if(typeof closeRowMenu==='function') closeRowMenu(); if(typeof closeEditModal==='function') closeEditModal(); } });
 
 async function openPlayer(r){
   const m=modeInfo(r);
@@ -762,16 +811,71 @@ async function removeRecord(r){
   render(); readQuota();
 }
 
+/* ── per-row menu (⋯): edit title / delete ── */
+const rowMenu=$('#rowMenu');
+let menuRec=null;
+function openRowMenu(btn,r){
+  menuRec=r;
+  rowMenu.hidden=false;
+  const rb=btn.getBoundingClientRect(), mw=rowMenu.offsetWidth||150;
+  let left=rb.right-mw; if(left<8) left=8;
+  let top=rb.bottom+4;
+  if(top+rowMenu.offsetHeight>innerHeight-8) top=rb.top-rowMenu.offsetHeight-4;
+  rowMenu.style.left=left+'px'; rowMenu.style.top=top+'px';
+}
+function closeRowMenu(){ rowMenu.hidden=true; menuRec=null; }
+rowMenu.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-act]'); if(!b||!menuRec) return;
+  const r=menuRec; closeRowMenu();
+  if(b.dataset.act==='delete') removeRecord(r);
+  else openEditModal(r);
+});
+document.addEventListener('click',e=>{
+  if(!rowMenu.hidden && !e.target.closest('#rowMenu') && !e.target.closest('[data-menu]')) closeRowMenu();
+});
+window.addEventListener('resize',closeRowMenu);
+window.addEventListener('scroll',closeRowMenu,true);
+
+/* ── edit title ── */
+const editBackdrop=$('#editBackdrop'), editInput=$('#editInput');
+let editRec=null;
+function openEditModal(r){
+  editRec=r;
+  editInput.value = (r.topicText||'').trim() || (r.mode==='freeplay' ? 'Freeplay session' : '');
+  editBackdrop.classList.add('show');
+  editInput.focus(); editInput.select();
+}
+function closeEditModal(){ editBackdrop.classList.remove('show'); editRec=null; }
+$('#editClose').addEventListener('click',closeEditModal);
+$('#editCancel').addEventListener('click',closeEditModal);
+editBackdrop.addEventListener('click',e=>{ if(e.target===editBackdrop) closeEditModal(); });
+editInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#editSave').click(); } });
+$('#editSave').addEventListener('click',async ()=>{
+  if(!editRec) return;
+  const r=editRec, title=editInput.value.trim();
+  $('#editSave').disabled=true;
+  if(r.source==='cloud'){
+    const {error}=await sb.from('recordings').update({topic_text:title}).eq('id',r.id);
+    if(error) console.error('speakeasy edit title:',error.message);
+  }
+  const local=await idbGet('recordings',r.id);
+  if(local){ local.topicText=title; await idbPut('recordings',local); }
+  r.topicText=title;
+  $('#editSave').disabled=false;
+  closeEditModal();
+  render();
+});
+
 /* ── events ── */
 $('#grid').addEventListener('click',e=>{
-  const del=e.target.closest('[data-del]');
-  if(del){ removeRecord(visible()[+del.dataset.del]); return; }
+  const mb=e.target.closest('[data-menu]');
+  if(mb){ openRowMenu(mb, visible()[+mb.dataset.menu]); return; }
   const th=e.target.closest('.card-thumb:not(.no-video)');
   if(th) openPlayer(visible()[+th.dataset.idx]);
 });
 $('#listBody').addEventListener('click',e=>{
-  const del=e.target.closest('[data-del]');
-  if(del){ removeRecord(visible()[+del.dataset.del]); return; }
+  const mb=e.target.closest('[data-menu]');
+  if(mb){ openRowMenu(mb, visible()[+mb.dataset.menu]); return; }
   const tr=e.target.closest('tr.playable');
   if(tr) openPlayer(visible()[+tr.dataset.idx]);
 });

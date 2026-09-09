@@ -336,6 +336,19 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   `Library · Speakeasy`), lowercase, no per-page qualifier. No JS mutates
   `document.title`. Each `<head>` also has the inline SVG data-URI favicon (see
   P1 note) and `<meta name="theme-color" content="#100d0b">`.
+- **Library row actions: ⋯ menu with Edit title + Delete (2026-09-09).** The
+  per-row `✕` button (gallery cards and list rows) is now a `⋯` `.card-menu`
+  button that opens `#rowMenu`, a fixed-position floating menu positioned off the
+  button's rect, with **Edit title** and **Delete**. Delete runs the unchanged
+  `removeRecord` (still `confirm()`-gated). Edit opens `#editBackdrop` (a
+  `.modal` reusing the auth-modal styles) pre-filled with the current title;
+  Save writes `topic_text` to the cloud row (`sb.from('recordings').update`,
+  needs the `update own recordings` RLS policy which exists) and to the local
+  IndexedDB record (`idbGet`/`idbPut` helpers added), updates the in-memory
+  `records` entry, and re-renders. `titleFor` now prefers a non-empty
+  `topicText` even for freeplay, so an edited freeplay title shows (the
+  Freeplay *badge* is unchanged). Menu closes on outside-click, Escape, scroll,
+  or resize.
 - **Signed-out `library.html` gate reworked (2026-09-09).** The 🎞️ film-frame
   emoji is replaced with an inline SVG mug icon (ember steam curls + cream cup
   with an ember rim and handle — matches the favicon's palette). `.gate .icn`
