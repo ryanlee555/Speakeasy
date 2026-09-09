@@ -147,17 +147,14 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
 
 ## Current state (last updated 2026-09-09)
 
-- **Habit panel: streak + contribution grid (2026-09-09, `speakeasy.html`).**
-  New `#streakCard` `.panel` in the left column, under the Rec Studio panel.
-  Three tiles (day streak / recordings / min practiced), then a
-  **GitHub-style contribution grid** — 26 weeks × 7 days, `.sg-cell` coloured
-  `lvl1..lvl4` by that day's recording count, future days dashed/faint, native
-  `title=` on every past cell ("3 recordings · Mon, Sep 7" / "No recordings ·
-  Sat, Sep 5"). Fed by `renderStreakCard(await loadRecords())` from
-  `refreshStats()` (boot, auth change, after each save). The dead sidebar
-  Stats/Library JS (`renderStats`, `renderLibrary`, `playLibraryRecord`,
-  `libList`, `MODE_LABELS`, `truncate`, the 2nd `fmtDur`) was deleted in the
-  same pass.
+- **"Daily activity" panel (2026-09-09, `speakeasy.html`).** `#streakCard`
+  `.panel` in the left column under the Rec Studio panel: three tiles —
+  **day streak / recordings / min practiced** — via `computeStreak` + totals,
+  rendered by `renderStreakCard(await loadRecords())` from `refreshStats()`
+  (boot, auth change, after each save). Header reads "Daily activity".
+  (A GitHub-style contribution grid shipped here first and was **removed**
+  2026-09-09 at the user's request — all `.sg*` CSS/JS gone.) The dead sidebar
+  Stats/Library JS was deleted in the same pass.
 - **Daily challenge: completed state (2026-09-09).** After you **save** a daily
   take, `markDailyDone(mode)` writes a localStorage flag keyed by the UTC day
   (same math as `computeDaily`, resets with the prompt). `renderDailyCard` has
@@ -175,10 +172,28 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   cloud (delete + re-record to fix). `cloudInsert`'s all-or-nothing fallback is
   a latent footgun for the next migration — make it per-column-tolerant if
   another column is ever added.
-- **Copy:** hero tagline → "Practice out loud and watch your public speaking
-  improve, day by day." Footer → "© \<year\> Speakeasy. All rights reserved."
-  (year from JS). `startStream`'s overlay-sub reset string updated to match the
-  new HTML default.
+- **Copy:** studio hero tagline → "Practice out loud and watch your public
+  speaking improve, day by day." Both footers → "© \<year\> Speakeasy. All
+  rights reserved." (year from JS). `startStream`'s overlay-sub reset string
+  matched to the new HTML default.
+- **`index.html` copy + polish pass (2026-09-09).**
+  - No trailing periods in titles: "Speak a little easier", "Practice speaking
+    in just a few minutes" (was "You can practice…"), "Speakeasy gives you
+    everything you need to practice", "Why I built this".
+  - Nav + `#how` label "How it works" → **"Getting started"**. `#how` sub →
+    "No better site to practice your public speaking skills, impromptu."
+  - Hero blurb → "A cozy little studio for practicing your public speaking, out
+    loud." with `text-wrap:balance` for even lines.
+  - The 4 `how-steps` already carried the accurate feature copy (pick mode /
+    hit record / watch it back / build the habit) — unchanged. Freeplay
+    feature-card copy corrected to "watch it back in the library by full,
+    camera only, or audio only" (no longer claims a 4-way in-studio review).
+  - Feature cards: green `.dot` replaced with per-card ember line-icon SVGs
+    (`.feat-icn`: speech-bubble / dice / mic / pencil / diamond-check), and a
+    subtle hover lift (`translateY(-4px)` + shadow, `prefers-reduced-motion`
+    respected).
+  - Footer "speakeasy · v0.1" → the copyright line (new 1-line `<script>` for
+    the year, `index.html` had no script before).
 - **Review modes moved from the studio to the library (2026-09-09).**
   - `speakeasy.html` **no longer has the Full / Cam / Audio / Text button row.**
     After a recording stops (or Retake→record again) the studio just plays the
@@ -336,19 +351,20 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
   `Library · Speakeasy`), lowercase, no per-page qualifier. No JS mutates
   `document.title`. Each `<head>` also has the inline SVG data-URI favicon (see
   P1 note) and `<meta name="theme-color" content="#100d0b">`.
-- **Library row actions: ⋯ menu with Edit title + Delete (2026-09-09).** The
-  per-row `✕` button (gallery cards and list rows) is now a `⋯` `.card-menu`
-  button that opens `#rowMenu`, a fixed-position floating menu positioned off the
-  button's rect, with **Edit title** and **Delete**. Delete runs the unchanged
-  `removeRecord` (still `confirm()`-gated). Edit opens `#editBackdrop` (a
-  `.modal` reusing the auth-modal styles) pre-filled with the current title;
-  Save writes `topic_text` to the cloud row (`sb.from('recordings').update`,
-  needs the `update own recordings` RLS policy which exists) and to the local
-  IndexedDB record (`idbGet`/`idbPut` helpers added), updates the in-memory
-  `records` entry, and re-renders. `titleFor` now prefers a non-empty
-  `topicText` even for freeplay, so an edited freeplay title shows (the
-  Freeplay *badge* is unchanged). Menu closes on outside-click, Escape, scroll,
-  or resize.
+- **Library row actions: ⋯ menu → "Edit details" / "Delete" (2026-09-09).** The
+  per-row `✕` (gallery cards + list rows) is now a `⋯` `.card-menu` button that
+  opens `#rowMenu`, a fixed-position floating menu placed off the button's rect.
+  Delete runs the unchanged `confirm()`-gated `removeRecord`. **Edit** opens
+  `#editBackdrop` (a `.modal` reusing auth-modal styles) with a **Category**
+  pill row (`#editModes`: Topic / Words / Freeplay / Daily Challenge — "Daily
+  Challenge" maps to `is_daily=true`, keeping `mode` unless it was freeplay in
+  which case it becomes topic) **and** a **Title** input. Save writes
+  `topic_text` + `mode` + `is_daily` to the cloud row
+  (`sb.from('recordings').update`, uses the existing `update own recordings` RLS
+  policy) and to the local IndexedDB record (`idbGet`/`idbPut` helpers), updates
+  the in-memory `records` entry, and re-renders (so the badge changes live).
+  `titleFor` now prefers a non-empty `topicText` even for freeplay (Freeplay
+  *badge* unchanged). Menu closes on outside-click / Escape / scroll / resize.
 - **Signed-out `library.html` gate reworked (2026-09-09).** The 🎞️ film-frame
   emoji is replaced with an inline SVG mug icon (ember steam curls + cream cup
   with an ember rim and handle — matches the favicon's palette). `.gate .icn`

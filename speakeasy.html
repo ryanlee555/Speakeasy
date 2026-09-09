@@ -344,24 +344,10 @@ body.is-review .scrub{display:flex}
 .dur-custom:focus-within{outline:2px solid var(--ember);outline-offset:2px}
 
 /* habit: streak + contribution grid */
-.streak-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.streak-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .streak-row>div{background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:13px 12px;text-align:center}
 .streak-row span{display:block;font-family:'Fraunces',serif;font-size:26px;font-weight:440;line-height:1;color:var(--ember);margin-bottom:5px}
 .streak-row small{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
-.sg-wrap{overflow-x:auto;padding-bottom:2px}
-.sg{display:flex;gap:3px;width:max-content}
-.sg-col{display:flex;flex-direction:column;gap:3px}
-.sg-cell{width:12px;height:12px;border-radius:3px;background:var(--panel-2);border:1px solid var(--border);flex:0 0 auto}
-.sg-cell.future{opacity:.2;border-style:dashed}
-.sg-cell.lvl1{background:rgba(221,146,87,.28);border-color:transparent}
-.sg-cell.lvl2{background:rgba(221,146,87,.5);border-color:transparent}
-.sg-cell.lvl3{background:rgba(221,146,87,.74);border-color:transparent}
-.sg-cell.lvl4{background:var(--ember);border-color:transparent}
-.sg-legend{display:flex;align-items:center;gap:4px;margin-top:10px;font-size:9px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--ink-faint)}
-.sg-legend .sg-cell{width:10px;height:10px}
-.sg-legend span:first-child{margin-right:2px}
-.sg-legend span:last-child{margin-left:2px}
 
 .foot{text-align:center;margin-top:40px;font-size:12px;color:var(--ink-faint)}
 .foot .fill{color:var(--ember);border:0}
@@ -498,14 +484,12 @@ body.is-review .scrub{display:flex}
       </div>
 
       <div class="panel" id="streakCard">
-        <div class="phead">Your habit</div>
+        <div class="phead">Daily activity</div>
         <div class="streak-row">
           <div><span id="streakNum">0</span><small>day streak</small></div>
           <div><span id="streakRecs">0</span><small>recordings</small></div>
           <div><span id="streakMin">0</span><small>min practiced</small></div>
         </div>
-        <div class="sg-wrap"><div class="sg" id="streakGrid"></div></div>
-        <div class="sg-legend"><span>Less</span><i class="sg-cell"></i><i class="sg-cell lvl1"></i><i class="sg-cell lvl2"></i><i class="sg-cell lvl3"></i><i class="sg-cell lvl4"></i><span>More</span></div>
       </div>
     </div>
 
@@ -8625,45 +8609,19 @@ async function loadRecords(){
   const records = session ? await fetchCloudRecordings() : await getAllRecordings();
   return records.slice().sort((a,b)=>new Date(b.dateISO)-new Date(a.dateISO));
 }
-/* ── Your habit: streak number + a GitHub-style contribution grid ── */
-const SG_WEEKS=26; // ~6 months back — wide enough to feel like a habit, narrow enough for the column
+/* ── Daily activity: streak + totals ── */
 function renderStreakCard(records){
-  const card=$('#streakCard'); if(!card) return;
-  const totalMin=Math.round(records.reduce((s,r)=>s+(r.durationSec||0),0)/60);
+  if(!$('#streakCard')) return;
   $('#streakNum').textContent=computeStreak(records);
   $('#streakRecs').textContent=records.length;
-  $('#streakMin').textContent=totalMin;
-
-  const counts={};
-  records.forEach(r=>{ const k=toLocalDateStr(r.dateISO); counts[k]=(counts[k]||0)+1; });
-
-  const today=new Date(); today.setHours(0,0,0,0);
-  const start=new Date(today);
-  start.setDate(start.getDate() - ((SG_WEEKS-1)*7 + today.getDay())); // back to the Sunday that starts the window
-  const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-
-  const grid=$('#streakGrid'); grid.innerHTML='';
-  for(let w=0; w<SG_WEEKS; w++){
-    const col=document.createElement('div'); col.className='sg-col';
-    for(let dow=0; dow<7; dow++){
-      const d=new Date(start); d.setDate(start.getDate()+w*7+dow);
-      const n=counts[key(d)]||0;
-      const cell=document.createElement('div');
-      const future=d>today;
-      cell.className='sg-cell'+(future?' future':(n?' lvl'+Math.min(4,n):''));
-      const nice=d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
-      cell.title=future ? '' : (n ? (n+' recording'+(n===1?'':'s')+' · '+nice) : 'No recordings · '+nice);
-      col.appendChild(cell);
-    }
-    grid.appendChild(col);
-  }
+  $('#streakMin').textContent=Math.round(records.reduce((s,r)=>s+(r.durationSec||0),0)/60);
 }
 async function refreshStats(){
   if(!$('#streakCard')) return;
   try{ renderStreakCard(await loadRecords()); }
-  catch(e){ console.error('speakeasy habit:',e); }
+  catch(e){ console.error('speakeasy activity:',e); }
 }
-/* ── end habit ── */
+/* ── end activity ── */
 
 /* ── Auth ── */
 const sb = window.supabase.createClient(

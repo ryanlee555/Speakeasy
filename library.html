@@ -224,6 +224,12 @@ body{
 .row-menu button.danger:hover{color:var(--rec)}
 .edit-field{display:block;margin-bottom:14px}
 .edit-field span{display:block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:var(--ink-faint)}
+.edit-modes{display:flex;flex-wrap:wrap;gap:6px}
+.edit-modes button{font-family:'Inter',sans-serif;font-size:11px;color:var(--ink-dim);cursor:pointer;
+  background:transparent;border:1px solid var(--border);border-radius:999px;padding:7px 12px;
+  transition:border-color .15s,color .15s,background .15s}
+.edit-modes button:hover{border-color:var(--border-soft);color:var(--ink)}
+.edit-modes button.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
 .edit-field input{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;
   padding:10px 12px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;outline:0;box-sizing:border-box}
 .edit-field input:focus{border-color:var(--ember)}
@@ -456,7 +462,7 @@ body{
 
 <!-- per-row action menu -->
 <div class="row-menu" id="rowMenu" hidden>
-  <button type="button" data-act="edit">Edit title</button>
+  <button type="button" data-act="edit">Edit details</button>
   <button type="button" data-act="delete" class="danger">Delete</button>
 </div>
 
@@ -464,8 +470,16 @@ body{
 <div class="modal-backdrop" id="editBackdrop">
   <div class="modal">
     <div class="modal-head">
-      <div class="player-title">Edit title</div>
+      <div class="player-title">Edit recording</div>
       <button class="modal-close" id="editClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="edit-field"><span>Category</span>
+      <div class="edit-modes" id="editModes">
+        <button type="button" data-cat="topic">Topic</button>
+        <button type="button" data-cat="words">Words</button>
+        <button type="button" data-cat="freeplay">Freeplay</button>
+        <button type="button" data-cat="daily">Daily Challenge</button>
+      </div>
     </div>
     <label class="edit-field"><span>Title</span>
       <input type="text" id="editInput" maxlength="120" autocomplete="off">
@@ -837,10 +851,16 @@ window.addEventListener('resize',closeRowMenu);
 window.addEventListener('scroll',closeRowMenu,true);
 
 /* ── edit title ── */
-const editBackdrop=$('#editBackdrop'), editInput=$('#editInput');
-let editRec=null;
+const editBackdrop=$('#editBackdrop'), editInput=$('#editInput'), editModes=$('#editModes');
+let editRec=null, editCat='topic';
+function setEditCat(c){
+  editCat=c;
+  editModes.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.cat===c));
+}
+editModes.addEventListener('click',e=>{ const b=e.target.closest('button[data-cat]'); if(b) setEditCat(b.dataset.cat); });
 function openEditModal(r){
   editRec=r;
+  setEditCat(r.isDaily ? 'daily' : (r.mode||'topic'));
   editInput.value = (r.topicText||'').trim() || (r.mode==='freeplay' ? 'Freeplay session' : '');
   editBackdrop.classList.add('show');
   editInput.focus(); editInput.select();
@@ -853,14 +873,16 @@ editInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(
 $('#editSave').addEventListener('click',async ()=>{
   if(!editRec) return;
   const r=editRec, title=editInput.value.trim();
+  const isDaily = editCat==='daily';
+  const mode = isDaily ? (r.mode==='freeplay' ? 'topic' : (r.mode||'topic')) : editCat;
   $('#editSave').disabled=true;
   if(r.source==='cloud'){
-    const {error}=await sb.from('recordings').update({topic_text:title}).eq('id',r.id);
-    if(error) console.error('speakeasy edit title:',error.message);
+    const {error}=await sb.from('recordings').update({topic_text:title, mode, is_daily:isDaily}).eq('id',r.id);
+    if(error) console.error('speakeasy edit record:',error.message);
   }
   const local=await idbGet('recordings',r.id);
-  if(local){ local.topicText=title; await idbPut('recordings',local); }
-  r.topicText=title;
+  if(local){ local.topicText=title; local.mode=mode; local.isDaily=isDaily; await idbPut('recordings',local); }
+  r.topicText=title; r.mode=mode; r.isDaily=isDaily;
   $('#editSave').disabled=false;
   closeEditModal();
   render();

@@ -70,8 +70,8 @@ body{
   color:var(--ink);line-height:1.05;letter-spacing:-.01em;
 }
 .blurb{
-  font-size:15px;line-height:1.7;color:var(--ink-faint);
-  max-width:420px;margin:26px auto 0;
+  font-size:15px;line-height:1.8;color:var(--ink-faint);
+  max-width:400px;margin:26px auto 0;text-wrap:balance;
 }
 
 .cta{
@@ -133,10 +133,16 @@ body{
 
 /* ---- features ---- */
 .features-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:44px}
-.feature-card{border:1px solid var(--border);border-radius:16px;padding:24px 20px;background:var(--panel)}
-.feature-card .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-bottom:14px}
+.feature-card{
+  border:1px solid var(--border);border-radius:16px;padding:24px 20px;background:var(--panel);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.feature-card:hover{transform:translateY(-4px);border-color:var(--border-soft);box-shadow:0 14px 34px -18px var(--shadow)}
+.feature-card .feat-icn{width:24px;height:24px;color:var(--ember);margin-bottom:14px}
+.feature-card .feat-icn svg{width:100%;height:100%;display:block}
 .feature-card h3{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
 .feature-card p{font-size:13px;line-height:1.6;color:var(--ink-faint)}
+@media(prefers-reduced-motion:reduce){.feature-card,.feature-card:hover{transition:none;transform:none}}
 .soon{
   display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   color:var(--sage);border:1px solid rgba(143,168,146,.35);border-radius:999px;
@@ -173,7 +179,7 @@ body{
 <header class="topbar">
   <div class="brand">Speakeasy</div>
   <nav class="topnav">
-    <a href="#how">How it works</a>
+    <a href="#how">Getting started</a>
     <a href="#features">Features</a>
     <a href="#about">About</a>
     <a class="nav-cta" href="speakeasy.html?auth=1">Sign in</a>
@@ -181,10 +187,10 @@ body{
 </header>
 
 <section class="hero">
-  <div class="logo">Speak a little easier.</div>
+  <div class="logo">Speak a little easier</div>
 
   <div class="blurb">
-    A cozy little studio for practicing your public speaking out loud.
+    A cozy little studio for practicing your public speaking, out loud.
   </div>
 
   <div>
@@ -197,9 +203,9 @@ body{
 
 <section class="section" id="how">
   <div class="section-inner">
-    <div class="section-label">How it works</div>
-    <div class="section-title">You can practice speaking in just a few minutes.</div>
-    <div class="section-sub">There's no setup and nothing to memorize. Just you, a prompt, and a timer.</div>
+    <div class="section-label">Getting started</div>
+    <div class="section-title">Practice speaking in just a few minutes</div>
+    <div class="section-sub">No better site to practice your public speaking skills, impromptu.</div>
 
     <div class="how-grid">
       <div class="video-placeholder">
@@ -232,31 +238,31 @@ body{
 <section class="section" id="features">
   <div class="section-inner">
     <div class="section-label">Features</div>
-    <div class="section-title">Speakeasy gives you everything you need to practice.</div>
+    <div class="section-title">Speakeasy gives you everything you need to practice</div>
 
     <div class="features-grid">
       <div class="feature-card">
-        <div class="dot"></div>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 12h5"/></svg></div>
         <h3>Topic mode</h3>
         <p>Hundreds of prompts across thirteen categories, each one rated easy, medium or hard. Speaking under that bit of pressure is what trains you to stay calm.</p>
       </div>
       <div class="feature-card">
-        <div class="dot"></div>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r="1.1" fill="currentColor" stroke="none"/></svg></div>
         <h3>Words mode</h3>
         <p>One random word and nothing else. There is no question to lean on, so you have to build the whole thing yourself.</p>
       </div>
       <div class="feature-card">
-        <div class="dot"></div>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg></div>
         <h3>Freeplay mode</h3>
-        <p>No prompt at all. Record yourself for five minutes, then review the clip four ways: full, camera only, audio only, and transcript.</p>
+        <p>No prompt at all. Record yourself for as long as you set, then watch it back in the library by full, camera only, or audio only.</p>
       </div>
       <div class="feature-card">
-        <div class="dot"></div>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></div>
         <h3>Notes on every take <span class="soon">coming soon</span></h3>
         <p>Attach notes to any recording so you can look back through your history and actually see the progress you've made.</p>
       </div>
       <div class="feature-card">
-        <div class="dot"></div>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 9-8 9-8-9z"/><path d="M9 12l2 2 4-4"/></svg></div>
         <h3>Daily Challenge</h3>
         <p>One shared prompt for everyone, every day. Compare how you approached it with how your friends did.</p>
       </div>
@@ -267,7 +273,7 @@ body{
 <section class="section" id="about">
   <div class="section-inner">
     <div class="section-label">About</div>
-    <div class="section-title">Why I built this.</div>
+    <div class="section-title">Why I built this</div>
 
     <div class="about-grid">
       <div class="about-text">
@@ -303,7 +309,8 @@ body{
   </div>
 </section>
 
-<div class="foot">speakeasy · v0.1</div>
+<div class="foot">&copy; <span id="footYear">2026</span> Speakeasy. All rights reserved.</div>
 
+<script>document.getElementById('footYear').textContent=new Date().getFullYear();</script>
 </body>
 </html>
