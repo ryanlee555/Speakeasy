@@ -308,10 +308,11 @@ body.is-review .scrub{display:flex}
   font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.11em;
   text-transform:uppercase;color:var(--sage)}
 .daily-inprogress[hidden]{display:none}
-.daily-dur{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px}
-.daily-dur-label{font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
-.daily-dur .dur{font-size:11px;padding:6px 10px}
+.daily-dur{margin-bottom:10px}
+.daily-dur-label{display:block;font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px}
+.daily-dur-row{display:flex;gap:5px}
+.daily-dur-row .dur{flex:1;text-align:center;font-size:10px;padding:5px 4px}
 .daily-prompt{font-family:'Fraunces',serif;font-size:15px;line-height:1.45;color:var(--ink-dim);margin-bottom:10px}
 .daily-prompt.is-word{font-family:'Fraunces',serif;font-size:20px;color:var(--ember);margin-bottom:10px}
 .daily-btn.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
@@ -508,7 +509,10 @@ body.is-review .scrub{display:flex}
             </div>
             <div class="daily-inprogress" id="dailyInProgress" hidden>● In progress</div>
             <div class="daily-prompt" id="dailyPrompt"></div>
-            <div class="daily-dur" id="dailyDur"><span class="daily-dur-label">Time limit</span></div>
+            <div class="daily-dur" id="dailyDur">
+              <span class="daily-dur-label">Time limit</span>
+              <div class="daily-dur-row" id="dailyDurRow"></div>
+            </div>
             <button class="pbtn pbtn--ghost pbtn--sm daily-btn" type="button" id="dailyBtn" style="width:100%;text-align:center">Attempt today's challenge</button>
           </div>
           <div class="filterrow" id="catFilters"></div>
@@ -8153,7 +8157,9 @@ function pickTopic(){
   if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; return; }
   setDailyActive(false); // rerolling or filtering opts out of the daily
   const {cat,diff}=selected[recMode];
-  const item=window.pickPrompt(recMode,cat,diff,{recent:recentIds});
+  // never hand back today's daily as the regular prompt — they should differ
+  const dId = dailyItems[recMode] && dailyItems[recMode].id;
+  const item=window.pickPrompt(recMode,cat,diff,{recent: dId ? recentIds.concat(dId) : recentIds});
   if(!item){
     topicEl.textContent=(recMode==='words'?'No words':'No topics')+' match that combo yet. Try a different filter.';
     currentItem[recMode]=null;
@@ -8181,7 +8187,8 @@ diffFilters.addEventListener('click',e=>{
    a given UTC day, chosen with no backend. Topic mode gets a daily topic, Words
    mode gets a daily word. A given date maps to fixed prompts forever, which is
    what lets two people compare their takes. ── */
-const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag'), dailyDur=$('#dailyDur');
+const dailyCard=$('#dailyCard'), dailyBtn=$('#dailyBtn'), dailyTag=$('#dailyTag');
+const dailyDur=$('#dailyDur'), dailyDurRow=$('#dailyDurRow');
 const dailyItems={topic:null,words:null};
 // only one daily can be in progress at a time: 'topic' | 'words' | null.
 // attempting the daily in one mode clears it in the other.
@@ -8283,13 +8290,13 @@ function renderDurations(){
 function renderDailyDur(){
   if(recMode==='freeplay') return;
   const cur=chosenSec[recMode];
-  dailyDur.querySelectorAll('.dur').forEach(b=>b.remove());
+  dailyDurRow.innerHTML='';
   DUR_PRESETS[recMode].concat(0).forEach(sec=>{
     const b=document.createElement('button');
     b.type='button'; b.className='dur'+(sec===cur?' is-active':'');
     b.dataset.sec=sec;
     b.textContent = sec===0 ? 'No limit' : fmtDur(sec);
-    dailyDur.appendChild(b);
+    dailyDurRow.appendChild(b);
   });
 }
 dailyDur.addEventListener('click',e=>{

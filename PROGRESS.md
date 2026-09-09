@@ -202,19 +202,27 @@ No em dashes anywhere in user-facing copy on either page, and avoid comma-splice
     (`setDailyActive(false)` no-ops when `dailyActiveMode!==recMode`).
     `isDaily` at save time is now `dailyActiveMode===recMode`.
   - **Time-limit control on the daily card (2026-09-09).** `.daily-dur`
-    (`#dailyDur`) renders the mode's `DUR_PRESETS` + "No limit" as chips;
-    clicking one sets `chosenSec[recMode]`/`targetSec` and calls
-    `renderDurations()`, so it stays in lockstep with the main duration
-    selector below (and vice versa — `renderDurations` re-renders the daily
-    chips). The chosen limit is saved on every recording as `targetSec`
-    (0 = no limit), local IndexedDB always and the cloud row when
-    `supabase/2026-09-10_daily_limit.sql` has been run (`cloudInsert` sends
-    `target_sec`, falling back to the 6-col base insert if the column is
-    missing). `library.html` shows it for **daily** takes only —
-    `limitLabel(r)` appends " · 2:00 limit" / " · no limit" to the
-    date-duration line in gallery, list, and the player sub; non-daily takes
-    and pre-column takes get nothing, so the library reads clearly as "this
-    was a timed daily attempt" vs "this was a free recording".
+    (`#dailyDur`): a "Time limit" label on its own line, then all the chips —
+    the mode's `DUR_PRESETS` + "No limit" — on **one line** inside
+    `#dailyDurRow` (`.daily-dur-row .dur{flex:1}` so five equal-width pills fit
+    a row; same in Words mode). Clicking one sets `chosenSec[recMode]`/
+    `targetSec` and calls `renderDurations()`, so it stays in lockstep with the
+    main duration selector below (and vice versa). The chosen limit is saved on
+    every recording as `targetSec` (0 = no limit), local IndexedDB always and
+    the cloud row when `supabase/2026-09-10_daily_limit.sql` has been run
+    (`cloudInsert` sends `target_sec`, falling back to the 6-col base insert if
+    the column is missing).
+  - **Library shows one clean time per row (`slotTime(r)`).** A daily attempted
+    with a fixed limit shows that limit verbatim ("1:00", "1:30", …); a
+    "No limit" daily, a pre-column daily, and every non-daily take show the
+    actual recorded duration (`durationSec`, usually a non-round number). No
+    "limit"/"no limit" wording. Used in gallery cards, the list `col-dur`, and
+    the player sub. (Replaced the earlier `limitLabel()` that appended
+    " · 2:00 limit".)
+  - **First-open prompt never matches the daily.** `pickTopic` passes the
+    current mode's daily id into `pickPrompt`'s `recent` exclusion, so the
+    random prompt shown in the main slot on load (and on every reroll) is
+    always a different item from today's Daily Challenge / Daily Word.
   - **Freeplay copy:** title "No prompt. Just talk." → **"Speak with no
     prompt"**; body reworded to "Record for as long as you set, then review the
     clip four ways: full, camera only, audio only, and transcript. Watching
