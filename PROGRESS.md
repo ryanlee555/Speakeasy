@@ -24,9 +24,9 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
   highlights the current word and auto-scrolls; click any word to seek.
 - **Storage:** transcript = `{v:1, model, words:[[word,start,end],...]}`. Cached in `localStorage`
   (`speakeasy-tx:<id>`, removed on delete) and best-effort written to a new `recordings.transcript jsonb`
-  column. **ACTION NEEDED: run [supabase/2026-10-18_transcript.sql](supabase/2026-10-18_transcript.sql)
-  in the Supabase SQL Editor** so transcripts follow an account across devices. Until then it works
-  fine but only caches in the browser that made it (a console warning says so).
+  column. **[supabase/2026-10-18_transcript.sql](supabase/2026-10-18_transcript.sql) was RUN
+  2026-10-18** (user ran it in the SQL Editor), so transcripts now sync to the account and follow it
+  across devices. Not yet confirmed end to end with a real signed-in take.
 - **Verified 2026-10-18** in the browser pane with a synthetic spoken clip: WebGPU path and forced-wasm
   path both returned the correct 33 words with sensible timestamps; caption + word highlight track
   playback; click-to-seek works (needs a seekable source; Supabase signed URLs are, the plain
@@ -37,9 +37,57 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
   on a machine without WebGPU can take minutes. A smaller model (`whisper-base.en`) for wasm is the
   easy lever if that bites. (3) Only runs in `library.html`; the studio is untouched. (4) `index.html`
   still says transcripts are "coming soon" in the how-it-works step; update that copy when pushing.
-- **Not started: the AI coach** (grade a take from its transcript). Plan: needs a server-side function
-  holding the Anthropic key (Supabase Edge Function), fed the transcript + computed WPM/pauses.
-  Claude reads text, not video, so posture/eye contact would need sampled frames later.
+- **Layout change (same day):** the transcript is no longer a 4th review-mode button. The player
+  modal is now two columns (`.player.has-side`, max-width 1160px): video + Full/Camera only/Audio only
+  on the left, and a right-hand `#playSide` panel with a **Transcript | AI Coach** toggle
+  (`setSideTab`). Captions show over the video only while the Transcript tab is active. Under 900px the
+  panel stacks under the video.
+
+## 🟡 AI Coach — DEPLOYED 2026-10-18, waiting on the API key secret
+
+**Status 2026-10-18:** step 1 (SQL) done by the user. Step 3 done: `coach` deployed with
+`supabase functions deploy coach --project-ref niqwjooeuougvvusjznp --use-api`; smoke test passed (CORS
+preflight 200, no auth → 401, anon key without a user → 401 "Sign in to use the AI coach."). **Step 2 is
+NOT done:** the user believed they added `ANTHROPIC_API_KEY`, but `supabase secrets list` on the
+SpeakEasy project shows only the built-in `SUPABASE_*` secrets. It probably went into Vault or another
+project. Until it is set as an Edge Function secret on SpeakEasy, grading returns "The AI coach's API
+key isn't valid." No redeploy is needed after adding it. Real end-to-end grading is still untested.
+
+The second side-panel tab grades a take with Claude. User chose the Claude API (paid) over free options.
+- **Grades 7 areas, each 0-100 with reasoning + 2-3 tips:** Articulation, Pacing, Word choice,
+  Structure, Tone and vocal variety, Body language (video takes only), Confidence and fluency. Each row
+  is a gradient bar (rec → ember → sage) with a marker; click to drop down "Why this score" + "How to
+  improve". **Overall** (plain average of the shown areas, computed client-side) sits at the bottom,
+  then a summary, "Keep doing", "Work on next", and a Re-grade link.
+- **What the page sends** (`coachStart` in `library.html`): the timed transcript (`[m:ss] line`,
+  making one first if missing), measurements from `coachMetrics()` (WPM overall + per 15s, pauses ≥0.7s
+  and the 3 longest, dead air before/after, possible fillers/hedges, word repeats, pitch median +
+  variation in semitones via autocorrelation, loudness variation in dB), and for video takes **6 JPEG
+  stills** (512px, ~22 KB each) from `coachFrames()`. Claude never gets the audio; the prompt says so,
+  and that Whisper drops "um/uh".
+- **Server:** [supabase/functions/coach/index.ts](supabase/functions/coach/index.ts) (Deno Edge
+  Function). Holds `ANTHROPIC_API_KEY`, checks the caller is signed in, **caps 20 gradings per account
+  per 24h** (counted in a new `coach_runs` table under RLS), calls `claude-opus-5-5` at effort `medium`
+  with structured JSON output (`output_config.format`, one required object per category) and
+  `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`) so a safety decline retries on
+  another model. SDK pinned `@anthropic-ai/sdk@0.131.0`.
+- **Cost estimate:** roughly 5-10 cents per grading on Opus 5.5 (mostly output + thinking). Switching
+  `MODEL` to `claude-sonnet-5-5` would roughly halve it; that's the user's call.
+- **Results** are cached in `localStorage` (`speakeasy-coach:<id>`, removed on delete) and synced to
+  a new `recordings.coach jsonb` column.
+- **Verified 2026-10-18** in the browser pane against a real local recording with a mocked function
+  response: metrics computed (135 wpm, pitch variation 4.3 st, etc.), 6 frames captured, panel renders
+  bars / dropdowns / overall correctly, side-tab switching and modal close behave, and the
+  not-deployed state shows "The AI coach isn't set up on the server yet." **Not yet tested against
+  real Claude**, since the function isn't deployed.
+- **SETUP STILL NEEDED (in order):**
+  1. Run [supabase/2026-10-18_coach.sql](supabase/2026-10-18_coach.sql) in the SQL Editor
+     (adds `recordings.coach` + the `coach_runs` table/policies).
+  2. Create an Anthropic API key at console.anthropic.com (add credit), then add it as Edge Function
+     secret `ANTHROPIC_API_KEY` (Supabase dashboard → Edge Functions → Secrets). The user does this,
+     never paste the key into code or chat.
+  3. Deploy: `supabase functions deploy coach --project-ref niqwjooeuougvvusjznp` (the CLI on this
+     Mac is already logged in and can see the SpeakEasy project). `supabase/.temp/` is gitignored.
 
 ## 🎯 WHAT TO WORK ON NEXT (priority order, last set 2026-09-09)
 

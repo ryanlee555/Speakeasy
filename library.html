@@ -279,8 +279,24 @@ body{
 .auth-msg.ok{color:var(--sage)}
 
 /* player modal */
-.player{max-width:820px;padding:18px}
+.player{max-width:820px;padding:18px;max-height:calc(100vh - 40px);overflow-y:auto}
+.player.has-side{max-width:1160px}
 .player video{width:100%;border-radius:12px;background:#0b0908;display:block;max-height:66vh}
+/* video on the left, transcript / AI coach on the right */
+.player-body{display:block}
+.player.has-side .player-body{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+.player-side[hidden]{display:none}
+.player-side{display:flex;flex-direction:column;min-width:0}
+.side-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel-2);border:1px solid var(--border);
+  border-radius:999px;padding:4px;margin-bottom:12px}
+.side-tabs button{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:500;color:var(--ink-dim);cursor:pointer;
+  background:transparent;border:0;border-radius:999px;padding:8px 4px;transition:background .15s,color .15s}
+.side-tabs button:hover{color:var(--ink)}
+.side-tabs button.is-active{background:var(--panel);color:var(--ink);box-shadow:0 1px 0 var(--border-soft)}
+@media (max-width:900px){
+  .player.has-side .player-body{display:block}
+  .player-side{margin-top:14px}
+}
 .player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
 .player-title{font-family:'Fraunces',serif;font-size:18px;line-height:1.4;color:var(--ink)}
 .player-sub{font-size:11.5px;color:var(--ink-faint);margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -292,7 +308,7 @@ body{
   gap:14px;height:240px;background:#0b0908;border-radius:12px;color:var(--ink-faint);
   font-size:10px;letter-spacing:.12em;text-transform:uppercase}
 .player-stage.is-audio .player-audio{display:flex}
-.review-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;
+.review-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;
   background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
 .review-modes[hidden]{display:none}
 .review-modes button{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:var(--ink-dim);
@@ -308,21 +324,51 @@ body{
   text-align:center;font-size:15px;line-height:1.45;color:#fff;background:rgba(10,8,7,.74);
   padding:6px 14px;border-radius:10px;pointer-events:none;text-wrap:balance}
 .tx-cap[hidden]{display:none}
-.tx-panel{margin-top:12px;background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
-.tx-panel[hidden]{display:none}
+.tx-panel,.coach-panel{background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.tx-panel[hidden],.coach-panel[hidden]{display:none}
 .tx-state{text-align:center;padding:14px 8px;color:var(--ink-dim);font-size:13px;line-height:1.7}
 .tx-state small{display:block;color:var(--ink-faint);font-size:11.5px;margin-top:6px}
 .tx-state .pbtn{margin-top:12px}
 .tx-bar{height:4px;border-radius:99px;background:var(--border);margin:12px auto 0;max-width:260px;overflow:hidden}
 .tx-bar i{display:block;height:100%;width:40%;background:var(--ember);border-radius:99px;animation:txslide 1.3s ease-in-out infinite}
 @keyframes txslide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
-.tx-scroll{position:relative;max-height:200px;overflow-y:auto;font-size:14.5px;line-height:1.85;color:var(--ink-dim);padding-right:6px}
+.tx-scroll{position:relative;max-height:min(52vh,420px);overflow-y:auto;font-size:14.5px;line-height:1.85;color:var(--ink-dim);padding-right:6px}
 .tx-scroll span{cursor:pointer;border-radius:5px;padding:1px 1px;transition:color .12s,background .12s}
 .tx-scroll span:hover{color:var(--ink)}
 .tx-scroll span.is-past{color:var(--ink)}
 .tx-scroll span.is-now{background:var(--ember-soft);color:var(--ember)}
 .tx-foot{margin-top:10px;font-size:11px;color:var(--ink-faint);line-height:1.6}
 @media (prefers-reduced-motion:reduce){.tx-bar i{animation:none;width:100%}}
+
+/* AI coach: one row per graded area, click to open the reasoning */
+.coach-list{display:flex;flex-direction:column;gap:4px;max-height:min(52vh,440px);overflow-y:auto;padding-right:4px}
+.coach-cat{border-bottom:1px solid var(--border)}
+.coach-cat:last-child{border-bottom:0}
+.coach-row{width:100%;display:block;background:transparent;border:0;cursor:pointer;text-align:left;padding:10px 2px;color:var(--ink)}
+.coach-top{display:flex;align-items:baseline;gap:8px;font-family:'Inter',sans-serif;font-size:13px;margin-bottom:8px}
+.coach-top .nm{flex:1}
+.coach-top .sc{font-family:'Fraunces',serif;font-size:17px;font-variant-numeric:tabular-nums}
+.coach-top .chev{color:var(--ink-faint);font-size:11px;transition:transform .2s}
+.coach-cat.open .chev{transform:rotate(180deg)}
+.cbar{position:relative;height:6px;border-radius:99px;background:linear-gradient(90deg,#cd7362,#dd9257 50%,#8fa892)}
+.cbar i{position:absolute;top:0;right:0;bottom:0;width:calc(100% - var(--s) * 1%);background:rgba(32,25,17,.82);border-radius:0 99px 99px 0}
+.cbar b{position:absolute;top:50%;left:calc(var(--s) * 1%);width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
+  background:var(--ink);box-shadow:0 0 0 3px rgba(16,13,11,.6)}
+.coach-detail{display:none;padding:2px 2px 14px;font-size:12.5px;line-height:1.65;color:var(--ink-dim)}
+.coach-cat.open .coach-detail{display:block}
+.coach-detail h4{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;margin:10px 0 4px}
+.coach-detail ul{margin:0;padding-left:18px}
+.coach-detail li{margin-bottom:4px}
+.coach-overall{margin-top:12px;padding-top:14px;border-top:1px solid var(--border-soft)}
+.coach-overall .coach-top{margin-bottom:10px}
+.coach-overall .nm{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+.coach-overall .sc{font-size:30px;color:var(--ink)}
+.coach-overall .cbar{height:8px}
+.coach-sum{margin-top:12px;font-size:12.5px;line-height:1.65;color:var(--ink-dim)}
+.coach-sum b{color:var(--ink);font-weight:500}
+.coach-foot{margin-top:12px;font-size:11px;color:var(--ink-faint);line-height:1.6;display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.linkbtn{background:none;border:0;padding:0;color:var(--ember);font:inherit;cursor:pointer;white-space:nowrap}
+.linkbtn:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -468,19 +514,29 @@ body{
       </div>
       <button class="modal-close" id="playClose" type="button" aria-label="Close">&times;</button>
     </div>
-    <div class="player-stage" id="playStage" hidden>
-      <video id="playVideo" controls playsinline></video>
-      <div class="player-audio" id="playAudio"></div>
-      <div class="tx-cap" id="txCap" hidden></div>
+    <div class="player-body">
+      <div class="player-main">
+        <div class="player-stage" id="playStage" hidden>
+          <video id="playVideo" controls playsinline></video>
+          <div class="player-audio" id="playAudio"></div>
+          <div class="tx-cap" id="txCap" hidden></div>
+        </div>
+        <div class="review-modes" id="reviewModes" hidden>
+          <button type="button" data-rmode="full" class="is-active">Full</button>
+          <button type="button" data-rmode="cam">Camera only</button>
+          <button type="button" data-rmode="audio">Audio only</button>
+        </div>
+        <div class="player-msg hide" id="playMsg"></div>
+      </div>
+      <aside class="player-side" id="playSide" hidden>
+        <div class="side-tabs" id="sideTabs">
+          <button type="button" data-side="tx" class="is-active">Transcript</button>
+          <button type="button" data-side="coach">AI Coach</button>
+        </div>
+        <div class="tx-panel" id="txPanel"></div>
+        <div class="coach-panel" id="coachPanel" hidden></div>
+      </aside>
     </div>
-    <div class="review-modes" id="reviewModes" hidden>
-      <button type="button" data-rmode="full" class="is-active">Full</button>
-      <button type="button" data-rmode="cam">Camera only</button>
-      <button type="button" data-rmode="audio">Audio only</button>
-      <button type="button" data-rmode="text">Transcript</button>
-    </div>
-    <div class="tx-panel" id="txPanel" hidden></div>
-    <div class="player-msg hide" id="playMsg"></div>
   </div>
 </div>
 
@@ -709,7 +765,7 @@ async function fetchCloud(){
     mode:r.mode||'topic', isDaily:!!r.is_daily, audioOnly:!!r.audio_only,
     targetSec:(r.target_sec==null?null:r.target_sec),
     storagePath:r.storage_path||null, thumbPath:r.thumb_path||null, source:'cloud',
-    transcript:r.transcript||null
+    transcript:r.transcript||null, coach:r.coach||null
   }));
 }
 async function loadAll(){
@@ -833,18 +889,37 @@ function closePlayer(){
   playVideo.muted=false;
   playStage.hidden=true; playStage.classList.remove('is-audio');
   reviewModes.hidden=true;
-  txLeave(); curRec=null; curUrl=null;
+  showSide(false);
+  curRec=null; curUrl=null;
 }
 $('#playClose').addEventListener('click',closePlayer);
 
 let curRec=null, curUrl=null;
 function setReviewMode(mode){
   reviewModes.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.rmode===mode));
-  // an audio-only take keeps the equalizer tile in Transcript mode too
-  playStage.classList.toggle('is-audio', mode==='audio' || (mode==='text' && !!(curRec&&curRec.audioOnly)));
+  playStage.classList.toggle('is-audio', mode==='audio');
   playVideo.muted = (mode==='cam');           // camera only = watch without sound
-  if(mode==='text') txEnter(); else txLeave();
 }
+
+/* right-hand panel: Transcript | AI Coach */
+const playSide=$('#playSide'), sideTabs=$('#sideTabs');
+let sideTab='tx';
+function showSide(on){
+  playSide.hidden=!on;
+  $('.player').classList.toggle('has-side',on);
+  if(on) setSideTab(sideTab);
+  else{ txLeave(); coachLeave(); }
+}
+function setSideTab(tab){
+  sideTab=tab;
+  sideTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.side===tab));
+  if(tab==='tx'){ coachLeave(); txEnter(); }
+  else{ txLeave(); coachEnter(); }
+}
+sideTabs.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-side]');
+  if(b) setSideTab(b.dataset.side);
+});
 reviewModes.addEventListener('click',e=>{
   const b=e.target.closest('button[data-rmode]');
   if(b && !b.disabled) setReviewMode(b.dataset.rmode);
@@ -859,6 +934,7 @@ async function openPlayer(r){
   $('#playSub').innerHTML='<span class="badge-mode '+m.key+'">'+m.label+'</span> '
     + esc(fmtWhen(r.dateISO)) + ' · ' + slotTime(r) + (r.audioOnly?' · audio only':'');
   playStage.hidden=true; reviewModes.hidden=true; playMsg.classList.add('hide'); playMsg.textContent='';
+  showSide(false);
   playBackdrop.classList.add('show');
 
   let url=null, cloudFailed=false;
@@ -890,6 +966,7 @@ async function openPlayer(r){
   reviewModes.querySelector('[data-rmode="cam"]').disabled=isAudioTake;
   setReviewMode(isAudioTake?'audio':'full');
   playStage.hidden=false; reviewModes.hidden=false;
+  showSide(true);
   playVideo.src=url; playVideo.play().catch(()=>{});
 }
 
@@ -956,7 +1033,7 @@ function txWorker(){
     else if(m.type==='ready'){ txJob.stage='run'; try{ localStorage.setItem('speakeasy-asr-ready','1'); }catch(_){} }
     else if(m.type==='done'){ const j=txJob; j.resolve(m.words); return; }
     else if(m.type==='error'){ const j=txJob; j.reject(new Error(m.message)); return; }
-    txRender();
+    txRender(); coachRender();
   };
   asrWorker.onerror=e=>{
     // typically the model library failed to load (offline / blocked CDN)
@@ -966,22 +1043,30 @@ function txWorker(){
   return asrWorker;
 }
 
-async function txStart(){
-  const r=curRec, url=curUrl;
+// decoded 16 kHz audio of the last take we read, reused by the coach's voice measurements
+let txAudio=null;   // {id, audio}
+async function txAudioFor(r,url){
+  if(txAudio && txAudio.id===r.id) return txAudio.audio;
+  const audio=await txDecode(url).catch(()=>{ throw new Error("Couldn't read this take's audio."); });
+  txAudio={id:r.id, audio};
+  return audio;
+}
+
+async function txStart(r=curRec, url=curUrl){
   if(!r || !url || txJob) return;
   txErr=null;
   txJob={id:r.id, stage:'prep', loaded:0};
-  txRender();
+  txRender(); coachRender();
   const job=txJob;
   try{
-    const audio=await txDecode(url).catch(()=>{ throw new Error("Couldn't read this take's audio."); });
+    const audio=(await txAudioFor(r,url)).slice();      // copy: the worker takes ownership of what we send
     let peak=0; for(let i=0;i<audio.length;i+=16){ const a=Math.abs(audio[i]); if(a>peak) peak=a; }
     let raw=[];
     if(peak>0.005){                                       // near-silent audio makes Whisper invent text
       raw=await new Promise((resolve,reject)=>{
         job.resolve=resolve; job.reject=reject; job.stage='load';
         txWorker().postMessage({type:'run', id:r.id, audio},[audio.buffer]);
-        txRender();
+        txRender(); coachRender();
       });
     }
     const t={v:1, model:TX_MODEL, words:txClean(raw)};
@@ -995,7 +1080,7 @@ async function txStart(){
     txErr={id:r.id, msg:String((e&&e.message)||e)};
     console.warn('speakeasy transcript:',e);
   }finally{ txJob=null; }
-  txRender();
+  txRender(); coachRender();
 }
 
 function txState(html){ txPanel.innerHTML='<div class="tx-state">'+html+'</div>'; txWords=null; txCap.hidden=true; }
@@ -1079,6 +1164,216 @@ txPanel.addEventListener('click',e=>{
   }
 });
 
+/* ── AI coach: Claude grades the take through the `coach` Edge Function ── */
+// supabase/functions/coach/index.ts holds the Anthropic key; the page only sends
+// the transcript, a few voice/pace measurements and (for video takes) still frames.
+const coachPanel=$('#coachPanel');
+const COACH_CATS=[
+  ['articulation','Articulation'], ['pacing','Pacing'], ['word_choice','Word choice'],
+  ['structure','Structure'], ['vocal_variety','Tone and vocal variety'],
+  ['body_language','Body language'], ['confidence','Confidence and fluency']];
+let coachActive=false, coachJob=null, coachErr=null;   // coachJob: {id, stage:'tx'|'measure'|'ai'}
+const coachOpen=new Set();
+
+function coachFor(r){
+  if(r.coach && r.coach.categories) return r.coach;
+  try{ const v=JSON.parse(localStorage.getItem('speakeasy-coach:'+r.id)||'null'); return (v&&v.categories)?v:null; }catch(e){ return null; }
+}
+function coachEnter(){ coachActive=true; coachPanel.hidden=false; coachRender(); }
+function coachLeave(){ coachActive=false; coachPanel.hidden=true; }
+
+function coachState(html){ coachPanel.innerHTML='<div class="tx-state">'+html+'</div>'; }
+function coachBar(s){ return '<div class="cbar" style="--s:'+s+'"><i></i><b></b></div>'; }
+function coachRender(){
+  if(!coachActive || !curRec) return;
+  if(coachJob && coachJob.id===curRec.id){
+    let msg='Making the transcript first…';
+    if(coachJob.stage==='tx' && txJob && txJob.stage==='load' && txJob.loaded>0)
+      msg='Making the transcript first… downloading the speech model ('+Math.round(txJob.loaded/1048576)+' MB)';
+    else if(coachJob.stage==='measure') msg='Measuring your pace and voice…';
+    else if(coachJob.stage==='ai') msg='Your coach is reviewing the take…';
+    const sub = coachJob.stage==='ai' ? 'This usually takes under a minute.' : 'Keep this tab open.';
+    return coachState(esc(msg)+'<div class="tx-bar"><i></i></div><small>'+sub+'</small>');
+  }
+  if(coachJob) return coachState('Your coach is busy with another take. Try again in a moment.');
+  if(coachErr && coachErr.id===curRec.id)
+    return coachState(esc(coachErr.msg)+'<br><button class="pbtn pbtn--rec pbtn--sm" type="button" data-coach="go">Try again</button>');
+  const res=coachFor(curRec);
+  if(res) return coachShow(res);
+  coachState('Get a grade for each part of your delivery, with the reasons behind every score and what to work on next.'
+    +'<br><button class="pbtn pbtn--rec pbtn--sm" type="button" data-coach="go">Grade my take</button>'
+    +'<small>Your transcript, a few voice measurements'+(curRec.audioOnly?'':' and six still frames from the video')
+    +' are sent to Claude to review.'+(txFor(curRec)?'':' A transcript is made first if this take does not have one yet.')+'</small>');
+}
+function coachShow(res){
+  const byId={}; (res.categories||[]).forEach(c=>{ byId[c.id]=c; });
+  const cats=COACH_CATS.filter(([id])=>byId[id]).map(([id,label])=>({...byId[id], label,
+    score:Math.max(0,Math.min(100,Math.round(+byId[id].score||0)))}));
+  if(!cats.length) return coachState('This grade came back empty. Try grading again.');
+  const overall=Math.round(cats.reduce((s,c)=>s+c.score,0)/cats.length);
+  coachPanel.innerHTML='<div class="coach-list">'+cats.map(c=>
+      '<div class="coach-cat'+(coachOpen.has(c.id)?' open':'')+'">'
+    +   '<button class="coach-row" type="button" data-cat="'+c.id+'" aria-expanded="'+coachOpen.has(c.id)+'">'
+    +     '<div class="coach-top"><span class="nm">'+esc(c.label)+'</span><span class="sc">'+c.score+'</span><span class="chev">▾</span></div>'
+    +     coachBar(c.score)
+    +   '</button>'
+    +   '<div class="coach-detail"><h4>Why this score</h4><p>'+esc(c.reasoning||'')+'</p>'
+    +     ((c.tips&&c.tips.length)?'<h4>How to improve</h4><ul>'+c.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>':'')
+    +   '</div></div>').join('')+'</div>'
+    + '<div class="coach-overall"><div class="coach-top"><span class="nm">Overall</span><span class="sc">'+overall+'</span></div>'+coachBar(overall)+'</div>'
+    + '<div class="coach-sum">'+(res.summary?esc(res.summary):'')
+    +   (res.strength?'<br><br><b>Keep doing:</b> '+esc(res.strength):'')
+    +   (res.focus?'<br><b>Work on next:</b> '+esc(res.focus):'')+'</div>'
+    + '<div class="coach-foot"><span>Graded by Claude from your transcript and voice'
+    +   (res.frames?', plus '+res.frames+' still frames':'')+'. AI feedback can be wrong.</span>'
+    +   '<button class="linkbtn" type="button" data-coach="go">Re-grade</button></div>';
+}
+coachPanel.addEventListener('click',e=>{
+  if(e.target.closest('[data-coach="go"]')){ coachStart(); return; }
+  const row=e.target.closest('[data-cat]');
+  if(row){
+    const id=row.dataset.cat, cat=row.parentElement;
+    const open=!cat.classList.contains('open');
+    cat.classList.toggle('open',open); row.setAttribute('aria-expanded',open);
+    open ? coachOpen.add(id) : coachOpen.delete(id);
+  }
+});
+
+// "[0:12] sentence" lines, built from the same cues as the captions
+function coachTimedText(words){
+  return txBuildCues(words).map(c=>'['+fmtDur(c.s)+'] '+c.text).join('\n');
+}
+// objective numbers Claude can lean on, measured from the word timings and the raw audio
+function coachMetrics(words, audio){
+  const sr=16000, r1=x=>Math.round(x*10)/10;
+  const first=words[0], last=words[words.length-1];
+  const span=Math.max(1,last[2]-first[1]);
+  const pauses=[];
+  for(let i=1;i<words.length;i++){ const g=words[i][1]-words[i-1][2]; if(g>=0.7) pauses.push({at:words[i-1][2], sec:g}); }
+  const windows=[];
+  for(let t=first[1]; t<last[2]; t+=15){
+    const n=words.filter(w=>w[1]>=t && w[1]<t+15).length, len=Math.min(15,last[2]-t);
+    if(len>=5) windows.push(Math.round(n/len*60));
+  }
+  const text=' '+words.map(w=>w[0].toLowerCase().replace(/[^a-z' ]/g,'')).join(' ')+' ';
+  const fillers={};
+  ['um','uh','like','you know','i mean','basically','actually','literally','kind of','sort of'].forEach(f=>{
+    const n=(text.match(new RegExp(' '+f+' ','g'))||[]).length; if(n) fillers[f]=n;
+  });
+  let repeats=0;
+  for(let i=1;i<words.length;i++){
+    const a=words[i-1][0].toLowerCase().replace(/[^a-z']/g,''), b=words[i][0].toLowerCase().replace(/[^a-z']/g,'');
+    if(a && a===b) repeats++;
+  }
+  // loudness + pitch, 40 ms windows every 50 ms, first 10 minutes at most
+  const win=640, hop=800, minLag=40, maxLag=213, end=Math.min(audio.length, sr*600)-win-maxLag;
+  const dbs=[], frames=[];
+  for(let s=0;s<end;s+=hop){
+    let e=0; for(let i=0;i<win;i++) e+=audio[s+i]*audio[s+i];
+    const db=10*Math.log10(e/win+1e-12); dbs.push(db); frames.push([s,e]);
+  }
+  const peakDb=Math.max(...dbs, -100);
+  const voiced=frames.filter((f,i)=>dbs[i]>peakDb-30 && dbs[i]>-55);
+  const loud=voiced.map(([s,e])=>10*Math.log10(e/win+1e-12));
+  const f0=[];
+  voiced.forEach(([s,e0])=>{
+    let best=0, lag=0;
+    for(let L=minLag;L<=maxLag;L++){
+      let x=0, e1=0;
+      for(let i=0;i<win;i++){ const b=audio[s+i+L]; x+=audio[s+i]*b; e1+=b*b; }
+      const r=x/Math.sqrt(e0*e1+1e-12); if(r>best){ best=r; lag=L; }
+    }
+    if(best>0.6) f0.push(sr/lag);
+  });
+  const median=a=>{ const b=[...a].sort((x,y)=>x-y); return b.length?b[b.length>>1]:0; };
+  const std=a=>{ if(a.length<2) return 0; const m=a.reduce((s,x)=>s+x,0)/a.length; return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/a.length); };
+  const f0med=median(f0);
+  const semis=f0med ? f0.map(f=>12*Math.log2(f/f0med)).filter(x=>Math.abs(x)<12) : [];
+  return {
+    durationSec:r1(audio.length/sr), speakingSpanSec:r1(span), wordCount:words.length,
+    wordsPerMinute:Math.round(words.length/span*60), wordsPerMinuteBy15sWindow:windows,
+    timeBeforeFirstWordSec:r1(first[1]), trailingSilenceSec:r1(Math.max(0,audio.length/sr-last[2])),
+    pausesOver0_7s:pauses.length,
+    longestPauses:pauses.sort((a,b)=>b.sec-a.sec).slice(0,3).map(p=>({at:fmtDur(p.at), sec:r1(p.sec)})),
+    possibleFillersAndHedges:fillers, immediateWordRepeats:repeats,
+    pitchMedianHz:Math.round(f0med), pitchVariationSemitones:r1(std(semis)),
+    loudnessVariationDb:r1(std(loud)), voicedFraction:r1(voiced.length/Math.max(1,frames.length))
+  };
+}
+// six evenly spaced stills, so Claude can comment on posture, eye line and expression
+async function coachFrames(url, dur, n=6){
+  if(!dur || !isFinite(dur)) return [];
+  const v=document.createElement('video');
+  v.muted=true; v.playsInline=true; v.preload='auto'; v.crossOrigin='anonymous'; v.src=url;
+  const once=(ev,ms)=>new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error('timed out waiting for '+ev)),ms);
+    v.addEventListener(ev,()=>{ clearTimeout(t); res(); },{once:true});
+    v.addEventListener('error',()=>{ clearTimeout(t); rej(new Error('video failed to load')); },{once:true});
+  });
+  const out=[];
+  try{
+    await once('loadeddata',10000);
+    const c=document.createElement('canvas'), ctx=c.getContext('2d');
+    for(let k=0;k<n;k++){
+      const t=Math.max(0,Math.min(dur-0.3,(k+0.5)*dur/n));
+      const seeked=once('seeked',8000); v.currentTime=t; await seeked;
+      const w=512, h=Math.round(w*(v.videoHeight||288)/(v.videoWidth||512));
+      c.width=w; c.height=h; ctx.drawImage(v,0,0,w,h);
+      out.push({at:fmtDur(t), data:c.toDataURL('image/jpeg',0.72).split(',')[1]});
+    }
+  }catch(e){ console.warn('speakeasy coach frames:',e.message||e); }
+  finally{ v.removeAttribute('src'); v.load(); }
+  return out;
+}
+
+async function coachStart(){
+  const r=curRec, url=curUrl;
+  if(!r || !url || coachJob) return;
+  coachErr=null; coachJob={id:r.id, stage:txFor(r)?'measure':'tx'}; coachRender();
+  try{
+    if(!session) throw new Error('Sign in to get feedback from the AI coach.');
+    if(!txFor(r)){
+      if(txJob) throw new Error('Another take is still being transcribed. Try again in a moment.');
+      await txStart(r,url);
+      if(!txFor(r)) throw new Error((txErr && txErr.id===r.id && txErr.msg) || "Couldn't make a transcript for this take.");
+    }
+    const t=txFor(r);
+    if(!t.words.length) throw new Error('No speech was picked up in this take, so there is nothing to grade yet.');
+    coachJob.stage='measure'; coachRender();
+    const audio=await txAudioFor(r,url);
+    await new Promise(res=>setTimeout(res,30));          // let the panel paint before the number crunching
+    const metrics=coachMetrics(t.words, audio);
+    const frames=r.audioOnly ? [] : await coachFrames(url, r.durationSec || metrics.durationSec);
+    coachJob.stage='ai'; coachRender();
+    const {data,error}=await sb.functions.invoke('coach',{body:{
+      prompt:(r.mode==='freeplay' ? null : (r.topicText||null)), mode:r.mode||'topic', isDaily:!!r.isDaily,
+      targetSec:r.targetSec||0, durationSec:Math.round(r.durationSec||metrics.durationSec), audioOnly:!!r.audioOnly,
+      transcript:coachTimedText(t.words), metrics, frames
+    }});
+    if(error){
+      const status=error.context && error.context.status;
+      let msg='';
+      try{ const j=await error.context.json(); msg=(j&&j.error)||''; }catch(_){}
+      if(!msg) msg = (status===404 || error.name==='FunctionsFetchError')
+        ? "The AI coach isn't set up on the server yet." : "The AI coach couldn't be reached. Try again in a moment.";
+      throw new Error(msg);
+    }
+    if(!data || !Array.isArray(data.categories)) throw new Error('The coach sent back something unexpected. Try again.');
+    const res={v:1, ...data, frames:frames.length, at:new Date().toISOString()};
+    r.coach=res; coachOpen.clear();
+    try{ localStorage.setItem('speakeasy-coach:'+r.id, JSON.stringify(res)); }catch(_){}
+    if(r.source==='cloud'){
+      sb.from('recordings').update({coach:res}).eq('id',r.id).then(({error})=>{
+        if(error) console.warn('speakeasy coach not synced (run supabase/2026-10-18_coach.sql):',error.message);
+      });
+    }
+  }catch(e){
+    coachErr={id:r.id, msg:String((e&&e.message)||e)};
+    console.warn('speakeasy coach:',e);
+  }finally{ coachJob=null; }
+  coachRender();
+}
+
 /* ── delete ── */
 // pull the local .webm + .json out of the connected save folder, so deleting
 // in the library also frees the space on disk. only possible when a folder is
@@ -1106,7 +1401,7 @@ async function removeRecord(r){
   }
   await removeLocalFiles(r);
   await idbDelete('recordings', r.id);
-  try{ localStorage.removeItem('speakeasy-tx:'+r.id); }catch(e){}
+  try{ localStorage.removeItem('speakeasy-tx:'+r.id); localStorage.removeItem('speakeasy-coach:'+r.id); }catch(e){}
   records=records.filter(x=>x!==r);
   render(); readQuota(); notifyRecordsChanged();
 }
