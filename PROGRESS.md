@@ -8,6 +8,39 @@ Living doc. Updated after every change made in this project so any new chat can 
 ## Deployment (2026-08-10)
 Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
+## ✅ Transcript tab in the library — BUILT 2026-10-18 (not yet committed/pushed)
+
+`library.html`'s player modal now has a real **Transcript** tab (was a disabled "Transcript · soon").
+- **Engine: Whisper in the browser, free, no API key, no server.** `Xenova/whisper-small.en` via
+  `@huggingface/transformers@3.8.1` (jsDelivr), run in a Web Worker. The worker source lives inline in
+  `<script type="text/plain" id="asrWorkerSrc">` and starts from a Blob URL (same "no second file"
+  rule as the prompt library). WebGPU path = encoder fp32 + decoder q4 (~600 MB first download);
+  CPU/wasm fallback = q8 (~250 MB). It falls back to wasm automatically if WebGPU is missing or
+  can't return word timestamps. Model is cached by the browser after the first download.
+- **Flow:** open a take → Transcript tab → "Generate transcript" (explicit click because of the
+  download). Audio is fetched from the already-resolved player URL, decoded to 16 kHz mono with
+  `AudioContext`, sent to the worker. Near-silent audio is skipped (Whisper hallucinates on silence).
+- **UI:** live caption line over the video / audio tile, plus a scrolling word-level transcript that
+  highlights the current word and auto-scrolls; click any word to seek.
+- **Storage:** transcript = `{v:1, model, words:[[word,start,end],...]}`. Cached in `localStorage`
+  (`speakeasy-tx:<id>`, removed on delete) and best-effort written to a new `recordings.transcript jsonb`
+  column. **ACTION NEEDED: run [supabase/2026-10-18_transcript.sql](supabase/2026-10-18_transcript.sql)
+  in the Supabase SQL Editor** so transcripts follow an account across devices. Until then it works
+  fine but only caches in the browser that made it (a console warning says so).
+- **Verified 2026-10-18** in the browser pane with a synthetic spoken clip: WebGPU path and forced-wasm
+  path both returned the correct 33 words with sensible timestamps; caption + word highlight track
+  playback; click-to-seek works (needs a seekable source; Supabase signed URLs are, the plain
+  `python -m http.server` is not); reopening uses the cache with no recompute.
+- **Known limits / decisions:** (1) Whisper often **omits "um/uh"**, so this does NOT give a filler
+  count (the panel footer says so); a real filler stat needs a different engine (Deepgram/AssemblyAI)
+  or a verbatim-tuned model. (2) The CPU fallback is slow (very roughly 2-3x real time), so a long take
+  on a machine without WebGPU can take minutes. A smaller model (`whisper-base.en`) for wasm is the
+  easy lever if that bites. (3) Only runs in `library.html`; the studio is untouched. (4) `index.html`
+  still says transcripts are "coming soon" in the how-it-works step; update that copy when pushing.
+- **Not started: the AI coach** (grade a take from its transcript). Plan: needs a server-side function
+  holding the Anthropic key (Supabase Edge Function), fed the transcript + computed WPM/pauses.
+  Claude reads text, not video, so posture/eye contact would need sampled frames later.
+
 ## 🎯 WHAT TO WORK ON NEXT (priority order, last set 2026-09-09)
 
 Read this first. Everything above P3 is small; the big lifts are flagged.
@@ -102,18 +135,16 @@ or fixed, and whether cards should show "expires in N days".
   jumped the queue. Now easier than it was: `library.html` is the natural home
   for writing and reading notes, and a `notes text` column is a one-line addition
   to the migration pattern already established.
-- **Real stats** (roadmap §3). Words/Min and Fillers/Min are still `—`
-  placeholders and TEXT mode still shows a hardcoded transcript. Needs a
-  speech-to-text decision first (Web Speech API for a free fast path vs. a
-  Whisper-style service for accuracy). This is the biggest remaining lift and
-  everything in §4 depends on it.
+- **Real stats** (roadmap §3). **STT decided 2026-10-18: in-browser Whisper** (see the Transcript
+  section at the top; transcripts now exist per take). Still to do: compute Words/Min and
+  pauses from `transcript.words` and show them (Fillers/Min is unreliable with Whisper, see limits).
 - **Claude coaching layer** (roadmap §4). Blocked on real transcripts existing.
   Remember the constraint: any API key must go through a server-side function,
   never client-side.
 
 ### P4 — housekeeping worth doing eventually
-- **`index.html` still has three placeholders**: the "demo video coming soon"
-  box in How It Works, and two empty photo slots in About.
+- ~~`index.html` placeholders~~ **Done (commits through 2026-10):** the demo video and the About
+  photos were added after this list was written.
 - **Shared CSS.** Three pages now duplicate the same ~200 lines of variables and
   base styles. It was tolerable at two pages; at three it is worth extracting,
   but only if the `file://` lesson from the prompt library is respected (a

@@ -301,6 +301,28 @@ body{
 .review-modes button:hover:not(:disabled){color:var(--ink)}
 .review-modes button.is-active{background:var(--panel);color:var(--ink);box-shadow:0 1px 0 var(--border-soft)}
 .review-modes button:disabled{opacity:.4;cursor:not-allowed}
+
+/* transcript: live caption over the stage + a scrolling, click-to-seek panel */
+.player-stage{position:relative}
+.tx-cap{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);max-width:88%;
+  text-align:center;font-size:15px;line-height:1.45;color:#fff;background:rgba(10,8,7,.74);
+  padding:6px 14px;border-radius:10px;pointer-events:none;text-wrap:balance}
+.tx-cap[hidden]{display:none}
+.tx-panel{margin-top:12px;background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.tx-panel[hidden]{display:none}
+.tx-state{text-align:center;padding:14px 8px;color:var(--ink-dim);font-size:13px;line-height:1.7}
+.tx-state small{display:block;color:var(--ink-faint);font-size:11.5px;margin-top:6px}
+.tx-state .pbtn{margin-top:12px}
+.tx-bar{height:4px;border-radius:99px;background:var(--border);margin:12px auto 0;max-width:260px;overflow:hidden}
+.tx-bar i{display:block;height:100%;width:40%;background:var(--ember);border-radius:99px;animation:txslide 1.3s ease-in-out infinite}
+@keyframes txslide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.tx-scroll{position:relative;max-height:200px;overflow-y:auto;font-size:14.5px;line-height:1.85;color:var(--ink-dim);padding-right:6px}
+.tx-scroll span{cursor:pointer;border-radius:5px;padding:1px 1px;transition:color .12s,background .12s}
+.tx-scroll span:hover{color:var(--ink)}
+.tx-scroll span.is-past{color:var(--ink)}
+.tx-scroll span.is-now{background:var(--ember-soft);color:var(--ember)}
+.tx-foot{margin-top:10px;font-size:11px;color:var(--ink-faint);line-height:1.6}
+@media (prefers-reduced-motion:reduce){.tx-bar i{animation:none;width:100%}}
 </style>
 </head>
 <body>
@@ -449,13 +471,15 @@ body{
     <div class="player-stage" id="playStage" hidden>
       <video id="playVideo" controls playsinline></video>
       <div class="player-audio" id="playAudio"></div>
+      <div class="tx-cap" id="txCap" hidden></div>
     </div>
     <div class="review-modes" id="reviewModes" hidden>
       <button type="button" data-rmode="full" class="is-active">Full</button>
       <button type="button" data-rmode="cam">Camera only</button>
       <button type="button" data-rmode="audio">Audio only</button>
-      <button type="button" data-rmode="text" disabled>Transcript &middot; soon</button>
+      <button type="button" data-rmode="text">Transcript</button>
     </div>
+    <div class="tx-panel" id="txPanel" hidden></div>
     <div class="player-msg hide" id="playMsg"></div>
   </div>
 </div>
@@ -491,6 +515,61 @@ body{
   </div>
 </div>
 
+<!-- Whisper worker source. Inlined as text and started from a Blob URL so the page has no second file to fail on. -->
+<script type="text/plain" id="asrWorkerSrc">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+env.allowLocalModels = false;
+const MODEL = 'Xenova/whisper-small.en';
+let asr = null, device = 'wasm';
+const post = m => self.postMessage(m);
+
+async function build(useGpu){
+  const files = {};
+  const cb = p => {
+    if(p.status !== 'progress' || !p.file) return;
+    files[p.file] = p.loaded;
+    let loaded = 0; for(const k in files) loaded += files[k];
+    post({type:'progress', loaded});
+  };
+  if(useGpu){
+    return pipeline('automatic-speech-recognition', MODEL,
+      {device:'webgpu', dtype:{encoder_model:'fp32', decoder_model_merged:'q4'}, progress_callback:cb});
+  }
+  return pipeline('automatic-speech-recognition', MODEL, {device:'wasm', dtype:'q8', progress_callback:cb});
+}
+async function hasGpu(){
+  try{ return !!(self.navigator && navigator.gpu && await navigator.gpu.requestAdapter()); }catch(e){ return false; }
+}
+async function load(forceWasm){
+  if(asr) return;
+  if(!forceWasm && await hasGpu()){
+    try{ asr = await build(true); device = 'webgpu'; return; }catch(e){ asr = null; }
+  }
+  asr = await build(false); device = 'wasm';
+}
+async function transcribe(audio){
+  const out = await asr(audio, {return_timestamps:'word', chunk_length_s:30, stride_length_s:5});
+  return (out.chunks || []).map(c => [c.text, c.timestamp[0], c.timestamp[1]]);
+}
+self.onmessage = async e => {
+  const m = e.data;
+  try{
+    if(m.type === 'run'){
+      await load(false);
+      post({type:'ready', device});
+      let words;
+      try{ words = await transcribe(m.audio); }
+      catch(err){
+        // some GPU builds can't return word timestamps: retry once on the CPU path
+        if(device !== 'webgpu') throw err;
+        asr = null; await load(true); post({type:'ready', device});
+        words = await transcribe(m.audio);
+      }
+      post({type:'done', id:m.id, words, device});
+    }
+  }catch(err){ post({type:'error', id:m.id, message:String((err && err.message) || err)}); }
+};
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // SpeakEasy avatar icons — inlined (canonical copy: speakeasy-avatars.js).
@@ -629,7 +708,8 @@ async function fetchCloud(){
     id:r.id, dateISO:r.created_at, durationSec:r.duration_sec, topicText:r.topic_text,
     mode:r.mode||'topic', isDaily:!!r.is_daily, audioOnly:!!r.audio_only,
     targetSec:(r.target_sec==null?null:r.target_sec),
-    storagePath:r.storage_path||null, thumbPath:r.thumb_path||null, source:'cloud'
+    storagePath:r.storage_path||null, thumbPath:r.thumb_path||null, source:'cloud',
+    transcript:r.transcript||null
   }));
 }
 async function loadAll(){
@@ -753,13 +833,17 @@ function closePlayer(){
   playVideo.muted=false;
   playStage.hidden=true; playStage.classList.remove('is-audio');
   reviewModes.hidden=true;
+  txLeave(); curRec=null; curUrl=null;
 }
 $('#playClose').addEventListener('click',closePlayer);
 
+let curRec=null, curUrl=null;
 function setReviewMode(mode){
   reviewModes.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.rmode===mode));
-  playStage.classList.toggle('is-audio', mode==='audio');
+  // an audio-only take keeps the equalizer tile in Transcript mode too
+  playStage.classList.toggle('is-audio', mode==='audio' || (mode==='text' && !!(curRec&&curRec.audioOnly)));
   playVideo.muted = (mode==='cam');           // camera only = watch without sound
+  if(mode==='text') txEnter(); else txLeave();
 }
 reviewModes.addEventListener('click',e=>{
   const b=e.target.closest('button[data-rmode]');
@@ -770,6 +854,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePlayer(); $(
 
 async function openPlayer(r){
   const m=modeInfo(r);
+  curRec=r; curUrl=null;
   $('#playTitle').textContent=titleFor(r);
   $('#playSub').innerHTML='<span class="badge-mode '+m.key+'">'+m.label+'</span> '
     + esc(fmtWhen(r.dateISO)) + ' · ' + slotTime(r) + (r.audioOnly?' · audio only':'');
@@ -798,6 +883,7 @@ async function openPlayer(r){
       : 'No video file is saved for this take. It was recorded before cloud saving existed.';
     return;
   }
+  curUrl=url;
   playAudio.innerHTML=audioTile();
   const isAudioTake=!!r.audioOnly;
   reviewModes.querySelector('[data-rmode="full"]').disabled=isAudioTake;
@@ -806,6 +892,192 @@ async function openPlayer(r){
   playStage.hidden=false; reviewModes.hidden=false;
   playVideo.src=url; playVideo.play().catch(()=>{});
 }
+
+/* ── transcript: Whisper runs in the browser, nothing is uploaded ── */
+const txPanel=$('#txPanel'), txCap=$('#txCap');
+const TX_MODEL='Xenova/whisper-small.en';
+let asrWorker=null, txJob=null;            // txJob: {id, stage:'prep'|'load'|'run', loaded, resolve, reject}
+let txErr=null, txActive=false, txRaf=0;
+let txWords=null, txCues=[], txSpans=[], txIdx=-1, txCueIdx=-2, txScrollEl=null;
+
+function txCacheGet(id){
+  try{ const v=JSON.parse(localStorage.getItem('speakeasy-tx:'+id)||'null'); return (v&&v.words)?v:null; }catch(e){ return null; }
+}
+function txCachePut(id,t){ try{ localStorage.setItem('speakeasy-tx:'+id,JSON.stringify(t)); }catch(e){} }
+function txFor(r){ return (r.transcript&&r.transcript.words)?r.transcript:txCacheGet(r.id); }
+function txModelCached(){ try{ return localStorage.getItem('speakeasy-asr-ready')==='1'; }catch(e){ return false; } }
+
+function txClean(raw){
+  const out=[];
+  (raw||[]).forEach(([t,s,e])=>{
+    const w=String(t||'').trim();
+    if(!w || /^[\[(].*[\])]$/.test(w)) return;          // [BLANK_AUDIO], (music), ...
+    const st=Math.max(0,+s||0);
+    const en=(e==null || +e<=st) ? st+0.3 : +e;
+    out.push([w, Math.round(st*100)/100, Math.round(en*100)/100]);
+  });
+  return out;
+}
+// group words into subtitle lines: short, break at sentence ends and pauses
+function txBuildCues(words){
+  const cues=[]; let cur=null;
+  words.forEach((x,i)=>{
+    if(cur){
+      const prev=words[i-1], len=cur.text.length+1+x[0].length;
+      if(len>46 || x[2]-cur.s>6 || x[1]-prev[2]>0.9 || (/[.?!]$/.test(prev[0]) && len>18)){ cues.push(cur); cur=null; }
+    }
+    if(!cur) cur={s:x[1], e:x[2], text:x[0]};
+    else{ cur.text+=' '+x[0]; cur.e=x[2]; }
+  });
+  if(cur) cues.push(cur);
+  return cues;
+}
+
+async function txDecode(url){
+  const buf=await (await fetch(url)).arrayBuffer();
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  const ctx=new Ctx({sampleRate:16000});
+  try{
+    const ab=await ctx.decodeAudioData(buf);
+    const n=ab.length, ch=ab.numberOfChannels, out=new Float32Array(n);
+    for(let c=0;c<ch;c++){ const d=ab.getChannelData(c); for(let i=0;i<n;i++) out[i]+=d[i]/ch; }
+    return out;
+  }finally{ if(ctx.close) ctx.close(); }
+}
+
+function txWorker(){
+  if(asrWorker) return asrWorker;
+  const src=document.getElementById('asrWorkerSrc').textContent;
+  asrWorker=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})),{type:'module'});
+  asrWorker.onmessage=e=>{
+    const m=e.data;
+    if(!txJob) return;
+    if(m.type==='progress'){ txJob.stage='load'; txJob.loaded=m.loaded; }
+    else if(m.type==='ready'){ txJob.stage='run'; try{ localStorage.setItem('speakeasy-asr-ready','1'); }catch(_){} }
+    else if(m.type==='done'){ const j=txJob; j.resolve(m.words); return; }
+    else if(m.type==='error'){ const j=txJob; j.reject(new Error(m.message)); return; }
+    txRender();
+  };
+  asrWorker.onerror=e=>{
+    // typically the model library failed to load (offline / blocked CDN)
+    const j=txJob; asrWorker=null;
+    if(j) j.reject(new Error('Could not start the speech model. Check your connection and try again.'));
+  };
+  return asrWorker;
+}
+
+async function txStart(){
+  const r=curRec, url=curUrl;
+  if(!r || !url || txJob) return;
+  txErr=null;
+  txJob={id:r.id, stage:'prep', loaded:0};
+  txRender();
+  const job=txJob;
+  try{
+    const audio=await txDecode(url).catch(()=>{ throw new Error("Couldn't read this take's audio."); });
+    let peak=0; for(let i=0;i<audio.length;i+=16){ const a=Math.abs(audio[i]); if(a>peak) peak=a; }
+    let raw=[];
+    if(peak>0.005){                                       // near-silent audio makes Whisper invent text
+      raw=await new Promise((resolve,reject)=>{
+        job.resolve=resolve; job.reject=reject; job.stage='load';
+        txWorker().postMessage({type:'run', id:r.id, audio},[audio.buffer]);
+        txRender();
+      });
+    }
+    const t={v:1, model:TX_MODEL, words:txClean(raw)};
+    r.transcript=t; txCachePut(r.id,t);
+    if(session && r.source==='cloud'){
+      sb.from('recordings').update({transcript:t}).eq('id',r.id).then(({error})=>{
+        if(error) console.warn('speakeasy transcript not synced (run supabase/2026-10-18_transcript.sql):',error.message);
+      });
+    }
+  }catch(e){
+    txErr={id:r.id, msg:String((e&&e.message)||e)};
+    console.warn('speakeasy transcript:',e);
+  }finally{ txJob=null; }
+  txRender();
+}
+
+function txState(html){ txPanel.innerHTML='<div class="tx-state">'+html+'</div>'; txWords=null; txCap.hidden=true; }
+function txRender(){
+  if(!txActive || !curRec) return;
+  const t=txFor(curRec);
+  if(t) return txShowReady(t);
+  if(txJob && txJob.id===curRec.id){
+    const mb=Math.round(txJob.loaded/1048576);
+    const msg = txJob.stage==='prep' ? 'Reading the audio…'
+      : txJob.stage==='load' ? (mb>0 ? 'Downloading the speech model… '+mb+' MB' : 'Getting the speech model ready…')
+      : 'Transcribing your take…';
+    const sub = txJob.stage==='run' ? 'This can take a minute or two on slower computers. You can keep watching meanwhile.'
+      : 'Keep this tab open.';
+    return txState(esc(msg)+'<div class="tx-bar"><i></i></div><small>'+sub+'</small>');
+  }
+  if(txJob) return txState('Another take is still being transcribed. Try again in a moment.');
+  if(txErr && txErr.id===curRec.id)
+    return txState(esc(txErr.msg)+'<br><button class="pbtn pbtn--rec pbtn--sm" type="button" data-tx="go">Try again</button>');
+  txState('Turn this take into subtitles you can read along with.'
+    +'<br><button class="pbtn pbtn--rec pbtn--sm" type="button" data-tx="go">Generate transcript</button>'
+    +'<small>Runs on your own device, so your audio is never uploaded.'
+    +(txModelCached()?'':' The first time downloads a speech model (a few hundred MB), which is then saved for next time.')+'</small>');
+}
+function txShowReady(t){
+  if(txWords===t.words) return;                         // already drawn
+  txWords=t.words; txCues=txBuildCues(txWords); txIdx=-1; txCueIdx=-2;
+  if(!txWords.length){
+    txPanel.innerHTML='<div class="tx-state">No speech was picked up in this take.</div>';
+    txSpans=[]; return;
+  }
+  txPanel.innerHTML='<div class="tx-scroll" id="txScroll">'
+    + txWords.map((x,i)=>'<span data-i="'+i+'">'+esc(x[0])+'</span> ').join('')+'</div>'
+    + '<div class="tx-foot">Made on your device with Whisper. Click any word to jump there. Whisper often leaves out fillers like &ldquo;um&rdquo; and &ldquo;uh&rdquo;, so this is not a filler count.</div>';
+  txScrollEl=$('#txScroll'); txSpans=[...txScrollEl.children];
+}
+
+function txTick(){
+  if(!txWords || !txWords.length) { txCap.hidden=true; return; }
+  const t=playVideo.currentTime||0;
+  // last word that has started by now
+  let lo=0, hi=txWords.length-1, i=-1;
+  while(lo<=hi){ const mid=(lo+hi)>>1; if(txWords[mid][1]<=t){ i=mid; lo=mid+1; } else hi=mid-1; }
+  if(i!==txIdx){
+    txIdx=i;
+    for(let k=0;k<txSpans.length;k++){
+      txSpans[k].classList.toggle('is-past', k<i);
+      txSpans[k].classList.toggle('is-now', k===i);
+    }
+    const sp=txSpans[i];
+    if(sp && txScrollEl){
+      const top=sp.offsetTop;
+      if(top<txScrollEl.scrollTop+8 || top>txScrollEl.scrollTop+txScrollEl.clientHeight-36)
+        txScrollEl.scrollTop=Math.max(0,top-txScrollEl.clientHeight/3);
+    }
+  }
+  let c=-1;
+  for(let k=0;k<txCues.length;k++){ if(t>=txCues[k].s-0.15 && t<=txCues[k].e+0.6){ c=k; break; } }
+  if(c!==txCueIdx){
+    txCueIdx=c;
+    txCap.hidden = c<0;
+    if(c>=0) txCap.textContent=txCues[c].text;
+  }
+}
+function txLoop(){ txTick(); txRaf = txActive ? requestAnimationFrame(txLoop) : 0; }
+function txEnter(){
+  txActive=true; txPanel.hidden=false; txWords=null;
+  txRender();
+  if(!txRaf) txLoop();
+}
+function txLeave(){
+  txActive=false; txPanel.hidden=true; txCap.hidden=true;
+  cancelAnimationFrame(txRaf); txRaf=0; txWords=null; txSpans=[]; txIdx=-1; txCueIdx=-2;
+}
+txPanel.addEventListener('click',e=>{
+  if(e.target.closest('[data-tx="go"]')){ txStart(); return; }
+  const sp=e.target.closest('[data-i]');
+  if(sp && txWords){
+    playVideo.currentTime=txWords[+sp.dataset.i][1];
+    playVideo.play().catch(()=>{});
+  }
+});
 
 /* ── delete ── */
 // pull the local .webm + .json out of the connected save folder, so deleting
@@ -834,6 +1106,7 @@ async function removeRecord(r){
   }
   await removeLocalFiles(r);
   await idbDelete('recordings', r.id);
+  try{ localStorage.removeItem('speakeasy-tx:'+r.id); }catch(e){}
   records=records.filter(x=>x!==r);
   render(); readQuota(); notifyRecordsChanged();
 }
