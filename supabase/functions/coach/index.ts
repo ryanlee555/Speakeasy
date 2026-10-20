@@ -14,6 +14,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.58.0";
 
 const MODEL = "claude-opus-5-5";
 const DAILY_LIMIT = 20; // grading requests per account per rolling 24h
+// Across every account. Signup is open with no email confirmation, so throwaway
+// accounts could otherwise multiply the per-account cap; this bounds the
+// Anthropic bill no matter how many accounts exist.
+const GLOBAL_DAILY_LIMIT = 150;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -108,25 +112,43 @@ Deno.serve(async (req) => {
   const metrics = JSON.stringify(body.metrics ?? {});
   if (metrics.length > 20000) return json({ error: "Bad request." }, 400);
 
-  // Daily cap, counted under the caller's own RLS.
+  // Daily caps. Check, log this run, then re-check: a burst of parallel requests
+  // all pass the first check, but each sees the others' rows on the second.
+  // Requests refused by the first check log nothing, so one account spamming
+  // can't push up the site-wide count below.
+  const notSetUp = () =>
+    json({ error: "The AI coach isn't fully set up yet (run supabase/2026-10-18_coach.sql)." }, 500);
+  const overUser = () =>
+    json({ error: `You've used all ${DAILY_LIMIT} gradings for today. Try again tomorrow.` }, 429);
   const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-  const { count, error: countErr } = await supabase
+  const countMine = () =>
+    supabase.from("coach_runs").select("id", { count: "exact", head: true }).gte("created_at", since);
+  const before = await countMine();
+  if (before.error) { console.error("coach_runs count:", before.error.message); return notSetUp(); }
+  if ((before.count ?? 0) >= DAILY_LIMIT) return overUser();
+  const { error: logErr } = await supabase.from("coach_runs").insert({});
+  if (logErr) { console.error("coach_runs insert:", logErr.message); return notSetUp(); }
+  const after = await countMine();
+  if (after.error) { console.error("coach_runs count:", after.error.message); return notSetUp(); }
+  if ((after.count ?? 0) > DAILY_LIMIT) return overUser();
+  // The site-wide count needs to see every account's rows, so it uses the
+  // service-role key. It stays inside this function and only runs a count.
+  const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const { count: total, error: totalErr } = await admin
     .from("coach_runs").select("id", { count: "exact", head: true }).gte("created_at", since);
-  if (countErr) {
-    console.error("coach_runs count:", countErr.message);
-    return json({ error: "The AI coach isn't fully set up yet (run supabase/2026-10-18_coach.sql)." }, 500);
+  if (totalErr) { console.error("coach_runs global count:", totalErr.message); return notSetUp(); }
+  if ((total ?? 0) > GLOBAL_DAILY_LIMIT) {
+    return json({ error: "The AI coach has hit its daily limit for everyone. Try again tomorrow." }, 429);
   }
-  if ((count ?? 0) >= DAILY_LIMIT) {
-    return json({ error: `You've used all ${DAILY_LIMIT} gradings for today. Try again tomorrow.` }, 429);
-  }
-  await supabase.from("coach_runs").insert({});
 
   const ids = Object.keys(CATEGORIES).filter((id) => id !== "body_language" || frames.length > 0);
-  const mode = String(body.mode ?? "topic");
+  const mode = ["topic", "words", "freeplay"].includes(String(body.mode)) ? String(body.mode) : "topic";
+  const secs = (v: unknown) => { const n = Math.round(Number(v)); return Number.isFinite(n) && n > 0 && n < 36000 ? n : 0; };
+  const durationSec = secs(body.durationSec), targetSec = secs(body.targetSec);
   const context = [
-    `Mode: ${mode}${body.isDaily ? " (daily challenge)" : ""}`,
+    `Mode: ${mode}${body.isDaily === true ? " (daily challenge)" : ""}`,
     body.prompt ? `Prompt: ${String(body.prompt).slice(0, 500)}` : "Prompt: none (freeplay, the speaker chose their own subject)",
-    `Recorded length: ${body.durationSec ?? "?"}s; time limit: ${Number(body.targetSec) > 0 ? body.targetSec + "s" : "none"}`,
+    `Recorded length: ${durationSec || "?"}s; time limit: ${targetSec ? targetSec + "s" : "none"}`,
     body.audioOnly ? "This take is audio only, so there are no frames." : `Still frames attached: ${frames.length}`,
     "",
     "Categories to grade:",
@@ -139,7 +161,7 @@ Deno.serve(async (req) => {
 
   const content: Anthropic.Beta.BetaContentBlockParam[] = [];
   for (const f of frames) {
-    content.push({ type: "text", text: `Frame at ${String(f.at ?? "")}` });
+    content.push({ type: "text", text: `Frame at ${String(f.at ?? "").slice(0, 8)}` });
     content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: f.data } });
   }
   content.push({ type: "text", text: context });

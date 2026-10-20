@@ -728,7 +728,8 @@ function idbGetHandle(){
 const MODE_LABEL={topic:'Topic',words:'Words',freeplay:'Freeplay'};
 function modeInfo(r){
   if(r.isDaily) return {key:'daily', label:'Daily Challenge'};
-  return {key:r.mode||'topic', label:MODE_LABEL[r.mode]||'Topic'};
+  // only known modes reach the class attribute, whatever is stored in the row
+  return MODE_LABEL[r.mode] ? {key:r.mode, label:MODE_LABEL[r.mode]} : {key:'topic', label:'Topic'};
 }
 function titleFor(r){
   const t=(r.topicText||'').trim();
@@ -1225,7 +1226,7 @@ function coachShow(res){
     +   (res.strength?'<br><br><b>Keep doing:</b> '+esc(res.strength):'')
     +   (res.focus?'<br><b>Work on next:</b> '+esc(res.focus):'')+'</div>'
     + '<div class="coach-foot"><span>Graded by Claude from your transcript and voice'
-    +   (res.frames?', plus '+res.frames+' still frames':'')+'. AI feedback can be wrong.</span>'
+    +   ((+res.frames>0)?', plus '+(+res.frames)+' still frames':'')+'. AI feedback can be wrong.</span>'
     +   '<button class="linkbtn" type="button" data-coach="go">Re-grade</button></div>';
 }
 coachPanel.addEventListener('click',e=>{
@@ -1544,7 +1545,7 @@ function avatarMarkup(size){
   if(id){
     const s = window.avatarSvg ? window.avatarSvg(id,size||24) : '';
     if(s) return s;
-    if(/[^\x00-\x7F]/.test(id)) return '<span class="ava-ini">'+id+'</span>'; // legacy emoji value
+    if(/[^\x00-\x7F]/.test(id)) return '<span class="ava-ini">'+[...id.replace(/[<>&"']/g,'')].slice(0,2).join('')+'</span>'; // legacy emoji value (stripped of markup)
   }
   return '<span class="ava-ini">'+initialChar()+'</span>';
 }

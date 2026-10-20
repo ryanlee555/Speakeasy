@@ -43,12 +43,17 @@ Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected t
   (`setSideTab`). Captions show over the video only while the Transcript tab is active. Under 900px the
   panel stacks under the video.
 
-## 🟡 AI Coach — DEPLOYED 2026-10-18, waiting on the API key secret
+## 🟡 AI Coach — deployed + key set, but the coach SQL is NOT on the live DB (found 2026-10-19)
+
+**2026-10-19 security audit found `recordings.coach` and `public.coach_runs` do not exist live**, so
+the user's earlier "ran the coach SQL" did not take. Every grading currently fails with "isn't fully
+set up yet". Fix: run [supabase/2026-10-18_coach.sql](supabase/2026-10-18_coach.sql) in the SQL Editor.
 
 **Status 2026-10-18:** step 1 (SQL) done by the user. Step 3 done: `coach` deployed with
 `supabase functions deploy coach --project-ref niqwjooeuougvvusjznp --use-api`; smoke test passed (CORS
-preflight 200, no auth → 401, anon key without a user → 401 "Sign in to use the AI coach."). **Step 2 is
-NOT done:** the user believed they added `ANTHROPIC_API_KEY`, but `supabase secrets list` on the
+preflight 200, no auth → 401, anon key without a user → 401 "Sign in to use the AI coach."). **Step 2 done
+later the same day:** `ANTHROPIC_API_KEY` now shows in `supabase secrets list` (first attempt had
+left the Value box empty). Earlier note, kept for history: the user believed they added `ANTHROPIC_API_KEY`, but `supabase secrets list` on the
 SpeakEasy project shows only the built-in `SUPABASE_*` secrets. It probably went into Vault or another
 project. Until it is set as an Edge Function secret on SpeakEasy, grading returns "The AI coach's API
 key isn't valid." No redeploy is needed after adding it. Real end-to-end grading is still untested.
@@ -88,6 +93,44 @@ The second side-panel tab grades a take with Claude. User chose the Claude API (
      never paste the key into code or chat.
   3. Deploy: `supabase functions deploy coach --project-ref niqwjooeuougvvusjznp` (the CLI on this
      Mac is already logged in and can see the SpeakEasy project). `supabase/.temp/` is gitignored.
+
+## 🔒 Security audit (2026-10-19)
+
+**Checked and fine:**
+- No secrets in git history. The only key ever committed is the public `anon` key (decoded role `anon`),
+  which is designed to ship to browsers. No `.env` files. `Recordings - Speakeasy/` is gitignored.
+- RLS on `recordings` (select/insert/update/delete own) and storage policies (per-uid folder) as in the
+  repo SQL. Live probes with only the anon key: read returns `[]`, insert refused by RLS, mass
+  update/delete affect 0 rows, storage list returns `[]`, anon upload refused, bucket is private (no
+  public URLs), OpenAPI schema listing refused (401).
+- Coach Edge Function: gateway rejects no-auth (401), anon key without a user gets 401, Anthropic key
+  lives only in the function's secrets.
+- HSTS already sent by Vercel.
+
+**Fixed in this pass (local, needs push + function redeploy):**
+- Coach function: **site-wide cap of 150 gradings / 24h** (`GLOBAL_DAILY_LIMIT`, counted with the
+  service-role key inside the function), because open signup with no email confirmation lets anyone mint
+  accounts and multiply the per-account cap. Per-account check is now check → log → re-check, so a
+  burst of parallel requests can't slip past 20/day, and refused requests don't inflate the global count.
+  `mode`, `durationSec`, `targetSec`, frame labels are now validated/coerced before going into the prompt.
+- Pages: the legacy-emoji avatar value and a recording's `mode` could inject HTML (self-only, since RLS
+  keeps both to the owner). Avatar is now stripped of markup characters and capped to 2 chars;
+  `modeInfo` only returns known mode keys. Verified with planted payloads: nothing executed.
+- New `vercel.json`: `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `X-Frame-Options: DENY` +
+  `frame-ancestors 'none'` (no clickjacking), `Permissions-Policy` (camera/mic only for this site).
+  A full script CSP was deliberately skipped: every page is inline-script based and the Whisper/WASM
+  path loads from jsDelivr + Hugging Face, so a strict CSP would likely break the app for little gain.
+
+**Still open (user decisions / dashboard):**
+- Run the coach SQL (above).
+- "Confirm email" is off (`mailer_autoconfirm: true`), so signup needs no real email. Turning it back on
+  (Authentication → Providers → Email) or adding CAPTCHA (Authentication → Attack Protection) is the
+  real fix for throwaway accounts. Also worth enabling leaked-password protection there.
+- Anthropic console: keep auto-reload off and/or set a monthly spend limit, so the worst case is capped.
+- Storage bucket has no per-file size or MIME limit, so any account can upload arbitrary files into its
+  own folder up to the project's quota. Optional hardening: set `allowed_mime_types` (video/webm,
+  video/mp4, audio/webm, audio/mp4, image/jpeg) on the `recordings` bucket.
+- Run Supabase's built-in Security Advisor (dashboard → Advisors) for anything not visible from outside.
 
 ## 🎯 WHAT TO WORK ON NEXT (priority order, last set 2026-09-09)
 

@@ -8678,7 +8678,7 @@ function avatarMarkup(size){
   if(id){
     const s = window.avatarSvg ? window.avatarSvg(id,size||24) : '';
     if(s) return s;
-    if(/[^\x00-\x7F]/.test(id)) return '<span class="ava-ini">'+id+'</span>'; // legacy emoji value
+    if(/[^\x00-\x7F]/.test(id)) return '<span class="ava-ini">'+[...id.replace(/[<>&"']/g,'')].slice(0,2).join('')+'</span>'; // legacy emoji value (stripped of markup)
   }
   return '<span class="ava-ini">'+initialChar()+'</span>';
 }
