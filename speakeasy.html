@@ -8786,10 +8786,13 @@ authForm.addEventListener('submit', async e=>{
   authMsg.textContent=''; authMsg.className='auth-msg';
   try{
     if(authMode==='signup'){
-      const {error}=await sb.auth.signUp({email,password});
+      const {data,error}=await sb.auth.signUp({email,password});
       if(error) throw error;
-      authMsg.textContent='Check your email to confirm your account, then log in.';
-      authMsg.classList.add('ok');
+      if(data&&data.session){ closeAuthModal(); }   // "Confirm email" off: already signed in
+      else{
+        authMsg.textContent='Check your email to confirm your account, then log in.';
+        authMsg.classList.add('ok');
+      }
     }else{
       const {error}=await sb.auth.signInWithPassword({email,password});
       if(error) throw error;

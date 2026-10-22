@@ -8,6 +8,20 @@ Living doc. Updated after every change made in this project so any new chat can 
 ## Deployment (2026-08-10)
 Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
+## Signup message + "no confirmation code" report — 2026-10-21 (not yet committed/pushed)
+User reported that a new user signing up got no confirmation code, and the user received a Vercel
+"New sign-in detected" email instead. Findings: (1) the app sends **no** confirmation email, since
+"Confirm email" is off (`mailer_autoconfirm: true`, see Security pass), so a signup returns a live
+session immediately; the old modal text "Check your email to confirm" was simply wrong and caused
+the confusion. (2) The Vercel alert is about the owner's own Vercel account (new device/browser
+sign-in), not triggered by anyone's app signup; the app never talks to Vercel auth.
+**Changed:** `speakeasy.html` and `library.html` signup handlers now close the modal when
+`signUp()` returns a session, and only show "Check your email…" when no session comes back (i.e. if
+Confirm email is ever turned on). Not tested against live Supabase (no throwaway cloud accounts made).
+**Still open (user decision):** turn "Confirm email" on to actually verify addresses. That needs
+custom SMTP (Resend/Postmark etc.) in Supabase, because the default mailer is heavily rate-limited
+and only delivers to project team members.
+
 ## ✅ Transcript tab in the library — BUILT 2026-10-18 (not yet committed/pushed)
 
 `library.html`'s player modal now has a real **Transcript** tab (was a disabled "Transcript · soon").
