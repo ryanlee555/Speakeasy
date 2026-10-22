@@ -8,7 +8,12 @@ Living doc. Updated after every change made in this project so any new chat can 
 ## Deployment (2026-08-10)
 Live at **https://speakeasy-beryl.vercel.app**, deployed via Vercel, connected to the `ryanlee555/Speakeasy` GitHub repo. Continuous deployment is live: pushing to `main` auto-deploys to production; pushing to any other branch or opening a PR gets its own Vercel preview URL. No build step/framework — deployed as a static site. No env vars needed (Supabase anon key is hardcoded client-side, which is the documented safe exception in CLAUDE.md).
 
-## Signup message + "no confirmation code" report — 2026-10-21 (not yet committed/pushed)
+## Architecture doc — 2026-10-21
+Added [ARCHITECTURE.md](ARCHITECTURE.md): a from-scratch technical rundown (frontend files, browser
+APIs, Vercel, Supabase auth/RLS/storage/Edge Function, data flow, gotchas, learning path). Written
+at the user's request to learn the backend. Keep it in sync if the stack changes.
+
+## Signup message + "no confirmation code" report — 2026-10-21
 User reported that a new user signing up got no confirmation code, and the user received a Vercel
 "New sign-in detected" email instead. Findings: (1) the app sends **no** confirmation email, since
 "Confirm email" is off (`mailer_autoconfirm: true`, see Security pass), so a signup returns a live
