@@ -18,9 +18,12 @@ sign-in), not triggered by anyone's app signup; the app never talks to Vercel au
 **Changed:** `speakeasy.html` and `library.html` signup handlers now close the modal when
 `signUp()` returns a session, and only show "Check your email…" when no session comes back (i.e. if
 Confirm email is ever turned on). Not tested against live Supabase (no throwaway cloud accounts made).
-**Still open (user decision):** turn "Confirm email" on to actually verify addresses. That needs
-custom SMTP (Resend/Postmark etc.) in Supabase, because the default mailer is heavily rate-limited
-and only delivers to project team members.
+**Resolved 2026-10-21:** the user chose to keep "Confirm email" **off** (no email verification
+needed). The fix is live on Vercel and the user confirmed a friend can now sign up and is signed in
+immediately. The Vercel "new sign-in" email was the owner's own Vercel account, unrelated to signups.
+**If email verification is ever wanted:** turn "Confirm email" on AND set up custom SMTP (needs a
+domain you own, e.g. Resend), because Supabase's default mailer is rate-limited (~2/hr) and only
+delivers to project team members. Also set Auth → URL Configuration → Site URL to the Vercel URL.
 
 ## ✅ Transcript tab in the library — BUILT 2026-10-18 (not yet committed/pushed)
 
