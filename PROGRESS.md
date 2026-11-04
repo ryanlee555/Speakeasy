@@ -2,6 +2,16 @@
 
 Living doc. Updated after every change made in this project so any new chat can pick up without re-deriving context. See [CLAUDE.md](CLAUDE.md) for the overall project vision/end-state — this file tracks state, roadmap, and decisions only.
 
+**Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
+
+## AI Coach and transcript speed — 2026-11-03
+
+**AI Coach database fix applied 2026-11-03, real grading still untested:** the user hit "The AI coach isn't fully set up yet" from library → take → grade, because `public.coach_runs` and `recordings.coach` didn't exist live. The user ran the SQL from [supabase/2026-10-18_coach.sql](supabase/2026-10-18_coach.sql) in the SQL Editor for the **SpeakEasy** project (`niqwjooeuougvvusjznp`), and a read-only API check now returns 200 for both. **Still to do:** grade a real take on the live site, which has never been done end to end.
+
+**Transcript model switched to `whisper-base.en` 2026-11-03 (pushed to `main`, which auto-deploys to the live site):** the user saw about 3 minutes per transcript or first grading on an M2 with 8 GB of RAM. Download is now 199 MB instead of 561 MB. **Tests in the browser pane, real worker code, WebGPU:** the old model loaded in about 21s, then was stopped unfinished at about 318s on an 82s clip because swap was nearly full (11,965 MB used, 323 MB free). The new model on a non-repeating 78s text-to-speech clip loaded from the browser's saved copy in 2.4s and finished at 56.9s, about 0.7x real time, with 4 word edits out of 221 (1.8% error). Memory stayed stable. These are not clean before/after figures: the pane was hidden, the Mac was already swapping heavily, and the two runs used different clips. **Known limits:** text-to-speech is cleaner than real speech, so accuracy still needs checking on a real take, and grades may shift because the Coach reads this transcript. The output doubled one word ("research research"), and a clip repeating one passage 7 times returned only 105 of 245 words, likely from how overlapping sections are joined, so a speaker repeating long passages word for word could lose text. The new model still takes roughly a minute for this length on this Mac. Existing saved transcripts and grades stay as they are. The ready flag in `localStorage` is now per model (`speakeasy-asr-ready:<model>`), so the first-download notice is correct after a model change. The old model stays in the browser's storage until cleared. **Next:** test on a real take on the live site, and if it is still too slow, consider cloud transcription (needs a paid API key and a change to the "never uploaded" wording).
+
+**Second timing run (2026-11-03):** a separate non-repeating 75s text-to-speech clip on `whisper-base.en` loaded in 5.8s and finished at 73.8s (about real time, with a disk scan running for part of it), returning 204 words from a 203-word script. It also doubled one word ("quickly quickly"), so expect an occasional doubled word in real transcripts. The test machine had 8 GB of RAM and was low on disk. Low RAM is the main limit for the local model, so slow results there may not reflect other users' machines.
+
 ## Repo state
 `feature/recording-stats` has been merged into `main` (2026-08-10) — `main` now has the current warm/cozy version with Supabase auth, not the old pixel/CRT one.
 
@@ -33,6 +43,7 @@ delivers to project team members. Also set Auth → URL Configuration → Site U
 ## ✅ Transcript tab in the library — BUILT 2026-10-18 (not yet committed/pushed)
 
 `library.html`'s player modal now has a real **Transcript** tab (was a disabled "Transcript · soon").
+> **Update 2026-11-03:** the model below is being replaced by `Xenova/whisper-base.en` (199 MB on WebGPU); see the end-goal section at the top. Sizes and speeds below describe the original `whisper-small.en`.
 - **Engine: Whisper in the browser, free, no API key, no server.** `Xenova/whisper-small.en` via
   `@huggingface/transformers@3.8.1` (jsDelivr), run in a Web Worker. The worker source lives inline in
   `<script type="text/plain" id="asrWorkerSrc">` and starts from a Blob URL (same "no second file"

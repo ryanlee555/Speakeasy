@@ -575,7 +575,7 @@ body{
 <script type="text/plain" id="asrWorkerSrc">
 import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 env.allowLocalModels = false;
-const MODEL = 'Xenova/whisper-small.en';
+const MODEL = 'Xenova/whisper-base.en';
 let asr = null, device = 'wasm';
 const post = m => self.postMessage(m);
 
@@ -973,7 +973,7 @@ async function openPlayer(r){
 
 /* ── transcript: Whisper runs in the browser, nothing is uploaded ── */
 const txPanel=$('#txPanel'), txCap=$('#txCap');
-const TX_MODEL='Xenova/whisper-small.en';
+const TX_MODEL='Xenova/whisper-base.en';
 let asrWorker=null, txJob=null;            // txJob: {id, stage:'prep'|'load'|'run', loaded, resolve, reject}
 let txErr=null, txActive=false, txRaf=0;
 let txWords=null, txCues=[], txSpans=[], txIdx=-1, txCueIdx=-2, txScrollEl=null;
@@ -983,7 +983,7 @@ function txCacheGet(id){
 }
 function txCachePut(id,t){ try{ localStorage.setItem('speakeasy-tx:'+id,JSON.stringify(t)); }catch(e){} }
 function txFor(r){ return (r.transcript&&r.transcript.words)?r.transcript:txCacheGet(r.id); }
-function txModelCached(){ try{ return localStorage.getItem('speakeasy-asr-ready')==='1'; }catch(e){ return false; } }
+function txModelCached(){ try{ return localStorage.getItem('speakeasy-asr-ready:'+TX_MODEL)==='1'; }catch(e){ return false; } }
 
 function txClean(raw){
   const out=[];
@@ -1031,7 +1031,7 @@ function txWorker(){
     const m=e.data;
     if(!txJob) return;
     if(m.type==='progress'){ txJob.stage='load'; txJob.loaded=m.loaded; }
-    else if(m.type==='ready'){ txJob.stage='run'; try{ localStorage.setItem('speakeasy-asr-ready','1'); }catch(_){} }
+    else if(m.type==='ready'){ txJob.stage='run'; try{ localStorage.setItem('speakeasy-asr-ready:'+TX_MODEL,'1'); }catch(_){} }
     else if(m.type==='done'){ const j=txJob; j.resolve(m.words); return; }
     else if(m.type==='error'){ const j=txJob; j.reject(new Error(m.message)); return; }
     txRender(); coachRender();
@@ -1104,7 +1104,7 @@ function txRender(){
   txState('Turn this take into subtitles you can read along with.'
     +'<br><button class="pbtn pbtn--rec pbtn--sm" type="button" data-tx="go">Generate transcript</button>'
     +'<small>Runs on your own device, so your audio is never uploaded.'
-    +(txModelCached()?'':' The first time downloads a speech model (a few hundred MB), which is then saved for next time.')+'</small>');
+    +(txModelCached()?'':' The first time downloads a speech model (up to about 200 MB), which is then saved for next time.')+'</small>');
 }
 function txShowReady(t){
   if(txWords===t.words) return;                         // already drawn

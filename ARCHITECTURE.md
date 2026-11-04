@@ -51,7 +51,7 @@ Trade-off: nothing to install or build, and deploys are trivial. But the files a
 - **File System Access API** (`showDirectoryPicker`) lets a user pick a local folder and save `.webm` + `.json` files straight to disk. Chrome-only, and scoped per origin, so `localhost` and the Vercel site each need their own folder pick. Browsers without it fall back to a normal download.
 - **IndexedDB** keeps a local recording history, and persists the folder handle so the permission survives reloads.
 - **localStorage** is used for small caches: transcripts, coach grades, and "did I do today's daily challenge."
-- **Whisper in the browser.** `library.html` loads `@huggingface/transformers` from jsDelivr and runs `Xenova/whisper-small.en` in a Web Worker using WebAssembly. Transcription is free and private (audio never leaves the device). The cost is a large first-time model download and slow transcription on weak machines. Results are cached in localStorage and in the database.
+- **Whisper in the browser.** `library.html` loads `@huggingface/transformers` from jsDelivr and runs `Xenova/whisper-base.en` in a Web Worker, using WebGPU when available and WebAssembly otherwise. Transcription is free and private (audio never leaves the device). The cost is a first-time model download of up to about 200 MB and slower transcription on weak machines. Results are cached in localStorage and in the database.
 - **Web Audio** (`decodeAudioData`) computes pitch and loudness variation from the audio, to feed the coach.
 
 ## 3. Vercel (hosting)

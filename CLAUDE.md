@@ -15,3 +15,5 @@ See [PROGRESS.md](PROGRESS.md) for current state, the active roadmap, and decisi
 ## Working agreement
 
 After every change made in this project (features, fixes, redesigns, anything), update `PROGRESS.md`: what changed, what's still open, any new decisions. The goal is that a brand-new chat can open this repo and pick up exactly where the last session left off, without the user having to re-explain context.
+
+This GitHub repo is public and every tracked file ships with the site. Never put job application details, personal machine details or other private notes in tracked files; use the untracked `PRIVATE-NOTES.md`, and read it at the start of a session if it exists.
