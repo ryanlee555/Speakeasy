@@ -4,7 +4,7 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
-## AI Coach: score colors, bold details, clickable timestamps — built 2026-11-04, not yet committed or pushed
+## AI Coach: score colors, bold details, clickable timestamps — built and pushed 2026-11-04
 
 All in `library.html`, client side only, so existing grades get it with no re-grade, migration or function deploy.
 
