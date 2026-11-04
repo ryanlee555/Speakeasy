@@ -343,6 +343,10 @@ body.is-review .scrub{display:flex}
 .dur:hover{color:var(--ink-dim);border-color:var(--border-soft)}
 .dur.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
 .dur:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+/* the default choice (Random, All levels) is sage so it reads as "the default", selected or not */
+.dur--default{color:var(--sage);border-color:rgba(143,168,146,.3)}
+.dur--default:hover{color:var(--sage);border-color:rgba(143,168,146,.55)}
+.dur--default.is-active{background:rgba(143,168,146,.14);border-color:rgba(143,168,146,.5);color:var(--sage)}
 .dur-custom{padding:8px 12px}
 .dur-custom input{
   background:transparent;border:0;outline:0;color:var(--ink-dim);
@@ -534,7 +538,7 @@ body.is-review .scrub{display:flex}
           </div>
           <div class="filterrow" id="catFilters"></div>
           <div class="filterrow filterrow--sep" id="diffFilters">
-            <button class="dur is-active" data-diff="all">All levels</button>
+            <button class="dur dur--default is-active" data-diff="all">All levels</button>
             <button class="dur" data-diff="easy">Easy</button>
             <button class="dur" data-diff="medium">Medium</button>
             <button class="dur" data-diff="hard">Hard</button>
@@ -8160,7 +8164,7 @@ function renderCatFilters(){
   if(selected[recMode].cat==='random') selected[recMode].cat='all';
   const cats=window.categoriesFor(recMode).filter(c=>c.id!=='random');
   const cur=selected[recMode].cat;
-  catFilters.innerHTML='<button class="dur'+(cur==='all'?' is-active':'')+'" data-cat="all">Random</button>'+
+  catFilters.innerHTML='<button class="dur dur--default'+(cur==='all'?' is-active':'')+'" data-cat="all">Random</button>'+
     cats.map(c=>'<button class="dur'+(cur===c.id?' is-active':'')+'" data-cat="'+c.id+'">'+c.label+'</button>').join('');
 }
 function renderDiffFilters(){

@@ -319,6 +319,11 @@ body{
   gap:14px;height:240px;background:#0b0908;border-radius:12px;color:var(--ink-faint);
   font-size:10px;letter-spacing:.12em;text-transform:uppercase}
 .player-stage.is-audio .player-audio{display:flex}
+/* Audio only keeps the video's size: the hidden video still holds its space and the audio tile
+   sits on top of it. (Audio-only takes have no picture, so the stage keeps a 240px minimum.) */
+.player-stage.is-audio{min-height:240px}
+.player-stage.is-audio video{display:block;visibility:hidden}
+.player-stage.is-audio .player-audio{position:absolute;inset:0;height:auto;min-height:240px}
 .review-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;
   background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:4px}
 .review-modes[hidden]{display:none}
