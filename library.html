@@ -234,6 +234,14 @@ body{
   padding:10px 12px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;outline:0;box-sizing:border-box}
 .edit-field input:focus{border-color:var(--ember)}
 .edit-actions{display:flex;gap:8px;justify-content:flex-end}
+/* themed confirm pop-up (replaces the browser's native confirm) */
+.confirm{max-width:380px}
+.confirm-item{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin:14px 0}
+.confirm-item b{display:block;font-family:'Fraunces',serif;font-weight:440;font-size:15px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+.confirm-item span{display:block;margin-top:3px;font-size:12px;color:var(--ink-faint)}
+.confirm-body{font-size:13px;line-height:1.6;color:var(--ink-dim);margin-bottom:18px}
+.pbtn--danger{background:var(--rec);color:#1f0e0a;font-weight:600;font-size:13px;padding:13px 26px;border:1px solid var(--rec)}
+.pbtn--danger:hover:not(:disabled){filter:brightness(1.08)}
 
 /* ── list view ── */
 .ltable{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -547,6 +555,19 @@ body{
 <div class="row-menu" id="rowMenu" hidden>
   <button type="button" data-act="edit">Edit details</button>
   <button type="button" data-act="delete" class="danger">Delete</button>
+</div>
+
+<!-- confirm modal (delete etc.) -->
+<div class="modal-backdrop" id="confirmBackdrop" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal confirm">
+    <div class="player-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-item" id="confirmItem" hidden><b id="confirmItemName"></b><span id="confirmItemWhen"></span></div>
+    <p class="confirm-body" id="confirmBody"></p>
+    <div class="edit-actions">
+      <button class="pbtn pbtn--ghost pbtn--sm" id="confirmCancel" type="button">Cancel</button>
+      <button class="pbtn pbtn--danger" id="confirmOk" type="button">Delete</button>
+    </div>
+  </div>
 </div>
 
 <!-- edit-title modal -->
@@ -1391,9 +1412,41 @@ async function removeLocalFiles(r){
     catch(e){ if(e && e.name!=='NotFoundError') console.warn('speakeasy delete local:',name,e.message||e); }
   }
 }
+/* themed yes/no pop-up; resolves true on the confirm button, false on Cancel, Esc or a click outside */
+function askConfirm({title, item, when, body, okLabel='Delete'}){
+  const bd=$('#confirmBackdrop'), ok=$('#confirmOk'), cancel=$('#confirmCancel');
+  $('#confirmTitle').textContent=title;
+  $('#confirmItem').hidden=!item;
+  $('#confirmItemName').textContent=item||''; $('#confirmItemWhen').textContent=when||'';
+  $('#confirmBody').textContent=body||''; ok.textContent=okLabel;
+  bd.classList.add('show'); cancel.focus();
+  return new Promise(resolve=>{
+    const done=v=>{
+      bd.classList.remove('show');
+      ok.onclick=cancel.onclick=bd.onclick=null;
+      document.removeEventListener('keydown',onKey,true);
+      resolve(v);
+    };
+    const onKey=e=>{
+      if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); done(false); }
+      else if(e.key==='Tab'){                       // keep focus inside the pop-up
+        e.preventDefault();
+        (document.activeElement===cancel ? ok : cancel).focus();
+      }
+    };
+    ok.onclick=()=>done(true); cancel.onclick=()=>done(false);
+    bd.onclick=e=>{ if(e.target===bd) done(false); };
+    document.addEventListener('keydown',onKey,true);
+  });
+}
 async function removeRecord(r){
   const t=titleFor(r);
-  if(!confirm('Delete this recording?\n\n'+t+'\n'+fmtWhen(r.dateISO)+'\n\nThis removes it from your account'+(dirHandle&&r.fsaaFile?' and from your save folder':'')+', and cannot be undone.')) return;
+  const ok=await askConfirm({
+    title:'Delete this recording?', item:t, when:fmtWhen(r.dateISO),
+    body:'This removes it from your account'+(dirHandle&&r.fsaaFile?' and from your save folder':'')+'. This cannot be undone.',
+    okLabel:'Delete'
+  });
+  if(!ok) return;
   if(r.storagePath||r.thumbPath){
     const paths=[r.storagePath,r.thumbPath].filter(Boolean);
     try{ await sb.storage.from(BUCKET).remove(paths); }
