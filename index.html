@@ -82,7 +82,7 @@ body{
 }
 .blurb{
   font-size:15px;line-height:1.8;color:var(--ink-faint);
-  max-width:400px;margin:26px auto 0;text-wrap:balance;
+  max-width:470px;margin:26px auto 0;text-wrap:balance;
 }
 
 .cta{
@@ -150,16 +150,47 @@ body{
 .feature-card h3{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
 .feature-card p{font-size:13px;line-height:1.6;color:var(--ink-faint)}
 @media(prefers-reduced-motion:reduce){.feature-card,.feature-card:hover{transition:none;transform:none}}
-.soon{
-  position:absolute;top:16px;right:16px;
-  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--sage);border:1px solid rgba(143,168,146,.35);border-radius:999px;
-  padding:3px 8px;background:var(--panel);
-}
 
-@media(max-width:1080px){.features-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
-@media(max-width:760px){.features-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.features-grid{grid-template-columns:1fr}}
+/* five cards: three over two (centered) on tablets, and the last one runs full width in two columns */
+@media(max-width:1080px){
+  .features-grid{grid-template-columns:repeat(6,1fr);gap:20px}
+  .feature-card{grid-column:span 2}
+  .feature-card:nth-child(4){grid-column:2/span 2}
+}
+@media(max-width:760px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .feature-card,.feature-card:nth-child(4){grid-column:auto}
+  .feature-card:last-child{grid-column:1/-1}
+}
+@media(max-width:520px){.features-grid{grid-template-columns:1fr}.feature-card:last-child{grid-column:auto}}
+
+/* ---- AI coach ---- */
+.coach-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:44px}
+.coach-points{list-style:none;display:flex;flex-direction:column;gap:20px}
+.coach-points li{font-size:14.5px;line-height:1.6;color:var(--ink-dim)}
+.coach-points strong{display:block;color:var(--ink);font-weight:600;margin-bottom:4px}
+.coach-grid .cta-secondary{margin-top:28px}
+.coach-fine{margin-top:16px;font-size:12px;line-height:1.6;color:var(--ink-faint)}
+/* a static picture of the library's coach panel. Colors come from coachColor() in library.html */
+.coach-demo{border:1px solid var(--border-soft);border-radius:16px;background:var(--panel);padding:20px 22px;box-shadow:0 18px 44px -22px var(--shadow)}
+.cd-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+.cd-row{padding:11px 0;border-bottom:1px solid var(--border)}
+.cd-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink);margin-bottom:8px}
+.cd-sc{font-family:'Fraunces',serif;font-size:17px;font-variant-numeric:tabular-nums}
+.cd-bar{position:relative;height:6px;border-radius:99px;background:rgba(244,229,205,.09)}
+.cd-bar i{position:absolute;top:0;left:0;bottom:0;width:calc(var(--s) * 1%);border-radius:99px;transition:width .7s cubic-bezier(.22,1,.36,1)}
+.cd-bar b{position:absolute;top:50%;left:calc(var(--s) * 1%);transition:left .7s cubic-bezier(.22,1,.36,1);width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px rgba(16,13,11,.6)}
+/* the script below holds each bar at 0 until it scrolls into view. Without the script they just show their score */
+.cd-bar.is-waiting i{width:0;transition:none}
+.cd-bar.is-waiting b{left:0;transition:none}
+.cd-detail{margin-top:12px;font-size:12.5px;line-height:1.65;color:var(--ink-dim)}
+.cd-detail h4{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:10px 0 4px}
+.cd-detail strong{color:var(--ink);font-weight:600}
+.cd-detail ul{padding-left:18px}
+.cd-ts{font-weight:600;color:var(--ember);white-space:nowrap;text-decoration:underline;text-decoration-color:rgba(221,146,87,.4);text-underline-offset:2px}
+.cd-overall{padding-top:14px}
+.cd-ov{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+.cd-sc--big{font-size:30px;line-height:1}
 
 /* ---- about ---- */
 .about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start;margin-top:44px}
@@ -184,7 +215,7 @@ body{
 @media(prefers-reduced-motion:reduce){.about-photos>*,.about-photos>*:hover{transition:none;transform:none}}
 
 @media(max-width:760px){
-  .how-grid,.about-grid{grid-template-columns:1fr}
+  .how-grid,.about-grid,.coach-grid{grid-template-columns:1fr}
   .about-photos{max-width:320px}
 }
 
@@ -198,6 +229,7 @@ body{
   <div class="brand">Speakeasy</div>
   <nav class="topnav">
     <a href="#how">Getting started</a>
+    <a href="#coach">AI Coach</a>
     <a href="#features">Features</a>
     <a href="#about">About</a>
     <a class="nav-cta" href="speakeasy.html?auth=1">Sign in</a>
@@ -208,12 +240,12 @@ body{
   <div class="logo">Speak a little easier</div>
 
   <div class="blurb">
-    A cozy little studio for practicing your public speaking, out loud.
+    A cozy little studio for practicing your public speaking out loud, with an AI coach to show you what to work on next.
   </div>
 
   <div>
     <a class="cta" href="speakeasy.html?auth=1">Sign in →</a>
-    <div class="sub">save your recordings & track your streak across devices</div>
+    <div class="sub">save your recordings, get graded by the AI Coach &amp; track your streak across devices</div>
     <br>
     <a class="cta-secondary" href="speakeasy.html">Start practicing without an account</a>
   </div>
@@ -233,21 +265,87 @@ body{
       <ol class="how-steps">
         <li>
           <span class="num">1</span>
-          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty and how long to speak for, get a random word to riff on, or switch to Freeplay with no prompt at all.</span>
+          <span class="txt"><strong>Pick your mode.</strong> Choose a topic by category and difficulty, get a random word to riff on, take on the Daily Challenge, or switch to Freeplay with no prompt at all.</span>
         </li>
         <li>
           <span class="num">2</span>
-          <span class="txt"><strong>Hit record.</strong> Set a timer, then speak into your camera and mic right in the browser. Super simple, as speaking should be.</span>
+          <span class="txt"><strong>Hit record.</strong> Set your timer, press Attempt on your prompt, then speak into your camera and mic right in the browser. Super simple, as speaking should be.</span>
         </li>
         <li>
           <span class="num">3</span>
-          <span class="txt"><strong>Watch it back.</strong> Review the full video, audio only, visual only, or a transcript (coming soon). Pick whichever helps you notice the most.</span>
+          <span class="txt"><strong>Watch it back.</strong> Open the take in your library and review the full video, camera only, or audio only, with a transcript that follows along. Pick whichever helps you notice the most.</span>
         </li>
         <li>
           <span class="num">4</span>
+          <span class="txt"><strong>Get coached.</strong> Sign in and ask the AI Coach to grade your take. You get a score for each area, the reasons behind it, and tips to try next.</span>
+        </li>
+        <li>
+          <span class="num">5</span>
           <span class="txt"><strong>Build the habit.</strong> Sign in to track your streak and minutes practiced over time.</span>
         </li>
       </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="coach">
+  <div class="section-inner">
+    <div class="section-label">AI Coach</div>
+    <div class="section-title">Find out exactly what to work on next</div>
+    <div class="section-sub">Watching yourself shows you what happened. The AI Coach, built with Claude, tells you why it matters and what to try on your next take.</div>
+
+    <div class="coach-grid">
+      <div>
+        <ul class="coach-points">
+          <li><strong>Seven graded points</strong>Articulation, pacing, word choice, structure, tone and vocal variety, body language, and confidence and fluency. Body language is graded on video takes only.</li>
+          <li><strong>Reasons you can check</strong>Every score points to phrases you said and measurements like your words per minute, followed by tips for your next take.</li>
+          <li><strong>A link to the moment</strong>Click any timestamp in the feedback to jump straight to that part of your video.</li>
+        </ul>
+        <a class="cta-secondary" href="speakeasy.html?auth=1">Sign in to use the AI Coach</a>
+        <p class="coach-fine">The coach reviews your transcript, a few voice measurements and six still frames from video takes. It never receives your audio. AI feedback can be wrong.</p>
+      </div>
+
+      <div class="coach-demo" role="group" aria-label="An example AI Coach grade">
+        <div class="cd-label">Example grade</div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Articulation</span><span class="cd-sc" style="color:rgb(197,159,99)">64</span></div>
+          <div class="cd-bar" style="--s:64"><i style="background:linear-gradient(90deg,rgb(208,120,96),rgb(197,159,99))"></i><b></b></div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Pacing</span><span class="cd-sc" style="color:rgb(168,174,114)">71</span></div>
+          <div class="cd-bar" style="--s:71"><i style="background:linear-gradient(90deg,rgb(213,130,93),rgb(168,174,114))"></i><b></b></div>
+          <div class="cd-detail">
+            <h4>Why this score</h4>
+            <p>You held a steady <strong>128 wpm</strong>, then sped up to <strong>162 wpm</strong> around <span class="cd-ts">0:41</span>. The pause at <span class="cd-ts">0:27</span> gave your main point room to land.</p>
+            <h4>How to improve</h4>
+            <ul><li>Take one full breath before your final point at <span class="cd-ts">0:41</span>.</li></ul>
+          </div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Word choice</span><span class="cd-sc" style="color:rgb(221,146,87)">58</span></div>
+          <div class="cd-bar" style="--s:58"><i style="background:linear-gradient(90deg,rgb(205,115,98),rgb(221,146,87))"></i><b></b></div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Structure</span><span class="cd-sc" style="color:rgb(217,138,90)">52</span></div>
+          <div class="cd-bar" style="--s:52"><i style="background:linear-gradient(90deg,rgb(205,115,98),rgb(217,138,90))"></i><b></b></div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Tone and vocal variety</span><span class="cd-sc" style="color:rgb(185,165,105)">67</span></div>
+          <div class="cd-bar" style="--s:67"><i style="background:linear-gradient(90deg,rgb(210,124,95),rgb(185,165,105))"></i><b></b></div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Body language</span><span class="cd-sc" style="color:rgb(156,180,120)">74</span></div>
+          <div class="cd-bar" style="--s:74"><i style="background:linear-gradient(90deg,rgb(215,134,91),rgb(156,180,120))"></i><b></b></div>
+        </div>
+        <div class="cd-row">
+          <div class="cd-top"><span>Confidence and fluency</span><span class="cd-sc" style="color:rgb(213,150,91)">60</span></div>
+          <div class="cd-bar" style="--s:60"><i style="background:linear-gradient(90deg,rgb(205,115,98),rgb(213,150,91))"></i><b></b></div>
+        </div>
+        <div class="cd-overall">
+          <div class="cd-top"><span class="cd-ov">Overall</span><span class="cd-sc cd-sc--big" style="color:rgb(197,159,99)">64</span></div>
+          <div class="cd-bar" style="--s:64"><i style="background:linear-gradient(90deg,rgb(208,120,96),rgb(197,159,99))"></i><b></b></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -279,10 +377,9 @@ body{
         <p>One shared prompt for everyone, every day. Compare how you approached it with how your friends did.</p>
       </div>
       <div class="feature-card">
-        <span class="soon">coming soon</span>
-        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></div>
-        <h3>Notes on every take</h3>
-        <p>Attach notes to any recording so you can look back through your history and actually see the progress you've made.</p>
+        <div class="feat-icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 11h16M4 16h10"/><path d="M4 21h6"/></svg></div>
+        <h3>Live transcripts</h3>
+        <p>Made on your own device with Whisper. Captions follow along as you watch, and clicking any word jumps to that moment.</p>
       </div>
     </div>
   </div>
@@ -337,6 +434,34 @@ document.getElementById('footYear').textContent=new Date().getFullYear();
   function onScroll(){ tb.classList.toggle('scrolled', window.scrollY>16); }
   onScroll();
   window.addEventListener('scroll',onScroll,{passive:true});
+})();
+/* example grade: each bar fills and its number counts up the first time it scrolls into view */
+(function(){
+  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var MS=700;
+  function countUp(el,to){
+    var start=null;
+    function step(now){
+      if(start===null) start=now;
+      var t=Math.min(1,(now-start)/MS);
+      el.textContent=Math.round(to*(1-Math.pow(1-t,3)));
+      if(t<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      io.unobserve(e.target);
+      e.target.classList.remove('is-waiting');
+      countUp(e.target.previousElementSibling.querySelector('.cd-sc'),+e.target.style.getPropertyValue('--s'));
+    });
+  },{threshold:1,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.cd-bar').forEach(function(bar){
+    bar.classList.add('is-waiting');
+    bar.previousElementSibling.querySelector('.cd-sc').textContent='0';
+    io.observe(bar);
+  });
 })();
 </script>
 </body>

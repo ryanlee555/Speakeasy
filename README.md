@@ -122,7 +122,6 @@ Planned:
 
 - Real transcripts from speech to text, which then unlocks words per minute and filler word counts
 - Coaching notes from a language model, once transcripts exist
-- Per recording notes that you write yourself
 - A retention sweep that expires old cloud videos so the free storage tier lasts longer
 
 ## A note on storage

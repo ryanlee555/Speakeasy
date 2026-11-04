@@ -4,6 +4,19 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
+## Home page updated for the AI Coach — built and pushed 2026-11-04
+
+`index.html` now matches what the product does.
+- **New AI Coach section** (`#coach`, between Getting started and Features, also in the top nav): three points on the left (a bold heading with its paragraph underneath, top-aligned with the box), plus a sign-in button and a note on what the coach receives. On the right is a picture of the coach panel, labeled "Example grade", with made-up sample scores. Its colors were calculated once from `coachColor()` in `library.html`, so if that scale changes, these inline values need updating too.
+- **Scroll animation:** the first time each bar scrolls into view it fills left to right and its number counts up from 0, in 0.7s (`IntersectionObserver` at the end of the page). With JavaScript off or reduced motion on, the final values just show.
+- **Hero:** the blurb and the line under Sign in now mention the coach. The blurb's max width went from 400 to 470 px.
+- **Getting started:** now five steps with a new "Get coached" step. Removed "transcript (coming soon)". Step 1 mentions the Daily Challenge and step 2 mentions pressing Attempt.
+- **Features:** new "Live transcripts" card, and the "Notes on every take" card is gone. Still five across on desktop; three over two (centered) on tablets, with no lone card on phones.
+- **Decision (user, 2026-11-04): per-recording notes will not be built.** Removed from the home page and `README.md`, and marked dropped in the roadmap below.
+- **Left as is:** the About text, which is the user's own story, and `assets/demo.mp4`, dated 2026-09-09, so it predates the transcript, coach and new player. It should be re-recorded to show the current product.
+
+**Checked in the browser pane:** desktop and 375 px phone layouts, with no sideways scroll and no console errors. Links not clicked through.
+
 ## AI Coach: score colors, bold details, clickable timestamps — built and pushed 2026-11-04
 
 All in `library.html`, client side only, so existing grades get it with no re-grade, migration or function deploy.
@@ -310,7 +323,7 @@ Still to decide: the window (30 / 60 / 90 days), whether it is user-configurable
 or fixed, and whether cards should show "expires in N days".
 
 ### P3 — product features already scoped
-- **Per-recording notes** (roadmap §2.5). Was next before the library work
+- ~~**Per-recording notes**~~ **Dropped by the user 2026-11-04.** (roadmap §2.5). Was next before the library work
   jumped the queue. Now easier than it was: `library.html` is the natural home
   for writing and reading notes, and a `notes text` column is a one-line addition
   to the migration pattern already established.
@@ -727,7 +740,7 @@ Grouped by dependency, not strict priority order — reorder freely.
   - **Click-to-replay works for local recordings only**, and this is a deliberate scope decision, not a stopgap: FSAA actually supports reading a previously-granted folder back (not just writing to it), so clips saved locally can be replayed in the browser today without needing Storage at all. The recorder's `onstop` handler now computes one shared `base` filename (via new `fsaaBase()` helper) and passes it to *both* the IndexedDB record (as `fsaaFile`) and the actual saved file, so a Library row knows exactly which file to reopen. Clicking a row calls `playLibraryRecord()`, which reads the file via the existing `dirHandle`, builds a blob URL, and drops it into the same review player used right after recording.
   - Cloud-sourced rows (signed in) never get `fsaaFile` — the Supabase `recordings` table has no such column and doesn't need one — so those rows render correctly as non-playable. This is intentional and matches reality: video Storage is still deferred, so there is no video to play back for a cloud row yet. Clicking a non-playable/disconnected row shows an inline status message instead of failing silently (e.g. "reconnect your save folder (SET SAVE DIR) to watch local recordings").
   - **Verified in-browser 2026-08-14** by injecting real records via the app's own `saveRecordingMeta()`/`refreshStats()` functions (camera/mic aren't available in the automated browser environment, so an actual end-to-end recording couldn't be driven there): list renders correctly with real dates/modes/durations/topics, empty-state message shows/hides correctly, the local ↔ cloud source switch was exercised directly (toggling `session`) and both branches render without errors, and the playable-row click path was confirmed to hit `playLibraryRecord()` and show the correct fallback message when no folder is connected. **Click-to-replay against a real saved `.webm` file confirmed working by the user 2026-08-14** — recorded locally with a real folder granted, clicked the row in the Library list, and the clip played back. Library panel is fully done, both the list and local playback.
-- [ ] **Per-recording notes** — attach a text note to any recording so the user can look back and see progress. Needs a `notes` column (or a `notes` table) added to the Supabase schema, plus the same field on the local IndexedDB record. Depends on Library being real first.
+- [x] ~~**Per-recording notes**~~ **Dropped by the user 2026-11-04, will not be built.** Attach a text note to any recording so the user can look back and see progress. Needs a `notes` column (or a `notes` table) added to the Supabase schema, plus the same field on the local IndexedDB record. Depends on Library being real first.
 - [x] **Daily Challenge — done 2026-09-08.** One globally-shared prompt per day, identical for every user, at the top of Topic mode. Went with the date-seeded no-backend approach: `(utcEpochDay*362 + 61) % 585` over the topic prompts, 362 chosen so the sequence is a full permutation that also doesn't alias with the category blocks. Recordings tagged `isDaily` locally; a `◆`/"Daily" marker in the Library. Cloud tagging (an `is_daily` column) deferred to bundle with the next Supabase change — the shared-prompt feature works regardless. Full detail + verification in Current state above.
 
 ### 2.6 Polish + presentation
