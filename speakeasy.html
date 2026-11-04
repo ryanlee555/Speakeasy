@@ -151,7 +151,17 @@ body{
 }
 
 /* layout */
-.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:stretch}
+/* both columns end on the same line in every mode: the last card in each column
+   stretches to match the taller column, and its contents spread into the extra room */
+.grid>div{display:flex;flex-direction:column}
+.grid>div>:last-child{flex:1}
+#streakCard{display:flex;flex-direction:column}
+#streakCard .streak-row{flex:1}
+#streakCard .streak-row>div{display:flex;flex-direction:column;justify-content:center}
+.rpg{display:flex;flex-direction:column}
+.rpg #topicPane,.rpg .freeplay-copy{flex:1}
+.rpg .freeplay-copy{margin-top:0}   /* flex children don't collapse margins; this keeps the old 16px gap under the mode switch */
 @media (max-width:820px){.grid{grid-template-columns:1fr}}
 
 .panel{
@@ -486,9 +496,9 @@ body.is-review .scrub{display:flex}
       <div class="panel" id="streakCard">
         <div class="phead">Daily activity</div>
         <div class="streak-row">
-          <div><span id="streakNum">0</span><small>day streak</small></div>
-          <div><span id="streakRecs">0</span><small>recordings</small></div>
-          <div><span id="streakMin">0</span><small>min practiced</small></div>
+          <div><div><span id="streakNum">0</span><small>day streak</small></div></div>
+          <div><div><span id="streakRecs">0</span><small>recordings</small></div></div>
+          <div><div><span id="streakMin">0</span><small>min practiced</small></div></div>
         </div>
       </div>
     </div>
