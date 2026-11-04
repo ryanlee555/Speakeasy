@@ -434,8 +434,9 @@ body{
 .coach-top .sc{font-family:'Fraunces',serif;font-size:17px;font-variant-numeric:tabular-nums}
 .coach-top .chev{color:var(--ink-faint);font-size:11px;transition:transform .2s}
 .coach-cat.open .chev{transform:rotate(180deg)}
-.cbar{position:relative;height:6px;border-radius:99px;background:linear-gradient(90deg,#cd7362,#dd9257 50%,#8fa892)}
-.cbar i{position:absolute;top:0;right:0;bottom:0;width:calc(100% - var(--s) * 1%);background:rgba(32,25,17,.82);border-radius:0 99px 99px 0}
+/* the whole fill shifts with the score (colors from coachColor), so a high score reads green from end to end */
+.cbar{position:relative;height:6px;border-radius:99px;background:rgba(244,229,205,.09)}
+.cbar i{position:absolute;top:0;left:0;bottom:0;width:calc(var(--s) * 1%);background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:99px}
 .cbar b{position:absolute;top:50%;left:calc(var(--s) * 1%);width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
   background:var(--ink);box-shadow:0 0 0 3px rgba(16,13,11,.6)}
 .coach-detail{display:none;padding:2px 2px 14px;font-size:12.5px;line-height:1.65;color:var(--ink-dim)}
@@ -443,6 +444,11 @@ body{
 .coach-detail h4{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;margin:10px 0 4px}
 .coach-detail ul{margin:0;padding-left:18px}
 .coach-detail li{margin-bottom:4px}
+.coach-em{color:var(--ink);font-weight:600}
+.coach-ts{background:none;border:0;padding:0;font:inherit;font-weight:600;color:var(--ember);cursor:pointer;
+  font-variant-numeric:tabular-nums;white-space:nowrap;text-decoration:underline;text-decoration-color:rgba(221,146,87,.4);text-underline-offset:2px}
+.coach-ts:hover{text-decoration-color:var(--ember)}
+.coach-ts:focus-visible{outline:2px solid var(--ember);outline-offset:2px;border-radius:3px}
 .coach-overall{margin-top:12px;padding-top:14px;border-top:1px solid var(--border-soft)}
 .coach-overall .coach-top{margin-bottom:10px}
 .coach-overall .nm{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
@@ -1433,7 +1439,33 @@ function coachEnter(){ coachActive=true; coachPanel.hidden=false; coachRender();
 function coachLeave(){ coachActive=false; coachPanel.hidden=true; }
 
 function coachState(html){ coachPanel.innerHTML='<div class="tx-state">'+html+'</div>'; }
-function coachBar(s){ return '<div class="cbar" style="--s:'+s+'"><i></i><b></b></div>'; }
+function coachBar(s){ return '<div class="cbar" style="--s:'+s+';--c1:'+coachColor(s-25)+';--c2:'+coachColor(s)+'"><i></i><b></b></div>'; }
+// a score's color. The stops follow the coach's scale (40-55 typical, 56-70 solid, 71-85 strong), so green means strong
+const COACH_STOPS=[[35,[205,115,98]],[58,[221,146,87]],[80,[132,193,132]]];
+function coachColor(s){
+  const st=COACH_STOPS, last=st[st.length-1];
+  if(s<=st[0][0]) return 'rgb('+st[0][1]+')';
+  if(s>=last[0]) return 'rgb('+last[1]+')';
+  const i=st.findIndex(x=>s<x[0]), a=st[i-1], b=st[i], f=(s-a[0])/(b[0]-a[0]);
+  return 'rgb('+a[1].map((v,k)=>Math.round(v+(b[1][k]-v)*f))+')';
+}
+// a time in the coach's text: a link to that moment, or just bold if it's past the end of the take
+function coachTs(label){
+  const p=label.split(':'), sec=(+p[0])*60+(+p[1]), len=pcLength();
+  if(len && sec>len+1) return '<strong class="coach-em">'+label+'</strong>';
+  return '<button class="coach-ts" type="button" data-t="'+sec+'" aria-label="Jump to '+label+' in the video">'+label+'</button>';
+}
+// One pass over the escaped text, so a replacement never gets matched again. In order: quoted phrases,
+// [0:42] or [0:42-0:50], a bare 0:42, and measurements like 125 wpm. No lookbehind: older Safari can't parse it.
+const COACH_RICH=/(&quot;|“)(.+?)(&quot;|”)|\[(\d{1,2}:[0-5]\d(?:\s*(?:-|–|—|to|,|and)\s*\d{1,2}:[0-5]\d)*)\]|(^|[^\d:])(\d{1,2}:[0-5]\d)(?![\d:])|\b\d+(?:\.\d+)?(?:\s?(?:wpm|words per minute|semitones?|dB|seconds?)\b|s\b|%)/g;
+function coachRich(text){
+  return esc(text).replace(COACH_RICH,(m,open,quote,close,group,pre,bare)=>{
+    if(quote!==undefined) return '<strong class="coach-em">'+open+quote+close+'</strong>';
+    if(group!==undefined) return group.replace(/\s*[-–—]\s*/g,'–').replace(/\d{1,2}:[0-5]\d/g,x=>coachTs(x));
+    if(bare!==undefined) return pre+coachTs(bare);
+    return '<strong class="coach-em">'+m+'</strong>';
+  });
+}
 function coachRender(){
   if(!coachActive || !curRec) return;
   if(coachJob && coachJob.id===curRec.id){
@@ -1464,22 +1496,31 @@ function coachShow(res){
   coachPanel.innerHTML='<div class="coach-list">'+cats.map(c=>
       '<div class="coach-cat'+(coachOpen.has(c.id)?' open':'')+'">'
     +   '<button class="coach-row" type="button" data-cat="'+c.id+'" aria-expanded="'+coachOpen.has(c.id)+'">'
-    +     '<div class="coach-top"><span class="nm">'+esc(c.label)+'</span><span class="sc">'+c.score+'</span><span class="chev">▾</span></div>'
+    +     '<div class="coach-top"><span class="nm">'+esc(c.label)+'</span><span class="sc" style="color:'+coachColor(c.score)+'">'+c.score+'</span><span class="chev">▾</span></div>'
     +     coachBar(c.score)
     +   '</button>'
-    +   '<div class="coach-detail"><h4>Why this score</h4><p>'+esc(c.reasoning||'')+'</p>'
-    +     ((c.tips&&c.tips.length)?'<h4>How to improve</h4><ul>'+c.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>':'')
+    +   '<div class="coach-detail"><h4>Why this score</h4><p>'+coachRich(c.reasoning||'')+'</p>'
+    +     ((c.tips&&c.tips.length)?'<h4>How to improve</h4><ul>'+c.tips.map(t=>'<li>'+coachRich(t)+'</li>').join('')+'</ul>':'')
     +   '</div></div>').join('')+'</div>'
-    + '<div class="coach-overall"><div class="coach-top"><span class="nm">Overall</span><span class="sc">'+overall+'</span></div>'+coachBar(overall)+'</div>'
-    + '<div class="coach-sum">'+(res.summary?esc(res.summary):'')
-    +   (res.strength?'<br><br><b>Keep doing:</b> '+esc(res.strength):'')
-    +   (res.focus?'<br><b>Work on next:</b> '+esc(res.focus):'')+'</div>'
+    + '<div class="coach-overall"><div class="coach-top"><span class="nm">Overall</span><span class="sc" style="color:'+coachColor(overall)+'">'+overall+'</span></div>'+coachBar(overall)+'</div>'
+    + '<div class="coach-sum">'+(res.summary?coachRich(res.summary):'')
+    +   (res.strength?'<br><br><b>Keep doing:</b> '+coachRich(res.strength):'')
+    +   (res.focus?'<br><b>Work on next:</b> '+coachRich(res.focus):'')+'</div>'
     + '<div class="coach-foot"><span>Graded by Claude from your transcript and voice'
     +   ((+res.frames>0)?', plus '+(+res.frames)+' still frames':'')+'. AI feedback can be wrong.</span>'
     +   '<button class="linkbtn" type="button" data-coach="go">Re-grade</button></div>';
 }
 coachPanel.addEventListener('click',e=>{
   if(e.target.closest('[data-coach="go"]')){ coachStart(); return; }
+  const ts=e.target.closest('[data-t]');
+  if(ts){
+    playVideo.currentTime=+ts.dataset.t;
+    pcPaint();
+    playVideo.play().catch(()=>{});
+    playStage.scrollIntoView({block:'nearest'});  // when the panel is stacked under the video on small screens
+    if(e.detail) ts.blur();                       // after a mouse click, Space goes back to play/pause
+    return;
+  }
   const row=e.target.closest('[data-cat]');
   if(row){
     const id=row.dataset.cat, cat=row.parentElement;

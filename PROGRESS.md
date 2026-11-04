@@ -4,6 +4,20 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
+## AI Coach: score colors, bold details, clickable timestamps — built 2026-11-04, not yet committed or pushed
+
+All in `library.html`, client side only, so existing grades get it with no re-grade, migration or function deploy.
+
+**Score colors:** the bar used to be one fixed red-to-sage gradient that the score revealed, so a 72 still looked mostly red. Now the whole fill shifts with the score. `coachColor()` maps a score to a color, red up to 35, ember at 58, green (same `#84c184` as the studio's Easy) from 80, following the coach's own scale in the function's prompt (40-55 typical, 56-70 solid, 71-85 strong). `coachBar()` runs each fill from `coachColor(s-25)` to `coachColor(s)`. The number uses the same color, including Overall.
+
+**Bold and timestamps:** `coachRich()` formats the reasoning, tips, summary, Keep doing and Work on next, escaping first. Quoted phrases and measurements (125 wpm, 2.4 seconds, 12%, semitones, dB) are bold. Timestamps (`[0:42]`, `[0:42-0:50]`, a bare `0:42`) become ember links that seek and play, matching the transcript's click behavior. The brackets are dropped because the link styling replaces them. A time past the end of the take is bold but not a link.
+
+**Verified in the browser pane with a sample grade on a local take (nothing saved):** seeking landed at the right time and the player's time display followed; an out-of-range time, `1:05:10` and `3:1` were not linked; planted HTML stayed as plain text; no console errors. **Not verified:** a real grade from the live site, or Safari and Firefox.
+
+## Expanded library playback is slow — set aside by the user 2026-11-04, not fixed
+
+The user reported dropped frames when expanding a take in the library player, then chose to leave it for now. In the user's Chrome, expanded playback showed 12-16 fps video and the page at about 20-39 fps, while normal size reached 29.6 fps and 60 fps. Hiding the controls and caption and stopping the per-frame timeline and caption loops did not clearly help (4.6-12.2 fps), so they look unlikely as the cause. Results swung a lot between runs, and that run was not clean (older test script, no page reload). **No cause is proven.** Next test if this comes back: rerun on mains power with the machine's low power setting off, then try full-screening only the `<video>` element instead of the stage. Machine details are in `PRIVATE-NOTES.md`.
+
 ## Attempt button, enlarged view, level colors, custom player controls — built and pushed 2026-11-03
 
 **Attempt (`speakeasy.html`):** Topic and Words now have an Attempt button under the prompt, mirroring the daily's. Rec won't start until the user has chosen the regular prompt or the daily (`hasPick()`); Freeplay needs no choice. Pressing Rec without one shows an ember status line and pulses the Attempt and daily buttons (`nudgeAttempt()`). New topic, a filter change or a saved take clears the choice; Retake keeps it. The two choices are exclusive within a mode.
