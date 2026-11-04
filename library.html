@@ -261,6 +261,9 @@ body{
 .modal-backdrop{position:fixed;inset:0;background:rgba(16,13,11,.78);backdrop-filter:blur(5px);
   display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
 .modal-backdrop.show{display:flex}
+/* No blur behind the video player: a blurred layer over a playing video is re-blurred every frame,
+   which made Chrome drop over half the frames (measured 2026-11-03: 8.5 fps with blur, 23 fps without). */
+#playBackdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(16,13,11,.9)}
 .modal{background:var(--panel);border:1px solid var(--border-soft);border-radius:20px;
   box-shadow:0 24px 60px -20px var(--shadow);padding:24px;width:100%;max-width:360px}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
