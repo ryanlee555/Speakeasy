@@ -21,6 +21,9 @@
   --ember:#dd9257;
   --ember-soft:rgba(221,146,87,.14);
   --sage:#8fa892;
+  --easy:#84c184;
+  --hard:#e0645a;
+  --chip-default:#e8dac0;
   --rec:#cd7362;
   --shadow:rgba(0,0,0,.35);
 }
@@ -176,9 +179,10 @@ body{
 
 /* camera */
 .screen{
-  position:relative;width:100%;aspect-ratio:16/10;background:#0b0908;
+  position:relative;width:100%;height:100%;background:#0b0908;
   border:1px solid var(--border);border-radius:16px;overflow:hidden;
 }
+.screen-slot{width:100%;aspect-ratio:16/10}
 .screen video{width:100%;height:100%;object-fit:cover;display:block;background:#0b0908}
 .screen video.mirror{transform:scaleX(-1)}
 .overlay{
@@ -261,6 +265,70 @@ body.is-review .scrub{display:flex}
 .scrub input[type=range]:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
 .scrub-time{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
 
+/* enlarge: the same box fills the window, with the time and the prompt on screen */
+.screen-expand{
+  position:absolute;top:12px;right:12px;z-index:7;width:34px;height:34px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;
+  background:rgba(16,13,11,.78);border:1px solid var(--border-soft);color:var(--ink);
+  transition:color .15s,border-color .15s;
+}
+.screen-expand:hover{color:var(--ember);border-color:var(--ember)}
+.screen-expand:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.screen-expand svg{width:15px;height:15px;display:block}
+.screen-expand .ic-shrink{display:none}
+.overlay:not(.hide) ~ .screen-expand{display:none}
+.big-top,.big-dock{display:none}
+body.big-open{overflow:hidden}
+.screen.is-big{
+  position:fixed;inset:0;z-index:200;width:auto;height:auto;border:0;border-radius:0;
+  display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);
+}
+.screen.is-big video{grid-row:2;grid-column:1;object-fit:contain;min-height:0}
+.screen.is-big .screen-expand{top:20px;right:24px;width:40px;height:40px}
+.screen.is-big .screen-expand svg{width:17px;height:17px}
+.screen.is-big .ic-grow{display:none}
+.screen.is-big .ic-shrink{display:block}
+/* no blur up here: blur over moving video is what made playback choppy before */
+.screen.is-big .badge{display:flex;z-index:7;top:20px;left:24px;height:40px;padding:0 16px;font-size:18px;
+  font-variant-numeric:tabular-nums;background:rgba(16,13,11,.86);backdrop-filter:none;-webkit-backdrop-filter:none}
+.screen.is-big .playhint{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(16,13,11,.72)}
+body:not(.is-rec):not(.is-review) .recdot{display:none}
+.screen.is-big .big-top{
+  grid-row:1;grid-column:1;position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;
+  gap:8px;padding:18px 130px 16px;text-align:center;background:#0b0908;
+}
+.big-label{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
+.big-label.is-unpicked{color:var(--ink-faint)}
+.big-prompt{font-family:'Fraunces',serif;font-size:clamp(19px,2.4vw,28px);font-weight:440;line-height:1.3;color:var(--ink);max-width:880px;text-wrap:balance}
+.big-prompt.is-word{font-size:clamp(30px,4.4vw,52px);line-height:1.1;color:var(--ember)}
+.big-attempt{margin-top:4px}
+.big-attempt[hidden]{display:none}
+.screen.is-big .big-dock{
+  grid-row:3;grid-column:1;position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;
+  gap:12px;padding:14px 24px 22px;background:#0b0908;
+}
+.big-dock .scrub{width:min(760px,100%);margin:0}
+.big-dock .recrow{justify-content:center;margin:0}
+.big-dock .status{color:var(--ink-dim)}
+@media (max-width:720px){
+  .screen.is-big .big-top{padding:72px 18px 12px}
+}
+
+/* attempt: you commit to a prompt before recording, same as the daily */
+.attempt-btn{display:block;width:100%;text-align:center;margin-top:12px}
+.status--warn{color:var(--ember);font-weight:500}
+.nudge{animation:nudge 2.1s ease-out 1}
+@keyframes nudge{
+  0%,33%,66%,100%{box-shadow:0 0 0 0 rgba(221,146,87,0)}
+  12%,45%,78%{box-shadow:0 0 0 4px rgba(221,146,87,.45);border-color:var(--ember);color:var(--ember)}
+}
+@media (prefers-reduced-motion:reduce){
+  .nudge{animation:none;border-color:var(--ember);color:var(--ember);box-shadow:0 0 0 2px rgba(221,146,87,.45)}
+}
+/* while recording the prompt is locked in, so its controls step back */
+body.is-rec .rpg .modeseg,body.is-rec .rpg #dailyCard,body.is-rec .rpg .filterrow,
+body.is-rec .rpg .dursel,body.is-rec .rpg #newTopic{opacity:.4;transition:opacity .2s}
+
 /* capture mode switch (camera <-> audio only), shown once capture is on */
 .capbar{margin:12px 0 0;display:flex}
 .capbar[hidden]{display:none}
@@ -270,9 +338,9 @@ body.is-review .scrub{display:flex}
   font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid transparent;
 }
-.diff-pill.easy{color:var(--sage);border-color:rgba(143,168,146,.4)}
+.diff-pill.easy{color:var(--easy);border-color:rgba(132,193,132,.4)}
 .diff-pill.medium{color:var(--ember);border-color:rgba(221,146,87,.4)}
-.diff-pill.hard{color:var(--rec);border-color:rgba(205,115,98,.5)}
+.diff-pill.hard{color:var(--hard);border-color:rgba(224,100,90,.5)}
 .daily-diff{flex:0 0 auto;padding:2px 8px;font-size:9px}
 /* active: the daily gets louder, not hidden */
 .daily.is-active{
@@ -344,9 +412,19 @@ body.is-review .scrub{display:flex}
 .dur.is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.4);color:var(--ember)}
 .dur:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 /* the default choice (Random, All levels) is sage so it reads as "the default", selected or not */
-.dur--default{color:var(--sage);border-color:rgba(143,168,146,.3)}
-.dur--default:hover{color:var(--sage);border-color:rgba(143,168,146,.55)}
-.dur--default.is-active{background:rgba(143,168,146,.14);border-color:rgba(143,168,146,.5);color:var(--sage)}
+/* defaults (Random, All levels) are cream; each level wears its own color */
+.dur--default{color:var(--chip-default);border-color:rgba(232,218,192,.3)}
+.dur--default:hover{color:var(--chip-default);border-color:rgba(232,218,192,.55)}
+.dur--default.is-active{background:rgba(232,218,192,.13);border-color:rgba(232,218,192,.55);color:var(--chip-default)}
+.dur[data-diff=easy]{color:var(--easy);border-color:rgba(132,193,132,.3)}
+.dur[data-diff=easy]:hover{color:var(--easy);border-color:rgba(132,193,132,.55)}
+.dur[data-diff=easy].is-active{background:rgba(132,193,132,.14);border-color:rgba(132,193,132,.55);color:var(--easy)}
+.dur[data-diff=medium]{color:var(--ember);border-color:rgba(221,146,87,.3)}
+.dur[data-diff=medium]:hover{color:var(--ember);border-color:rgba(221,146,87,.55)}
+.dur[data-diff=medium].is-active{background:var(--ember-soft);border-color:rgba(221,146,87,.55);color:var(--ember)}
+.dur[data-diff=hard]{color:var(--hard);border-color:rgba(224,100,90,.3)}
+.dur[data-diff=hard]:hover{color:var(--hard);border-color:rgba(224,100,90,.55)}
+.dur[data-diff=hard].is-active{background:rgba(224,100,90,.14);border-color:rgba(224,100,90,.55);color:var(--hard)}
 .dur-custom{padding:8px 12px}
 .dur-custom input{
   background:transparent;border:0;outline:0;color:var(--ink-dim);
@@ -458,7 +536,7 @@ body.is-review .scrub{display:flex}
           <span class="phead-title">Rec Studio</span>
           <button class="toggle toggle--mini" id="mirrorBtn" type="button">Mirror <span class="v">off</span></button>
         </div>
-        <div class="screen">
+        <div class="screen-slot"><div class="screen" id="screenBox">
           <video id="screen" playsinline></video>
           <div class="badge"><span class="recdot"></span><span id="timer">0:00</span></div>
           <div class="playhint">▶</div>
@@ -466,6 +544,12 @@ body.is-review .scrub{display:flex}
             <div class="bars"><i style="height:16px"></i><i style="height:38px"></i><i style="height:24px"></i><i style="height:52px"></i><i style="height:30px"></i><i style="height:44px"></i><i style="height:18px"></i></div>
             <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)">Audio only</div>
           </div>
+          <div class="big-top" id="bigTop">
+            <div class="big-label" id="bigLabel"></div>
+            <div class="big-prompt" id="bigPrompt"></div>
+            <button class="pbtn pbtn--ghost pbtn--sm big-attempt" type="button" id="bigAttempt" hidden></button>
+          </div>
+          <div class="big-dock" id="bigDock"></div>
           <div class="overlay" id="overlay">
             <div class="big">Ready when you are</div>
             <div class="sub">Record yourself speaking. Enabling the camera is recommended.</div>
@@ -474,7 +558,11 @@ body.is-review .scrub{display:flex}
               <button class="pbtn pbtn--ghost pbtn--sm" id="enableAudioBtn">Audio only</button>
             </div>
           </div>
-        </div>
+          <button class="screen-expand" id="expandBtn" type="button" aria-label="Enlarge the recording" title="Enlarge">
+            <svg class="ic-grow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>
+            <svg class="ic-shrink" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5V6H2.5M13.5 6H10V2.5M10 13.5V10h3.5M2.5 10H6v3.5"/></svg>
+          </button>
+        </div></div>
 
         <div class="capbar" id="capBar" hidden>
           <button class="pbtn pbtn--ghost pbtn--sm" id="switchCapBtn" type="button">Turn on camera</button>
@@ -509,7 +597,7 @@ body.is-review .scrub{display:flex}
 
     <!-- SIDE -->
     <div>
-      <div class="rpg">
+      <div class="rpg" id="rpgCard">
         <div class="phead"><span id="rpgTitle">Practice mode</span></div>
 
         <div class="modeseg" id="recModeSeg">
@@ -545,6 +633,7 @@ body.is-review .scrub{display:flex}
           </div>
           <div class="daily-tag" id="dailyTag" hidden>◆ Today's Daily Challenge</div>
           <div class="topic" id="topic">Convince me to visit a city you've never been to.</div>
+          <button class="pbtn pbtn--ghost pbtn--sm daily-btn attempt-btn" type="button" id="attemptBtn">Attempt this topic</button>
         </div>
 
         <div class="freeplay-copy" id="freeplayPane" style="display:none">
@@ -8154,6 +8243,13 @@ const selected={topic:{cat:'all',diff:'all'},words:{cat:'all',diff:'all'}};
 /* the prompt on screen, per mode, so toggling modes doesn't reroll it */
 const currentText={topic:'',words:''};
 const currentItem={topic:null,words:null};
+/* "I'm attempting the prompt on screen", per mode. Recording needs this or the daily. */
+const attempting={topic:false,words:false};
+/* the regular prompt to go back to when a daily attempt ends */
+const beforeDaily={topic:null,words:null};
+/* the take's prompt, fixed when recording starts, so nothing can change it mid-take */
+let recPick=null;
+const attemptBtn=$('#attemptBtn'), bigAttempt=$('#bigAttempt');
 /* ids shown this session so "new topic" doesn't hand back the same one */
 const recentIds=[], RECENT_MAX=60;
 
@@ -8177,6 +8273,7 @@ function pickTopic(){
   if(recMode==='freeplay') return;
   if(!libOK){ topicEl.textContent="Prompt library failed to initialize. Try reloading the page."; return; }
   setDailyActive(false); // rerolling or filtering opts out of the daily
+  attempting[recMode]=false; beforeDaily[recMode]=null; // and out of attempting the old prompt
   const {cat,diff}=selected[recMode];
   // never hand back today's daily as the regular prompt — they should differ
   const dId = dailyItems[recMode] && dailyItems[recMode].id;
@@ -8184,6 +8281,7 @@ function pickTopic(){
   if(!item){
     topicEl.textContent=(recMode==='words'?'No words':'No topics')+' match that combo yet. Try a different filter.';
     currentItem[recMode]=null;
+    renderAttempt();
     return;
   }
   recentIds.push(item.id);
@@ -8191,6 +8289,7 @@ function pickTopic(){
   currentText[recMode]=item.text;
   currentItem[recMode]=item;
   topicEl.textContent=item.text;
+  renderAttempt();
 }
 $('#newTopic').addEventListener('click',pickTopic);
 
@@ -8275,24 +8374,132 @@ function setDailyActive(on){
   if(on){ if(dailyItems[m]) dailyActiveMode=m; }        // switches the attempt to this mode
   else if(dailyActiveMode===m){ dailyActiveMode=null; } // only this mode's own reroll/filter clears it
   renderDailyCard();
+  renderAttempt();
+}
+/* a daily attempt ended: put back the regular prompt it replaced, so the daily's
+   text isn't left sitting in the regular slot looking like an ordinary pick */
+function restoreRegular(m){
+  const b=beforeDaily[m];
+  beforeDaily[m]=null;
+  currentItem[m]=b||null;
+  currentText[m]=b?b.text:'';
+  if(m!==recMode) return;                // applyRecMode restores or rerolls it on the way back
+  if(b){ topicEl.textContent=b.text; renderAttempt(); }
+  else pickTopic();
 }
 function armDaily(){
   const m=recMode;
   if(m!=='topic'&&m!=='words') return;
   const item=dailyItems[m];
   if(!item) return;
+  const other=m==='topic'?'words':'topic';
+  if(dailyActiveMode===other) restoreRegular(other);   // only one daily runs at a time
+  if(dailyActiveMode!==m && currentItem[m] && currentItem[m].id!==item.id) beforeDaily[m]=currentItem[m];
+  attempting[m]=false;
   currentText[m]=item.text;
   currentItem[m]=item;
   topicEl.textContent=item.text;
   if(recentIds.indexOf(item.id)===-1) recentIds.push(item.id);
   setDailyActive(true);
 }
+function dropDaily(){ setDailyActive(false); restoreRegular(recMode); }
 dailyBtn.addEventListener('click',()=>{
-  if(dailyActiveMode===recMode){ setDailyActive(false); return; } // toggle off
+  if(dailyActiveMode===recMode){ dropDaily(); return; } // toggle off
   armDaily();
 });
 dailyRetry.addEventListener('click',armDaily); // re-attempt after completing it today
 computeDaily();
+
+/* ── Attempt: recording needs a chosen prompt. Freeplay has none to choose. ── */
+function hasPick(m){
+  m=m||recMode;
+  if(m==='freeplay'||!libOK) return true;  // a broken library shouldn't stop someone recording
+  return dailyActiveMode===m || (attempting[m] && !!currentItem[m]);
+}
+function idleStatus(){ return audioOnly?'audio only, hit REC':'ready, hit REC'; }
+function toggleAttempt(){
+  const m=recMode;
+  if(m==='freeplay'||!currentItem[m]) return;
+  if(dailyActiveMode===m){ dropDaily(); return; }
+  attempting[m]=!attempting[m];
+  renderAttempt();
+}
+function attemptLabel(){ return recMode==='words'?'Attempt this word':'Attempt this topic'; }
+function renderAttempt(){
+  const m=recMode;
+  if(m!=='freeplay'){
+    const isWord=m==='words', daily=dailyActiveMode===m, on=daily||(attempting[m]&&!!currentItem[m]);
+    attemptBtn.classList.toggle('is-active',on);
+    attemptBtn.disabled=!currentItem[m];
+    attemptBtn.textContent = daily ? (isWord?"✓ Attempting today's word":"✓ Attempting today's challenge")
+      : on ? (isWord?'✓ Attempting this word':'✓ Attempting this topic')
+      : attemptLabel();
+  }
+  if(hasPick() && status.classList.contains('status--warn')){
+    status.classList.remove('status--warn');
+    status.textContent=idleStatus();
+  }
+  renderBigPrompt();
+}
+/* someone hit Rec without choosing: say so next to the button and point at the choices */
+function nudgeAttempt(){
+  const big=screenBox.classList.contains('is-big');
+  status.classList.add('status--warn');
+  status.textContent = !currentItem[recMode]
+    ? 'no prompt matches these filters. change a filter to get one, then choose it'
+    : 'choose what you\'re attempting first: press "'+attemptLabel()+'" '+(big?'above':'on the right');
+  [attemptBtn,bigAttempt,dailyBtn].forEach(b=>{
+    if(b.disabled) return;
+    b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge');
+  });
+  if(!big) attemptBtn.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+[attemptBtn,bigAttempt,dailyBtn].forEach(b=>b.addEventListener('animationend',()=>b.classList.remove('nudge')));
+attemptBtn.addEventListener('click',toggleAttempt);
+bigAttempt.addEventListener('click',toggleAttempt);
+
+/* ── Enlarge: the capture box fills the window, with the time and prompt in view.
+   The Rec row and the scrubber move into the box while it's big and move back after. ── */
+const screenBox=$('#screenBox'), expandBtn=$('#expandBtn'), bigDock=$('#bigDock');
+const bigLabel=$('#bigLabel'), bigPrompt=$('#bigPrompt');
+const scrubBar=$('#scrubBar'), recRow=$('.recrow');
+function renderBigPrompt(){
+  const m=recPick?recPick.mode:recMode;
+  if(m==='freeplay'){
+    bigLabel.textContent='Freeplay'; bigLabel.classList.remove('is-unpicked');
+    bigPrompt.textContent='No prompt, speak freely'; bigPrompt.classList.remove('is-word');
+    bigAttempt.hidden=true;
+    return;
+  }
+  const isWord=m==='words';
+  const daily=recPick?recPick.isDaily:dailyActiveMode===m;
+  const picked=recPick?true:hasPick(m);
+  bigLabel.textContent = daily ? (isWord?"Today's word":"Today's challenge")
+    : picked ? (isWord?'Attempting this word':'Attempting this topic')
+    : 'Not chosen yet';
+  bigLabel.classList.toggle('is-unpicked',!picked);
+  bigPrompt.textContent=recPick?recPick.text:topicEl.textContent.trim();
+  bigPrompt.classList.toggle('is-word',isWord);
+  bigAttempt.hidden = picked || !currentItem[m];
+  bigAttempt.textContent=attemptLabel();
+}
+/* before a take, the enlarged badge shows the time you'll have */
+function paintIdleTimer(){
+  if(recording||document.body.classList.contains('is-review')) return;
+  timerEl.textContent=fmtDur(targetSec||0); timerEl.style.color='#fff';
+}
+function setBig(on){
+  if(on===screenBox.classList.contains('is-big')) return;
+  screenBox.classList.toggle('is-big',on);
+  document.body.classList.toggle('big-open',on);
+  if(on) bigDock.append(scrubBar,recRow);
+  else { capBar.after(scrubBar); scrubBar.after(recRow); }
+  const label=on?'Exit the enlarged view':'Enlarge the recording';
+  expandBtn.setAttribute('aria-label',label); expandBtn.title=on?'Exit (Esc)':'Enlarge';
+  paintIdleTimer(); renderBigPrompt();
+}
+expandBtn.addEventListener('click',()=>setBig(!screenBox.classList.contains('is-big')));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') setBig(false); });
 
 /* rec mode: topic vs words vs freeplay */
 const DUR_PRESETS={
@@ -8363,6 +8570,7 @@ function applyRecMode(mode){
     else pickTopic();
   }
   renderDurations();
+  renderAttempt();
 }
 document.querySelectorAll('#recModeSeg .pbtn').forEach(b=>
   b.addEventListener('click',()=>applyRecMode(b.dataset.recmode)));
@@ -8396,6 +8604,7 @@ function updateCapBar(){
   if(show) switchCapBtn.textContent = audioOnly ? 'Turn on camera' : 'Switch to audio only';
 }
 async function startStream(withVideo){
+  status.classList.remove('status--warn');
   overlay.querySelector('.big').textContent='Ready when you are';
   overlay.querySelector('.sub').textContent='Record yourself speaking. Enabling the camera is recommended.';
   status.textContent='requesting '+(withVideo?'camera + mic':'mic')+'…';
@@ -8412,6 +8621,7 @@ async function startStream(withVideo){
     status.textContent=audioOnly?'audio only, hit REC':'ready, hit REC';
     updateCapBar();
   }catch(err){
+    setBig(false);
     overlay.classList.remove('hide');
     status.textContent='capture blocked here. open the file locally and allow access.';
     overlay.querySelector('.big').textContent='ACCESS DENIED';
@@ -8936,6 +9146,7 @@ function stopRecording(){
   if(!recording) return;
   recorder.stop(); recording=false; clearInterval(tick);
   document.body.classList.remove('is-rec');
+  $('#rpgCard').inert=false;
 }
 function startRecording(){
   chunks=[];
@@ -8957,23 +9168,27 @@ function startRecording(){
     screen.pause(); try{ screen.currentTime=0; }catch(e){}
     stopScrubRaf(); paintScrub(0); curTime.textContent='0:00';
     timerEl.textContent=fmtDur(durationSec); timerEl.style.color='#fff'; // badge shows clip length during review
-    const topicText = recMode==='freeplay' ? '' : $('#topic').textContent.trim();
-    const isDaily = recMode!=='freeplay' && dailyActiveMode===recMode;
+    const {mode:takeMode,text:topicText,isDaily,dailyId}=recPick; // fixed when the take started
     const now=new Date();
     pendingBlob=blob;
-    pendingBase=fsaaBase(now,recMode);
+    pendingBase=fsaaBase(now,takeMode);
     // one client-generated uuid shared by the local record AND the cloud row, so
     // the library can merge the two stores without guessing
     const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
-    pendingMeta={id,dateISO:now.toISOString(),durationSec,mode:recMode,topicText,isDaily,dailyId:isDaily?dailyItems[recMode].id:null,audioOnly,targetSec};
+    pendingMeta={id,dateISO:now.toISOString(),durationSec,mode:takeMode,topicText,isDaily,dailyId,audioOnly,targetSec};
     recBtn.textContent='↺ Retake';
     saveRecBtn.style.display=''; saveRecBtn.disabled=false; saveRecBtn.textContent='💾 Save';
     status.textContent='click the clip to play it. Save keeps it, Retake starts over';
   };
   try{ recorder.start(); }
   catch(e){ console.error('speakeasy recorder:',e); status.textContent='could not start recording, try re-enabling capture'; updateCapBar(); return; }
+  const m=recMode, takeIsDaily=m!=='freeplay'&&dailyActiveMode===m;
+  recPick={mode:m, text:m==='freeplay'?'':topicEl.textContent.trim(), isDaily:takeIsDaily, dailyId:takeIsDaily?dailyItems[m].id:null};
+  renderBigPrompt();
   recording=true; t0=Date.now(); setTimer(); tick=setInterval(setTimer,250);
   document.body.classList.add('is-rec'); recBtn.textContent='■ STOP'; status.textContent='recording…';
+  status.classList.remove('status--warn');
+  $('#rpgCard').inert=true;
 }
 function resetToIdle(){
   pendingBlob=null; pendingBase=null; pendingMeta=null; pendingPoster=null;
@@ -8982,6 +9197,7 @@ function resetToIdle(){
   saveRecBtn.style.display='none'; saveRecBtn.disabled=true; saveRecBtn.textContent='💾 Save';
   stopScrubRaf(); paintScrub(0); curTime.textContent='0:00'; durTime.textContent='0:00';
   recBtn.textContent='● Rec';
+  recPick=null; paintIdleTimer(); renderBigPrompt();
   screen.pause(); screen.removeAttribute('src');
   if(audioOnly){ screen.srcObject=null; status.textContent='audio only, hit REC'; }
   else if(stream){ screen.srcObject=stream; screen.muted=true; screen.play().catch(()=>{}); status.textContent='ready, hit REC'; }
@@ -8991,6 +9207,7 @@ function resetToIdle(){
 recBtn.addEventListener('click',()=>{
   if(recording){ stopRecording(); return; }
   if(document.body.classList.contains('is-review')){ resetToIdle(); return; } // Retake goes back to start, does not record
+  if(!hasPick()){ nudgeAttempt(); return; }
   startRecording();
 });
 
@@ -9008,7 +9225,14 @@ saveRecBtn.addEventListener('click', async ()=>{
   }
   try{ await saveRecordingMeta(rec); }
   catch(e){ console.error('speakeasy meta:',e); }
-  if(rec.isDaily){ markDailyDone(rec.mode); if(dailyActiveMode===rec.mode) dailyActiveMode=null; renderDailyCard(); }
+  if(rec.isDaily){
+    markDailyDone(rec.mode);
+    if(dailyActiveMode===rec.mode){ dailyActiveMode=null; restoreRegular(rec.mode); }
+    renderDailyCard();
+  } else if(rec.mode!=='freeplay'){
+    attempting[rec.mode]=false; // that attempt is done; the next take gets chosen fresh
+  }
+  renderAttempt();
   refreshStats(); notifyRecordsChanged();
   if(dirHandle){
     setSaveStatus('saving…');

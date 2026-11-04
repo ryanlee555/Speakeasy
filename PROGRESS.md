@@ -4,6 +4,23 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
+## Attempt button, enlarged view, level colors, custom player controls — built and pushed 2026-11-03
+
+**Attempt (`speakeasy.html`):** Topic and Words now have an Attempt button under the prompt, mirroring the daily's. Rec won't start until the user has chosen the regular prompt or the daily (`hasPick()`); Freeplay needs no choice. Pressing Rec without one shows an ember status line and pulses the Attempt and daily buttons (`nudgeAttempt()`). New topic, a filter change or a saved take clears the choice; Retake keeps it. The two choices are exclusive within a mode.
+- **Prompt is locked per take:** `recPick` snapshots mode, text and daily status when recording starts, and `onstop` reads that rather than the page. The practice card is `inert` and its controls dim during recording.
+- **Bug fixed along the way:** ending a daily attempt left the daily's text in the regular prompt slot (with the wrong difficulty). `beforeDaily` and `restoreRegular()` now put the earlier regular prompt back.
+
+**Enlarged view (`speakeasy.html`):** a button on the capture box fills the window (`setBig()`, Esc exits, not the OS Fullscreen API), with the timer top left and the prompt top center. Before a take the timer shows the time limit. The box's new `.screen-slot` parent keeps the card's height while enlarged. The real Rec row and scrubber move into the box and back, so Stop, Save and Retake all work there; there is deliberately no blur up there.
+
+**Level colors (`speakeasy.html`):** Easy green (`--easy`), Medium ember, Hard red (`--hard`), applied to the chips and the daily's difficulty pill. All levels and Random are cream (`--chip-default`), replacing last round's sage, which would now read as Easy.
+
+**Audio-only captions (`library.html`):** caption rendering was fine; the caption did draw over the audio tile during playback. The real problem was that native controls lived on the hidden video, so Audio only had no way to play or resume, and a finished clip shows no caption. The new controls fix that. `txTick` also keeps the last line up while paused or ended, in every mode.
+
+**Custom player controls (`library.html`):** native controls are gone, replaced by a floating pill (`#pc`): ember play/pause, time, ember timeline showing buffered progress, mute with a hover volume slider, expand. Clicking the video toggles play, double-click expands. Keys: space or k, left/right for 5s, m, f. Controls fade after 2.6s idle during playback (not in Audio only). Camera only disables the sound controls, since that mode is silent by definition. Expand fullscreens the stage, not the video, so captions and controls come along. `pcLength()` falls back to the saved `durationSec` when a file reports `Infinity`. Native extras (speed, download, picture-in-picture) went with the old controls; not added back since nobody asked.
+
+**Verified in the browser pane:** a fake camera stream ran the gate, record, stop, review, retake and save paths (save stubbed so nothing was written), plus daily interplay across modes, Words, Freeplay, audio only, seek, mute, volume, keyboard, replay, a forced `Infinity` duration, the fade, and a 375 px phone layout. Column bottoms stayed at 0 px difference in the states checked.
+**Not verified:** a real camera; the expand button actually entering full screen (the pane never completes the request, so only its layout was previewed, by applying the same CSS rules by class); Safari and Firefox.
+
 ## ✅ Choppy library playback — cause found and fixed 2026-11-03 (pushed to main)
 
 The user reported laggy, incoherent video, only in library playback (the studio preview and review were fine), on a built-in Mac camera, 8 GB RAM.

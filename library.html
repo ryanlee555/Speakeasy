@@ -336,10 +336,78 @@ body{
 
 /* transcript: live caption over the stage + a scrolling, click-to-seek panel */
 .player-stage{position:relative}
-.tx-cap{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);max-width:88%;
+.tx-cap{position:absolute;z-index:3;left:50%;bottom:66px;transform:translateX(-50%);max-width:88%;
   text-align:center;font-size:15px;line-height:1.45;color:#fff;background:rgba(10,8,7,.74);
   padding:6px 14px;border-radius:10px;pointer-events:none;text-wrap:balance}
 .tx-cap[hidden]{display:none}
+
+/* player controls: a floating pill in the site's own style. No blur behind it,
+   since blur over moving video is what made playback choppy before. */
+.player-stage video{cursor:pointer}
+.player-stage .player-audio{cursor:pointer}
+.pc{
+  position:absolute;z-index:4;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:10px;
+  padding:6px 12px 6px 6px;border-radius:999px;background:rgba(26,21,18,.94);border:1px solid var(--border-soft);
+  box-shadow:0 10px 24px -12px rgba(0,0,0,.7);transition:opacity .2s;
+}
+.pc-btn{
+  flex:0 0 auto;width:30px;height:30px;padding:0;border:0;border-radius:50%;cursor:pointer;background:transparent;
+  color:var(--ink-dim);display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s,filter .15s;
+}
+.pc-btn:hover:not(:disabled){color:var(--ember);background:var(--ember-soft)}
+.pc-btn:disabled{opacity:.35;cursor:not-allowed}
+.pc-btn:focus-visible,.pc input:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.pc-btn svg{width:16px;height:16px;display:block}
+.pc-play{width:34px;height:34px;background:var(--ember);color:#1c1108}
+.pc-play:hover:not(:disabled){background:var(--ember);color:#1c1108;filter:brightness(1.08)}
+.pc-time{flex:0 0 auto;font-family:'Inter',sans-serif;font-size:11.5px;color:var(--ink-dim);font-variant-numeric:tabular-nums;min-width:30px;text-align:center}
+.pc input[type=range]{
+  -webkit-appearance:none;appearance:none;height:5px;border-radius:999px;border:0;margin:0;cursor:pointer;outline:0;
+}
+.pc-seek{
+  flex:1 1 auto;min-width:40px;
+  background:linear-gradient(to right,
+    var(--ember) 0 calc(var(--pct,0)*1%),
+    rgba(244,234,216,.3) calc(var(--pct,0)*1%) calc(var(--buf,0)*1%),
+    rgba(244,234,216,.13) calc(var(--buf,0)*1%) 100%);
+}
+.pc-volwrap{flex:0 0 auto;display:flex;align-items:center}
+.pc-vol{
+  width:0;opacity:0;transition:width .18s,opacity .18s,margin .18s;
+  background:linear-gradient(to right,var(--ember) 0 calc(var(--pct,100)*1%),rgba(244,234,216,.18) calc(var(--pct,100)*1%) 100%);
+}
+.pc-volwrap:hover .pc-vol,.pc-vol:focus-visible{width:64px;opacity:1;margin:0 6px 0 4px}
+.pc input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:12px;height:12px;border-radius:50%;
+  background:var(--ember);border:2px solid var(--panel);box-shadow:0 0 0 1px var(--ember);cursor:pointer;transition:transform .12s;
+}
+.pc input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2)}
+.pc input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--ember);border:2px solid var(--panel);cursor:pointer}
+.pc .ic-pause,.pc .ic-muted,.pc .ic-shrink{display:none}
+.pc.is-playing .ic-play,.pc.is-muted .ic-sound,.pc.is-full .ic-grow{display:none}
+.pc.is-playing .ic-pause,.pc.is-muted .ic-muted,.pc.is-full .ic-shrink{display:block}
+/* big play mark on a paused video */
+.pc-bigplay{
+  position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;pointer-events:none;
+  background:rgba(16,13,11,.72);border:1px solid var(--border-soft);color:var(--ember);
+}
+.pc-bigplay svg{width:24px;height:24px;display:block;margin-left:3px}
+.player-stage.is-paused:not(.is-audio) .pc-bigplay{display:flex}
+/* controls step out of the way a moment after the mouse stops, while playing */
+.player-stage.pc-idle .pc{opacity:0;pointer-events:none}
+.player-stage.pc-idle,.player-stage.pc-idle video{cursor:none}
+/* expanded: the stage (not the bare video) fills the screen, so captions and controls come along */
+.player-stage:fullscreen{background:#0b0908;display:flex;align-items:center;justify-content:center}
+.player-stage:fullscreen video{width:100%;height:100%;max-height:none;border-radius:0;object-fit:contain}
+.player-stage:fullscreen .player-audio{border-radius:0}
+.player-stage:fullscreen .tx-cap{font-size:24px;bottom:92px}
+.player-stage:fullscreen .pc{left:50%;right:auto;bottom:24px;transform:translateX(-50%);width:min(860px,calc(100% - 48px))}
+@media (max-width:560px){
+  .pc{gap:6px;padding-right:8px}
+  .pc-volwrap .pc-vol{display:none}
+  .tx-cap{font-size:13px;max-width:94%;bottom:62px}
+}
 .tx-panel,.coach-panel{background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
 .tx-panel[hidden],.coach-panel[hidden]{display:none}
 .tx-state{text-align:center;padding:14px 8px;color:var(--ink-dim);font-size:13px;line-height:1.7}
@@ -533,9 +601,30 @@ body{
     <div class="player-body">
       <div class="player-main">
         <div class="player-stage" id="playStage" hidden>
-          <video id="playVideo" controls playsinline></video>
+          <video id="playVideo" playsinline></video>
           <div class="player-audio" id="playAudio"></div>
+          <div class="pc-bigplay" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5.2v13.6a1 1 0 0 0 1.52.85l11-6.8a1 1 0 0 0 0-1.7l-11-6.8A1 1 0 0 0 7 5.2z"/></svg></div>
           <div class="tx-cap" id="txCap" hidden></div>
+          <div class="pc" id="pc">
+            <button class="pc-btn pc-play" id="pcPlay" type="button" aria-label="Play">
+              <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.2v13.6a1 1 0 0 0 1.52.85l11-6.8a1 1 0 0 0 0-1.7l-11-6.8A1 1 0 0 0 7 5.2z"/></svg>
+              <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1.4"/><rect x="13.5" y="4.5" width="4.5" height="15" rx="1.4"/></svg>
+            </button>
+            <span class="pc-time" id="pcCur">0:00</span>
+            <input class="pc-seek" id="pcSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Playback position">
+            <span class="pc-time" id="pcDur">0:00</span>
+            <div class="pc-volwrap">
+              <button class="pc-btn" id="pcMute" type="button" aria-label="Mute">
+                <svg class="ic-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" fill="currentColor"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg>
+                <svg class="ic-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+              </button>
+              <input class="pc-vol" id="pcVol" type="range" min="0" max="100" value="100" step="1" aria-label="Volume">
+            </div>
+            <button class="pc-btn" id="pcFull" type="button" aria-label="Expand">
+              <svg class="ic-grow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>
+              <svg class="ic-shrink" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5V6H2.5M13.5 6H10V2.5M10 13.5V10h3.5M2.5 10H6v3.5"/></svg>
+            </button>
+          </div>
         </div>
         <div class="review-modes" id="reviewModes" hidden>
           <button type="button" data-rmode="full" class="is-active">Full</button>
@@ -914,9 +1003,10 @@ function render(){
 const playBackdrop=$('#playBackdrop'), playVideo=$('#playVideo'), playMsg=$('#playMsg');
 const playStage=$('#playStage'), playAudio=$('#playAudio'), reviewModes=$('#reviewModes');
 function closePlayer(){
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
   playBackdrop.classList.remove('show');
   playVideo.pause(); playVideo.removeAttribute('src'); playVideo.load();
-  playVideo.muted=false;
+  pcMuted=false; playVideo.muted=false;
   playStage.hidden=true; playStage.classList.remove('is-audio');
   reviewModes.hidden=true;
   showSide(false);
@@ -928,8 +1018,136 @@ let curRec=null, curUrl=null;
 function setReviewMode(mode){
   reviewModes.querySelectorAll('button').forEach(b=>b.classList.toggle('is-active',b.dataset.rmode===mode));
   playStage.classList.toggle('is-audio', mode==='audio');
-  playVideo.muted = (mode==='cam');           // camera only = watch without sound
+  playVideo.muted = (mode==='cam') || pcMuted; // camera only = watch without sound
+  // camera only has no sound to turn on, so its sound controls rest
+  pcMute.disabled = pcVol.disabled = (mode==='cam');
+  pcMute.title = mode==='cam' ? 'Camera only plays without sound' : '';
+  pcWake();
 }
+
+/* ── player controls ── */
+const pc=$('#pc'), pcPlay=$('#pcPlay'), pcSeek=$('#pcSeek'), pcCur=$('#pcCur'), pcDur=$('#pcDur');
+const pcMute=$('#pcMute'), pcVol=$('#pcVol'), pcFull=$('#pcFull');
+let pcMuted=false, pcDrag=false, pcRaf=0, pcIdleT=0;
+function pcFmt(s){ if(!isFinite(s)||s<0) s=0; return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'); }
+// Chromium reports Infinity for MediaRecorder files until they've been played through,
+// so lean on the length we saved with the take until the real number shows up.
+function pcLength(){
+  const d=playVideo.duration;
+  if(isFinite(d)&&d>0) return d;
+  return (curRec&&+curRec.durationSec)||0;
+}
+function pcPaint(){
+  const d=pcLength(), t=playVideo.currentTime||0;
+  if(!pcDrag){
+    const pct=d?Math.min(100,t/d*100):0;
+    pcSeek.value=pct*10;
+    pcSeek.style.setProperty('--pct',pct);
+    pcCur.textContent=pcFmt(t);
+  }
+  pcDur.textContent=pcFmt(d);
+  const b=playVideo.buffered;
+  pcSeek.style.setProperty('--buf', d&&b.length ? Math.min(100,b.end(b.length-1)/d*100) : 0);
+}
+function pcLoop(){ pcPaint(); pcRaf=requestAnimationFrame(pcLoop); }
+function pcReflect(){
+  const playing=!playVideo.paused && !playVideo.ended;
+  pc.classList.toggle('is-playing',playing);
+  playStage.classList.toggle('is-paused',!playing);
+  pcPlay.setAttribute('aria-label',playing?'Pause':'Play');
+  cancelAnimationFrame(pcRaf); pcRaf=0;
+  if(playing) pcLoop(); else pcPaint();
+  pcWake();
+}
+function pcToggle(){ if(playVideo.paused||playVideo.ended) playVideo.play().catch(()=>{}); else playVideo.pause(); }
+function pcReflectSound(){
+  const off=playVideo.muted||playVideo.volume===0;
+  pc.classList.toggle('is-muted',off);
+  pcMute.setAttribute('aria-label',off?'Unmute':'Mute');
+  const v=playVideo.muted?0:Math.round(playVideo.volume*100);
+  pcVol.value=v; pcVol.style.setProperty('--pct',v);
+}
+function pcNudge(by){
+  const d=pcLength(), t=(playVideo.currentTime||0)+by;
+  playVideo.currentTime=Math.max(0,d?Math.min(d,t):t);
+  pcPaint();
+}
+function pcToggleFull(){
+  if(document.fullscreenElement||document.webkitFullscreenElement){
+    (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+    return;
+  }
+  const req=playStage.requestFullscreen||playStage.webkitRequestFullscreen;
+  if(req) Promise.resolve(req.call(playStage)).catch(()=>{});
+  else if(playVideo.webkitEnterFullscreen) playVideo.webkitEnterFullscreen(); // iPhone only does the bare video
+}
+/* fade the controls when the mouse rests during playback. Audio only keeps them, nothing else is on screen */
+function pcWake(){
+  playStage.classList.remove('pc-idle');
+  clearTimeout(pcIdleT);
+  if(playVideo.paused||playVideo.ended||playStage.classList.contains('is-audio')) return;
+  pcIdleT=setTimeout(function rest(){
+    if(pcDrag||pc.matches(':hover')||pc.querySelector(':focus-visible')){ pcIdleT=setTimeout(rest,1500); return; }
+    playStage.classList.add('pc-idle');
+  },2600);
+}
+['play','pause','ended','emptied','loadedmetadata'].forEach(ev=>playVideo.addEventListener(ev,pcReflect));
+['loadedmetadata','durationchange','progress','seeked','timeupdate'].forEach(ev=>playVideo.addEventListener(ev,()=>{ if(!pcRaf) pcPaint(); }));
+playVideo.addEventListener('volumechange',pcReflectSound);
+pcPlay.addEventListener('click',pcToggle);
+pcSeek.addEventListener('input',()=>{
+  pcDrag=true;
+  const d=pcLength(), pct=pcSeek.value/10;
+  pcSeek.style.setProperty('--pct',pct);
+  pcCur.textContent=pcFmt(d*pct/100);
+  if(d && !playVideo.seeking) playVideo.currentTime=d*pct/100;  // the picture follows the drag
+});
+pcSeek.addEventListener('change',()=>{
+  const d=pcLength();
+  if(d) playVideo.currentTime=d*pcSeek.value/1000;
+  pcDrag=false; pcPaint();
+});
+pcMute.addEventListener('click',()=>{
+  pcMuted=!playVideo.muted;
+  playVideo.muted=pcMuted;
+  if(!pcMuted && playVideo.volume===0) playVideo.volume=1;
+});
+pcVol.addEventListener('input',()=>{
+  playVideo.volume=pcVol.value/100;
+  pcMuted=false; playVideo.muted=false;
+});
+pcFull.addEventListener('click',pcToggleFull);
+document.addEventListener('fullscreenchange',()=>{
+  const on=document.fullscreenElement===playStage;
+  pc.classList.toggle('is-full',on);
+  pcFull.setAttribute('aria-label',on?'Exit full screen':'Expand');
+  pcWake();
+});
+let pcTouchWoke=false;
+playStage.addEventListener('pointermove',pcWake);
+playStage.addEventListener('pointerdown',e=>{
+  // a tap on hidden controls just brings them back
+  pcTouchWoke = e.pointerType==='touch' && playStage.classList.contains('pc-idle');
+  pcWake();
+});
+playStage.addEventListener('click',e=>{
+  if(e.target.closest('#pc')) return;
+  if(pcTouchWoke){ pcTouchWoke=false; return; }
+  pcToggle();
+});
+playStage.addEventListener('dblclick',e=>{ if(!e.target.closest('#pc')) pcToggleFull(); });
+document.addEventListener('keydown',e=>{
+  if(!playBackdrop.classList.contains('show')||playStage.hidden) return;
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  const t=e.target, inControls=t.closest&&t.closest('#pc');
+  if(t.matches&&t.matches('input,textarea,select,[contenteditable]') && !inControls) return;
+  const k=e.key.toLowerCase();
+  if(k===' '||k==='k'){ if(t.closest&&t.closest('button')&&k===' ') return; e.preventDefault(); pcToggle(); }
+  else if(k==='arrowleft'){ e.preventDefault(); pcNudge(-5); }
+  else if(k==='arrowright'){ e.preventDefault(); pcNudge(5); }
+  else if(k==='m'){ if(!pcMute.disabled) pcMute.click(); }
+  else if(k==='f'){ pcToggleFull(); }
+});
 
 /* right-hand panel: Transcript | AI Coach */
 const playSide=$('#playSide'), sideTabs=$('#sideTabs');
@@ -1169,6 +1387,8 @@ function txTick(){
   }
   let c=-1;
   for(let k=0;k<txCues.length;k++){ if(t>=txCues[k].s-0.15 && t<=txCues[k].e+0.6){ c=k; break; } }
+  // stopped between lines or at the end: keep the last line up, so there's still something to read
+  if(c<0 && playVideo.paused){ for(let k=txCues.length-1;k>=0;k--){ if(t>=txCues[k].s){ c=k; break; } } }
   if(c!==txCueIdx){
     txCueIdx=c;
     txCap.hidden = c<0;
