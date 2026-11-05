@@ -4,6 +4,10 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
+## Studio tagline removed — built and pushed 2026-11-04
+
+Removed the italic line "Practice out loud and watch your public speaking improve, day by day." under the Speakeasy logo at the top of `speakeasy.html`, plus its now-unused `.tag` CSS rule. The studio header is now just the logo. (The older note below about the studio hero tagline copy is superseded.)
+
 ## Home page updated for the AI Coach — built and pushed 2026-11-04
 
 `index.html` now matches what the product does.
