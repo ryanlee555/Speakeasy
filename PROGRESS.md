@@ -4,6 +4,10 @@ Living doc. Updated after every change made in this project so any new chat can 
 
 **Private planning notes:** if `PRIVATE-NOTES.md` exists, read it at the start of a session. It is untracked because this repo is public.
 
+## Enlarged studio view softened — built and pushed 2026-11-04
+
+The user found the enlarged recording view (`.screen.is-big` in `speakeasy.html`) harsh: flat near-black (`#0b0908`) background and a sharp-cornered full-width video. Now: the enlarged view uses the same warm glow as the page background (ember glow top, sage glow top right, faint ember bottom left, over `--bg`); the top prompt bar, bottom dock, camera-permission overlay and audio-only panel are transparent so the glow shows through; the video element is sized to the picture itself (`width:auto;height:100%;max-width:100%`, centered) with 24px rounded corners, a faint border, a soft shadow and a very faint ember glow, so the rounding hugs the picture instead of a letterboxed box. At 720px and narrower the video is `calc(100% - 24px)` wide with `height:auto` and 20px corners, because phones are width-limited. **Checked in the browser pane** with a fake canvas video stream (no camera there): desktop and 375px phone width both look right and the Rec row sits below the picture. **Not checked:** a real camera, recording and review playback in the enlarged view (the scrubber lives in the same dock), Safari/Firefox. Not touched: the library player's enlarged view in `library.html`, which has its own styles.
+
 ## Studio tagline removed — built and pushed 2026-11-04
 
 Removed the italic line "Practice out loud and watch your public speaking improve, day by day." under the Speakeasy logo at the top of `speakeasy.html`, plus its now-unused `.tag` CSS rule. The studio header is now just the logo. (The older note below about the studio hero tagline copy is superseded.)

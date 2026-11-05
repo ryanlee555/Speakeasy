@@ -277,9 +277,21 @@ body.is-review .scrub{display:flex}
 body.big-open{overflow:hidden}
 .screen.is-big{
   position:fixed;inset:0;z-index:200;width:auto;height:auto;border:0;border-radius:0;
+  /* same warm glow as the page, instead of flat near-black */
+  background:
+    radial-gradient(1100px 560px at 50% -8%, rgba(221,146,87,.14), transparent 62%),
+    radial-gradient(800px 480px at 88% 6%, rgba(143,168,146,.08), transparent 60%),
+    radial-gradient(900px 520px at 10% 100%, rgba(221,146,87,.06), transparent 62%),
+    var(--bg);
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);
 }
-.screen.is-big video{grid-row:2;grid-column:1;object-fit:contain;min-height:0}
+.screen.is-big video{grid-row:2;grid-column:1;object-fit:contain;min-height:0;
+  /* size the element to the picture itself so the rounded corners and glow hug it, not a letterboxed box */
+  width:auto;height:100%;max-width:100%;justify-self:center;align-self:center;
+  border-radius:24px;background:var(--panel);
+  box-shadow:0 0 0 1px var(--border-soft),0 24px 60px var(--shadow),0 0 90px rgba(221,146,87,.07)}
+/* the camera-permission and audio-only panels sit on the same glow instead of flat black */
+.screen.is-big .overlay,.screen.is-big .audioviz{background:transparent}
 .screen.is-big .screen-expand{top:20px;right:24px;width:40px;height:40px}
 .screen.is-big .screen-expand svg{width:17px;height:17px}
 .screen.is-big .ic-grow{display:none}
@@ -291,7 +303,7 @@ body.big-open{overflow:hidden}
 body:not(.is-rec):not(.is-review) .recdot{display:none}
 .screen.is-big .big-top{
   grid-row:1;grid-column:1;position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;
-  gap:8px;padding:18px 130px 16px;text-align:center;background:#0b0908;
+  gap:8px;padding:18px 130px 16px;text-align:center;
 }
 .big-label{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
 .big-label.is-unpicked{color:var(--ink-faint)}
@@ -301,13 +313,15 @@ body:not(.is-rec):not(.is-review) .recdot{display:none}
 .big-attempt[hidden]{display:none}
 .screen.is-big .big-dock{
   grid-row:3;grid-column:1;position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;
-  gap:12px;padding:14px 24px 22px;background:#0b0908;
+  gap:12px;padding:14px 24px 22px;
 }
 .big-dock .scrub{width:min(760px,100%);margin:0}
 .big-dock .recrow{justify-content:center;margin:0}
 .big-dock .status{color:var(--ink-dim)}
 @media (max-width:720px){
   .screen.is-big .big-top{padding:72px 18px 12px}
+  /* narrow screens are width-limited: size to the picture's own ratio so the rounded frame hugs it */
+  .screen.is-big video{width:calc(100% - 24px);height:auto;max-height:100%;border-radius:20px}
 }
 
 /* attempt: you commit to a prompt before recording, same as the daily */
